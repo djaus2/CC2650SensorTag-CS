@@ -11,7 +11,7 @@ The supported characteristics/services are:
 - HUMIDITY
 - BAROMETRIC_PRESSURE
 - IO_SENSOR
-- KEYS .. extended to include the read switch (place a magnet near the power button)
+- KEYS .. extended to include the reed switch (place a magnet near the power button)
 - OPTICAL
 - MOVEMENT
 - REGISTERS
@@ -22,6 +22,8 @@ Another small change is that the moving dot for accelerator x-Y display has a va
 - White is 0 +-0.2
 - Red is < -1.4
 - Blue is > 1.4  etc.
+
+Also there is option to display RAW data.
 
 Further versions could implement:
 - A Headless version of the code
