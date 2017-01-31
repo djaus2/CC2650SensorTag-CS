@@ -11,12 +11,17 @@ The supported characteristics/services are:
 - HUMIDITY
 - BAROMETRIC_PRESSURE
 - IO_SENSOR
-- KEYS
+- KEYS .. extended to include the read switch (place a magnet near the power button)
 - OPTICAL
 - MOVEMENT
 - REGISTERS
 
 The code has been specifically refactored so that the CC2650 functionality is defined in a separate class. Whilst the Bluetooth connectivity and UI for displaying data and for user input remains in the MainPage class, characteristic metadata, service code and event handlers are all in the CC2650 class. The class uses a callback mechanism to update data in the UI.
+
+Another small change is that the moving dot for accelerator x-Y display has a variation in color depending upon the Z compoment:
+- White is 0 +-0.2
+- Reed is < -1.4
+- Blue is > 1.4  etc.
 
 Further versions could implement:
 - A Headless version of the code
