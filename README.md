@@ -20,7 +20,7 @@ The code has been specifically refactored so that the CC2650 functionality is de
 
 Another small change is that the moving dot for accelerator x-Y display has a variation in color depending upon the Z compoment:
 - White is 0 +-0.2
-- Reed is < -1.4
+- Red is < -1.4
 - Blue is > 1.4  etc.
 
 Further versions could implement:
