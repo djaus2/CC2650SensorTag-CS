@@ -1,37 +1,30 @@
-## Welcome to GitHub Pages
+## TI CC2650 SensorTag
 
-You can use the [editor on GitHub](https://github.com/djaus2/CC2650SensorTag-CS/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+This repository is a port of the [ms-iot/Samples/BluetoothGatt/CS GitHub](https://github.com/ms-iot/samples/tree/develop/BluetoothGATT/CS) code to support the Texas Instrument CC2650STK, the **CC2650 SensorTag**. The Microsoft code only supports the TI CC2541 Sensor Tag. This code has been refactored and extended to only support the CC2650.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+The code establishes a connection to the service for each of the BTE characteristics and displays their values in real time. A major difference from the CC2541 is that the Gyroscope, Magnetometer and Accelerometer are one characteristic, Motion. Also this tag has a reed switch.
 
-### Markdown
+This code also supports the IO Characteristic enabling turning of the LEDs 1 & 2 as well as the Buzzer on and off.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+The supported characteristics/services are:            
+- IR_SENSOR
+- HUMIDITY
+- BAROMETRIC_PRESSURE
+- IO_SENSOR
+- KEYS .. extended to include the reed switch (place a magnet near the power button)
+- OPTICAL
+- MOVEMENT
+- REGISTERS
 
-```markdown
-Syntax highlighted code block
+The code has been specifically refactored so that the CC2650 functionality is defined in a separate class. Whilst the Bluetooth connectivity and UI for displaying data and for user input remains in the MainPage class, characteristic metadata, service code and event handlers are all in the CC2650 class. The class uses a callback mechanism to update data in the UI.
 
-# Header 1
-## Header 2
-### Header 3
+Another small change is that the moving dot for accelerator x-Y display has a variation in color depending upon the Z compoment:
+- White is 0 +-0.2
+- Red is < -1.4
+- Blue is > 1.4  etc.
 
-- Bulleted
-- List
+Also there is option to display RAW data.
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/djaus2/CC2650SensorTag-CS/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+Further versions could implement:
+- A Headless version of the code
+- An integration with the [Azure IoT Gateway SDK](https://github.com/Azure/azure-iot-gateway-sdk/) This SDK does support the CC2650 tag as an example using the RPI3 but the code is only for Linux running on the RPI3
