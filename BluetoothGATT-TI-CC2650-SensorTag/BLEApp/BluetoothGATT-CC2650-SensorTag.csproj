@@ -136,7 +136,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TI=CC2650-SensorTag-Lib\TI-CC2650-SensorTag-Lib.csproj">
+    <ProjectReference Include="..\TI-CC2650-SensorTag-Lib\TI-CC2650-SensorTag-Lib.csproj">
       <Project>{b03e9c5b-c845-4d0c-9e7c-4c131deb260c}</Project>
       <Name>TI-CC2650-SensorTag-Lib</Name>
     </ProjectReference>

@@ -181,6 +181,7 @@
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                     <Button x:Name="PairButton" Content="Pair -Connect" Background="#CCFFFFFF" Click="PairButton_Click" Margin="10,0,0,0" Style="{StaticResource ButtonStyleGATT}" IsEnabled="True"></Button>
                     <Button x:Name="UnpairButton" Content="Unpair Device" Background="#CCFFFFFF" Click="UnpairButton_Click" Margin="10,0,0,0" Style="{StaticResource ButtonStyleGATT}" IsEnabled="False"></Button>
+                    <Button x:Name="ExitButton" Content="Exit" Background="#CCFFFFFF" Click="ExitButton_Click" Margin="10,0,0,0" Style="{StaticResource ButtonStyleGATT}" IsEnabled="True"></Button>
                     <TextBlock FontSize="20" Foreground="White" Margin="10">
                         <Run Text="Sportronics"/>
                     </TextBlock>
@@ -233,7 +234,7 @@
                         <Button x:Name="InitButton" Content="Init" Background="#CCFFFFFF" Click="InitButton_Click" Margin="10,0,0,0" IsEnabled="False" Visibility="Collapsed"/>
                         <Button x:Name="EnableButton" Content="Enable" Background="#CCFFFFFF" Click="EnableButton_Click" Margin="10,0,0,0" IsEnabled="False"/>
                         <Button x:Name="DisableButton" Content="Disable" Background="#CCFFFFFF" Click="DisableButton_Click" Margin="10,0,0,0" IsEnabled="False"/>
-
+                        <Button x:Name="ReadButton" Content="Read" Background="#CCFFFFFF" Click="ReadButton_Click" Margin="10,0,0,0" IsEnabled="True"/>
                         <StackPanel Orientation="Vertical">
                             <RadioButton x:Name="chkDataModeValues" IsEnabled="True" IsChecked="true" GroupName="DataMode" Foreground="Green" Checked="chkDataModeValues_Checked" Unchecked="chkDataModeValues_Checked" >Values</RadioButton>
                             <RadioButton x:Name="chkDataModeRaw" IsEnabled="True" IsChecked="False" GroupName="DataMode" Foreground="Green">Raw</RadioButton>

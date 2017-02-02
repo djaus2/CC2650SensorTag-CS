@@ -59,11 +59,16 @@ namespace TICC2650SensorTag
 
         // IR temperature change handler
         // Algorithm taken from http://processors.wiki.ti.com/index.php/SensorTag_User_Guide#IR_Temperature_Sensor
-        async void tempChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
+        private async void tempChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
         {
             byte[] bArray = new byte[eventArgs.CharacteristicValue.Length];
             DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(bArray);
+            await tempChangedProc(bArray, true);
+        }
 
+        private async Task<SensorData> tempChangedProc(byte[] bArray , bool doCallback)
+        {
+            SensorData values = null;
             if (bArray.Length == DataLength[(int)this.SensorIndex])
             {
                 double AmbTemp = (double)(((UInt16)bArray[3] << 8) + (UInt16)bArray[2]);
@@ -90,49 +95,52 @@ namespace TICC2650SensorTag
 
                 tObj = (tObj - 273.15);
 
-                var values =  new SensorData { Sensor_Index = SensorIndex, Values = new double[] { AmbTemp, tObj }, Raw = bArray };
-                if (CallMeBack!=null)
-                    CallMeBack(values);
-                
+                values =  new SensorData { Sensor_Index = SensorIndex, Values = new double[] { AmbTemp, tObj }, Raw = bArray };
+                if(doCallback)
+                    if (CallMeBack!=null)
+                        CallMeBack(values);
+               
             }
-
+            return values;
         }
 
         // Humidity change handler
         // Algorithm taken from http://processors.wiki.ti.com/index.php/SensorTag_User_Guide#Humidity_Sensor_2
-        async void humidChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
+        private async void humidChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
         {
             byte[] bArray = new byte[eventArgs.CharacteristicValue.Length];
             DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(bArray);
+            await humidChangedProc(bArray, true);
+        }
 
-            if(bArray.Length== DataLength[(int)this.SensorIndex])
+        private async Task<SensorData> humidChangedProc(byte[] bArray, bool DoCallBack)
+        {
+            SensorData values = null;
+            if (bArray.Length== DataLength[(int)this.SensorIndex])
             { 
                 double humidity = (double)((((UInt16)bArray[1] << 8) + (UInt16)bArray[0]) & ~0x0003);
                 humidity = (-6.0 + 125.0 / 65536 * humidity); // RH= -6 + 125 * SRH/2^16
-                var values =  new SensorData {Sensor_Index=SensorIndex, Values = new double[] { humidity }, Raw = bArray };
-                CallMeBack(values);
+                values =  new SensorData {Sensor_Index=SensorIndex, Values = new double[] { humidity }, Raw = bArray };
+                if (DoCallBack)
+                    if (CallMeBack != null)
+                        CallMeBack(values);
             }
+            return values;
         }
 
 
-        async void movementChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
+        private async void movementChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
         {
             byte[] bArray = new byte[eventArgs.CharacteristicValue.Length];
             DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(bArray);
+            await movementChangedProc(bArray, true);
+        }
+
+        private async Task<SensorData> movementChangedProc(byte[] bArray, bool doCallback)
+        {
+            SensorData values = null;
             if (bArray.Length == DataLength[(int)this.SensorIndex])
             {
-                //Int16 dataGyroX = (Int16)(((UInt16)bArray[17] << 8) + (UInt16)bArray[16]);
-                //Int16 dataGyroY = (Int16)(((UInt16)bArray[15] << 8) + (UInt16)bArray[14]);
-                //Int16 dataGyroZ = (Int16)(((UInt16)bArray[12] << 8) + (UInt16)bArray[13]);
-
-                //Int16 dataAccX = (Int16)(((UInt16)bArray[11] << 8) + (UInt16)bArray[10]);
-                //Int16 dataAccY = (Int16)(((UInt16)bArray[9] << 8) + (UInt16)bArray[8]);
-                //Int16 dataAccZ = (Int16)(((UInt16)bArray[7] << 8) + (UInt16)bArray[6]);
-
-
-                //Int16 dataMagX = (Int16)(256 * ((UInt16)bArray[5]) + (UInt16)bArray[4]);
-                //Int16 dataMagY = (Int16)(256 * ((UInt16)bArray[3]) + (UInt16)bArray[2]);
-                //Int16 dataMagZ = (Int16)(256 * ((UInt16)bArray[1]) + (UInt16)bArray[0]);
 
                 Int16 dataGyroX = (Int16)(((UInt16)bArray[1] << 8) + (UInt16)bArray[0]);
                 Int16 dataGyroY = (Int16)(((UInt16)bArray[3] << 8) + (UInt16)bArray[2]);
@@ -148,7 +156,7 @@ namespace TICC2650SensorTag
                 Int16 dataMagZ = (Int16)(256 * ((UInt16)bArray[17]) + (UInt16)bArray[16]);
 
 
-                var values =  new SensorData
+                values =  new SensorData
                 {
                     Sensor_Index = SensorIndex,
                     Values = new double[] {
@@ -165,9 +173,11 @@ namespace TICC2650SensorTag
                     }, 
                     Raw = bArray
                 };
-                if (CallMeBack != null)
-                    CallMeBack(values);
+                if (doCallback)
+                    if (CallMeBack != null)
+                        CallMeBack(values);
             }
+            return values;
 
         }
 
@@ -222,20 +232,26 @@ namespace TICC2650SensorTag
         }
 
 
-        public async void opticalChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
+        private async void opticalChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
         {
             byte[] bArray = new byte[eventArgs.CharacteristicValue.Length];
             DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(bArray);
+            await opticalChangedProc(bArray, true);
+        }
 
+        private async Task<SensorData> opticalChangedProc( byte[] bArray, bool doCallback)
+        {
+            SensorData values = null;
             if (bArray.Length == DataLength[(int)this.SensorIndex])
             {
 
-
                 double lumo = sensorOpt3001Convert(bArray);
-                var values =  new SensorData {Sensor_Index = SensorIndex, Values = new double[] { lumo }, Raw = bArray };
-                if (CallMeBack!=null)
-                    CallMeBack(values);
+                values =  new SensorData {Sensor_Index = SensorIndex, Values = new double[] { lumo }, Raw = bArray };
+                if (doCallback)
+                    if (CallMeBack!=null)
+                        CallMeBack(values);
             }
+            return values;
 
         }
 
@@ -250,12 +266,17 @@ namespace TICC2650SensorTag
             return m * (0.01 * Math.Pow(2.0, e));
         }
 
-        public async void pressureCC2650Changed(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
+        private async void pressureCC2650Changed(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
         {
 
             byte[] bArray = new byte[eventArgs.CharacteristicValue.Length];
             DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(bArray);
+            await pressureCC2650ChangedProc(bArray, true);
+        }
 
+        private async Task<SensorData> pressureCC2650ChangedProc(byte[] bArray, bool doCallback)
+        {
+            SensorData values = null;
             if (bArray.Length == DataLength[(int)this.SensorIndex])
             {
                 Int32 t = bArray[2] * 256;
@@ -269,13 +290,16 @@ namespace TICC2650SensorTag
                 p = tempP * 256 + bArray[3];
                 double pres = (double)p / 100;
 
-                var values =  new SensorData {Sensor_Index=SensorIndex, Values = new double[] { pres, tempr }, Raw = bArray };
-                CallMeBack(values);
+                values =  new SensorData {Sensor_Index=SensorIndex, Values = new double[] { pres, tempr }, Raw = bArray };
+                if (doCallback)
+                    if (CallMeBack != null)
+                        CallMeBack(values);
             }
+            return values;
         }
 
 
-   
+
 
         // Key press change handler
         // Algorithm taken from http://processors.wiki.ti.com/index.php/SensorTag_User_Guide#Simple_Key_Service
@@ -283,6 +307,12 @@ namespace TICC2650SensorTag
         {
             byte[] bArray = new byte[eventArgs.CharacteristicValue.Length];
             DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(bArray);
+            await keyChangedProc(bArray, true);
+        }
+
+        public async Task<SensorData> keyChangedProc(byte[] bArray, bool doCallback)
+        {
+            SensorData values = null;
             if (bArray.Length == DataLength[(int)this.SensorIndex])
             {
                 byte data = bArray[0];
@@ -306,10 +336,12 @@ namespace TICC2650SensorTag
                 else
                     reed = 0;
 
-                var values =  new SensorData { Sensor_Index = SensorIndex, Values= new double[] { right, left, reed }, Raw = bArray };
-                CallMeBack(values);
+                values =  new SensorData { Sensor_Index = SensorIndex, Values= new double[] { right, left, reed }, Raw = bArray };
+                if(doCallback)
+                    if (CallMeBack!=null)
+                        CallMeBack(values);
             }
-
+            return values;
         }
         public async void setSensorPeriod( int period)
         {
@@ -320,14 +352,17 @@ namespace TICC2650SensorTag
                 var characteristicList = gattService.GetCharacteristics(new Guid(UUIDBase[(int)SensorIndex] + SENSOR_PERIOD_GUID_SUFFFIX));
                 if (characteristicList != null)
                 {
-                    GattCharacteristic characteristic = characteristicList[0];
-
-                    if (characteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
+                    if (characteristicList.Count > 0)
                     {
-                        var writer = new Windows.Storage.Streams.DataWriter();
-                        // Accelerometer period = [Input * 10]ms
-                        writer.WriteByte((Byte)(period / 10));
-                        await characteristic.WriteValueAsync(writer.DetachBuffer());
+                        GattCharacteristic characteristic = characteristicList[0];
+
+                        if (characteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
+                        {
+                            var writer = new Windows.Storage.Streams.DataWriter();
+                            // Accelerometer period = [Input * 10]ms
+                            writer.WriteByte((Byte)(period / 10));
+                            await characteristic.WriteValueAsync(writer.DetachBuffer());
+                        }
                     }
                 }
             }

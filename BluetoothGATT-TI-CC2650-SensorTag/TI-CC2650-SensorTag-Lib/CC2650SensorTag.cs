@@ -10,7 +10,7 @@ namespace TICC2650SensorTag
 {
     public sealed partial class CC2650SensorTag
     {
-        public static string DeviceSensorName { get; internal set; } = "CC2650 SensorTag";
+        public static List<string> DeviceAltSensorNames { get; internal set; } = new List<string> { "CC2650 SensorTag" , "SensorTag 2.0" };
 
         private static int SetUpRunTimes = 0;
         //Class specific enums
@@ -91,7 +91,7 @@ namespace TICC2650SensorTag
         /// //////////////////////////
         public const int SENSOR_MAX = (int)SensorIndexes.REGISTERS;
         public const int NUM_SENSORS = SENSOR_MAX + 1;
-        public const int NUM_SENSORS_TO_TEST = NUM_SENSORS;
+        public const int NUM_SENSORS_TO_TEST =  NUM_SENSORS;
         public const int FIRST_SENSOR = 0;
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace TICC2650SensorTag
         /// </summary>
         /// <param name="gattService">Gatt Service found for this sensor</param>
         /// <param name="sensorIndex">SensorIndex</param>
-        public CC2650SensorTag(GattDeviceService gattService, SensorIndexes sensorIndex)
+        public CC2650SensorTag(GattDeviceService gattService, SensorIndexes sensorIndex, SensorDataDelegate callMeBack)
         {
             Debug.WriteLine("Begin sensor constructor: " + sensorIndex.ToString());
 
@@ -223,6 +223,8 @@ namespace TICC2650SensorTag
             Guid guidPeriod = guidNull;
             Guid guidAddress = guidNull;
             Guid guidDevId = guidNull;
+
+            CallMeBack = callMeBack;
 
             IO_IsOn = false;
 
@@ -313,11 +315,6 @@ namespace TICC2650SensorTag
                     if (Configuration.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
                     {
                         var writer = new Windows.Storage.Streams.DataWriter();
-                        // Special value for Gyroscope to enable all 3 axes
-                        ////////if (sensor == GYROSCOPE)
-                        ////////    writer.WriteByte((Byte)0x07);
-                        ////////else
-                        // Special value for Gyroscope to enable all 3 axes
                         if (SensorIndex == SensorIndexes.MOVEMENT)
                         {
                             byte[] bytes = new byte[] { 0x7f, 0x00 };
@@ -325,6 +322,25 @@ namespace TICC2650SensorTag
                         }
                         else
                             writer.WriteByte((Byte)0x01);
+
+                        var status = await Configuration.WriteValueAsync(writer.DetachBuffer());
+                    }
+            }
+            Debug.WriteLine("End turn on sensor: " + SensorIndex.ToString());
+        }
+
+        public async Task TurnOffSensor()
+        {
+            Debug.WriteLine("Begin turn on sensor: " + SensorIndex.ToString());
+            // Turn on sensor
+            if (SensorIndex >= 0 && SensorIndex != SensorIndexes.KEYS && SensorIndex != SensorIndexes.IO_SENSOR && SensorIndex != SensorIndexes.REGISTERS)
+            {
+                if (Configuration != null)
+                    if (Configuration.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
+                    {
+                        var writer = new Windows.Storage.Streams.DataWriter();
+
+                        writer.WriteByte((Byte)0x00);
 
                         var status = await Configuration.WriteValueAsync(writer.DetachBuffer());
                     }
@@ -434,13 +450,78 @@ namespace TICC2650SensorTag
             return ret;
         }
 
-
-        private async Task<bool> ReadSensor(byte[] bytes, ServiceCharacteristicsEnum character)
+        /// <summary>
+        /// Manually read sensor values from their Data Characteristic
+        /// </summary>
+        /// <param name="disableNotify">Notify should be off. Can optionally set this.</param>
+        /// <returns>Buffer for data. Is created in the call.</returns>
+        public async Task<SensorData> ReadSensor( bool disableNotify, bool updateDisplay)
         {
+            byte[] bytes = null;
+            SensorData sensorData = null;
             Debug.WriteLine("Begin read sensor: " + SensorIndex.ToString());
+            if (SensorIndex >= 0 && SensorIndex != SensorIndexes.IO_SENSOR && SensorIndex != SensorIndexes.REGISTERS)
+            {
+                if (GattService != null)
+                {
+                    if (disableNotify)
+                        await DisableNotify();
+                    //Enable Sensor
+                    await TurnOnSensor();
+                    bytes = await ReadSensorBase( ServiceCharacteristicsEnum.Data);
+                    //Disable Sensor
+                    await TurnOffSensor();
+                }
+            }
+
+            if (bytes != null)
+            {
+                switch (SensorIndex)
+                {
+                    case SensorIndexes.KEYS:
+                        sensorData = await keyChangedProc(bytes, updateDisplay);
+                        break;
+                    case SensorIndexes.IR_SENSOR:
+                        sensorData = await tempChangedProc(bytes, updateDisplay);
+                        break;
+                    case SensorIndexes.HUMIDITY:
+                        sensorData = await humidChangedProc(bytes, updateDisplay);
+                        break;
+                    case SensorIndexes.OPTICAL:
+                        sensorData = await opticalChangedProc(bytes, updateDisplay);
+                        break;
+                    case SensorIndexes.MOVEMENT:
+                        sensorData = await movementChangedProc(bytes, updateDisplay);
+                        break;
+                    case SensorIndexes.BAROMETRIC_PRESSURE:
+                        sensorData = await pressureCC2650ChangedProc(bytes, updateDisplay);
+                        break;
+                    case SensorIndexes.IO_SENSOR:
+                        break;
+                    case SensorIndexes.REGISTERS:
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            Debug.WriteLine("End read sensor: " + SensorIndex.ToString());
+            return sensorData;
+        }
+
+        /// <summary>
+        /// Read a readable sensor characteristic, typically the Data characteristic
+        /// </summary>
+        /// <param name="character">The characteristic to read from.</param>
+        /// <returns>Buffer for data. Is created in the call</returns>
+        public async Task<byte[]> ReadSensorBase(ServiceCharacteristicsEnum character)
+        {
+            byte[] bytes = null;
+            Debug.WriteLine("Begin read sensor base: " + SensorIndex.ToString());
             bool ret = false;
             if (GattService != null)
             {
+                bytes = new byte[DataLength[(int)SensorIndex]];
                 GattCharacteristic characteristic = null;
                 GattCharacteristicProperties flag = GattCharacteristicProperties.Read;
                 switch (character)
@@ -479,8 +560,10 @@ namespace TICC2650SensorTag
                     }
                 }
             }
-            Debug.WriteLine("End read sensor: " + SensorIndex.ToString());
-            return ret;
+            Debug.WriteLine("End read sensor base: " + SensorIndex.ToString());
+            if (!ret)
+                bytes = null;
+            return bytes;
         }
 
         public enum IOActions { On, AllOff,  Enable, Disable};
