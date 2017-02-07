@@ -30,3 +30,13 @@ Further versions could implement:
 - Rather than in **Notifications Mode**,  implement **Poll mode to read data directly from sensors** (Done but needs testing.)
 - A Headless version of the code
 - An integration with the [Azure IoT Gateway SDK](https://github.com/Azure/azure-iot-gateway-sdk/) This SDK does support the CC2650 tag as an example using the RPI3 but the code is only for Linux running on the RPI3
+
+UI Changes:
+- Once one CC2640 SensorTag is found the Device Watcher stops and conection can start.
+- Once all sensors have been found and configured, the BLE Watcher stops.
+- Device Watcher update debug messages have been commeneted out.
+
+**NOTE**
+PS I think that there might be a problem with GATT on the Creator Editions of Windows 10.
+This code was going swimmingly on my laptop until I installed my first 150XX (Windows Insider Fast Ring) build then things went haywire.
+I have done the latest testing on build 14393, Anniversary Update, and all with the same code seems well.
