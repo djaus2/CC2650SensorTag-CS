@@ -56,6 +56,7 @@ namespace BluetoothGATT
         private TypedEventHandler<DeviceWatcher, DeviceInformationUpdate> handlerUpdated = null;
         private TypedEventHandler<DeviceWatcher, DeviceInformationUpdate> handlerRemoved = null;
         private TypedEventHandler<DeviceWatcher, Object> handlerEnumCompleted = null;
+        private TypedEventHandler<DeviceWatcher, Object> handlerStopped = null;
 
         private DeviceWatcher blewatcher = null;
         private TypedEventHandler<DeviceWatcher, DeviceInformation> OnBLEAdded = null;
@@ -124,7 +125,8 @@ namespace BluetoothGATT
                         Debug.WriteLine("Watcher Add: " + deviceInfo.Id);
                         ResultCollection.Add(new DeviceInformationDisplay(deviceInfo));
                         UpdatePairingButtons();
-                        UserOut.Text = "Found at least one " +CC2650SensorTag.DeviceAltSensorNames + " Select for pairing. Still searching for others though.";                     
+                        UserOut.Text = "Found at least one " +CC2650SensorTag.DeviceAltSensorNames + " Select for pairing. Still searching for others though.";
+                        watcher.Stop();
                     }
                 });
             };
@@ -177,6 +179,24 @@ namespace BluetoothGATT
             };
             deviceWatcher.Removed += handlerRemoved;
 
+            handlerStopped = async (watcher, obj) =>
+            {
+                Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    Debug.WriteLine($"Watcher Stopped: Found {ResultCollection.Count} Bluetooth LE Devices");
+
+                    if (ResultCollection.Count > 0)
+                    {
+                        UserOut.Text = "Select a device for pairing";
+                    }
+                    else
+                    {
+                        UserOut.Text = "No Bluetooth LE Devices found.";
+                    }
+                    UpdatePairingButtons();
+                });
+            };
+
             handlerEnumCompleted = async (watcher, obj) =>
             {
                 Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
@@ -200,6 +220,7 @@ namespace BluetoothGATT
             deviceWatcher.Start();
         }
 
+ 
         private void StopWatcher()
         {
             if (null != deviceWatcher)
@@ -212,12 +233,16 @@ namespace BluetoothGATT
                 deviceWatcher.Updated -= handlerUpdated;
                 deviceWatcher.Removed -= handlerRemoved;
                 deviceWatcher.EnumerationCompleted -= handlerEnumCompleted;
+                // In my case I don't want to exercise the Stopped handler when exiting the app.
+                deviceWatcher.Stopped -= handlerStopped;
 
                 if (DeviceWatcherStatus.Started == deviceWatcher.Status ||
                     DeviceWatcherStatus.EnumerationCompleted == deviceWatcher.Status)
                 {
+
                     deviceWatcher.Stop();
                 }
+                
             }
         }
 
@@ -296,10 +321,15 @@ namespace BluetoothGATT
                             BUZZButton.IsEnabled = true;
                             LED1Button.IsEnabled = true;
                             LED2Button.IsEnabled = true;
-
+                            if (discoveredServices == CC2650SensorTag.NUM_SENSORS_TO_TEST)
+                            {
+                                blewatcher.Stop();
+                                Debug.WriteLine("blewatcher Stopped.");
+                            }
                             discoveredServices = 0;
                             UserOut.Text = "Sensors on!";
                         }
+
                     }
                 });
             };
@@ -953,7 +983,8 @@ namespace BluetoothGATT
             bool bSelectableDevices = (resultsListView.Items.Count > 0);
 
             // If something on the list of bluetooth devices is selected
-            if ((null != deviceInfoDisp) && (true))// (deviceWatcher.Status == DeviceWatcherStatus.EnumerationCompleted))
+            if ((null != deviceInfoDisp) && ( (deviceWatcher.Status == DeviceWatcherStatus.EnumerationCompleted)
+                || deviceWatcher.Status == DeviceWatcherStatus.Stopped))
             {
                 bool bIsConnected = (DeviceInfoConnected != null);
 
