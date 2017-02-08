@@ -548,8 +548,8 @@ namespace BluetoothGATT
                                 HumidOut.Text = string.Format("H:\t{0:000} {1:000} {2:000} {3:000}", data.Raw[3], data.Raw[2], data.Raw[1], data.Raw[0]);
                                 break;
                             case (CC2650SensorTag.SensorIndexes.OPTICAL):
-                            // LuxOut.Text = string.Format("L:\t{{0:000} {1:000}", data.Raw[1], data.Raw[0]);
-                            break; ;
+                                LuxOut.Text = string.Format("L:  \t{0:000} {1:000}", data.Raw[1], data.Raw[0]);
+                                break; ;
                             case (CC2650SensorTag.SensorIndexes.BAROMETRIC_PRESSURE):
                                 BaroOut.Text = string.Format("T:\t{0:000} {1:000} {2:000}", data.Raw[5], data.Raw[4], data.Raw[3]);
                                 BaroOutTemp.Text = string.Format("P:\t{0:000} {1:000} {2:000}", data.Raw[2], data.Raw[1], data.Raw[0]);

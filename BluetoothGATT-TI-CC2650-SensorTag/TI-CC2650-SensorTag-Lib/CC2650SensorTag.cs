@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.ComponentModel.DataAnnotations;
 
 namespace TICC2650SensorTag
 {
@@ -43,6 +45,8 @@ namespace TICC2650SensorTag
         public const string SENSOR_NOTIFICATION_GUID_SUFFFIX = "1-0451-4000-B000-000000000000";
         public const string SENSOR_ENABLE_GUID_SUFFFIX = "2-0451-4000-B000-000000000000";
         public const string SENSOR_PERIOD_GUID_SUFFFIX = "3-0451-4000-B000-000000000000";
+
+        public const string valueServiceUuid = "F000AA71-0451-4000-B000-000000000000";
 
         public const string BUTTONS_GUID_STR = "0000FFE0-0000-1000-8000-00805F9B34FB";
         public static readonly Guid BUTTONS_GUID = new Guid(BUTTONS_GUID_STR);
@@ -468,7 +472,7 @@ namespace TICC2650SensorTag
                         await DisableNotify();
                     //Enable Sensor
                     await TurnOnSensor();
-                    bytes = await ReadSensorBase( ServiceCharacteristicsEnum.Data);
+                    bytes = await ReadSensorBase(ServiceCharacteristicsEnum.Notification);//..Data);
                     //Disable Sensor
                     await TurnOffSensor();
                 }
@@ -550,13 +554,24 @@ namespace TICC2650SensorTag
                     if (characteristic.CharacteristicProperties.HasFlag(flag))
                     {
 
-                        var result = await characteristic.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
-                        var status = result.Status;
-                        if (status == GattCommunicationStatus.Success)
-                        {
-                            ret = true;
-                            var dat = result.Value;
-                        }
+                            GattReadResult result = await characteristic.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
+
+                            var status = result.Status;
+                            if (status == GattCommunicationStatus.Success)
+                            {
+                                ret = true;
+                                var dat = result.Value;
+                                var xx = dat.GetType();
+                                var yy = dat.Capacity;
+                                var zz = dat.Length;
+
+                                bytes = new byte[result.Value.Length];
+
+                                Windows.Storage.Streams.DataReader.FromBuffer(result.Value).ReadBytes(bytes);
+
+                            }
+                        
+                      
                     }
                 }
             }
