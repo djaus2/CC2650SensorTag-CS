@@ -126,7 +126,10 @@ namespace BluetoothGATT
                         ResultCollection.Add(new DeviceInformationDisplay(deviceInfo));
                         UpdatePairingButtons();
                         UserOut.Text = "Found at least one " +CC2650SensorTag.DeviceAltSensorNames + " Select for pairing. Still searching for others though.";
-                        watcher.Stop();
+                        var st = watcher.Status;
+                        if (watcher != null)
+                            if (st != DeviceWatcherStatus.Stopped)
+                                watcher.Stop();
                     }
                 });
             };
@@ -272,8 +275,33 @@ namespace BluetoothGATT
                         Debug.WriteLine("Found Service: " + svcGuid);
 
                         // Add this service to the list if it conforms to the TI-GUID pattern for most sensors
+                        if (svcGuid == CC2650SensorTag.DEVICE_BATTERY_SERVICE)
+                        {
+                            CC2650SensorTag.SetUpBattery(service);
+                            byte[] bytes = await CC2650SensorTag.GetBatteryLevel();
+                            return;
+                        }
+                        else if (svcGuid == CC2650SensorTag.UUID_PROPERTIES_SERVICE.ToUpper())
+                        {
+                            var qaz = service.GetIncludedServices(new Guid(svcGuid));
+                            CC2650SensorTag.DevicePropertyService = service;
+                            //IReadOnlyList<GattDeviceService> svcs =  service.GetAllIncludedServices();
+                            //var arr = svcs.ToArray<GattDeviceService>();
+                            //var lst = svcs.ToList<GattDeviceService>();
+                            //var sxc = svcs[0];
+                            //int count = svcGuid.Count();
+                            ////var azx = svcs.First();
+                            //foreach (GattDeviceService svc in svcs)
+                            //{
+                            //    Debug.WriteLine("{0} {1} {2} ",count, svc.DeviceId, svc.Uuid);
+                            //}
+                            await CC2650SensorTag.GetProperties();
 
-                        if (svcGuid == CC2650SensorTag.IO_SENSOR_GUID_STR)
+                            return;
+                        }
+
+
+                        else if (svcGuid == CC2650SensorTag.IO_SENSOR_GUID_STR)
                         {
                             sensorIndx = CC2650SensorTag.SensorIndexes.IO_SENSOR;
                         }
@@ -372,10 +400,15 @@ namespace BluetoothGATT
 
                 if (ii < CC2650SensorTag.NUM_SENSORS_TO_TEST - 1)
                 {
-                    aqs += " OR ";
+                    
                 }
             }
 
+
+            aqs += " OR ";
+            aqs += "(" + GattDeviceService.GetDeviceSelectorFromUuid(new Guid(CC2650SensorTag.DEVICE_BATTERY_SERVICE)) + ")";
+            aqs += " OR ";
+            aqs += "(" + GattDeviceService.GetDeviceSelectorFromUuid(new Guid(CC2650SensorTag.UUID_PROPERTIES_SERVICE)) + ")";
 
 
             blewatcher = DeviceInformation.CreateWatcher(aqs);

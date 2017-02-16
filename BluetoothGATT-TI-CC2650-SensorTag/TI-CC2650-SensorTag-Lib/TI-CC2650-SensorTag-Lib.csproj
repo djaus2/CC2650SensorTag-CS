@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="CC2650SensorTag.cs" />
     <Compile Include="CC2650SensorTagEvents.cs" />
+    <Compile Include="CC2650SensorTagProperties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\TI_CC2650_SensorTag_Lib.rd.xml" />
   </ItemGroup>

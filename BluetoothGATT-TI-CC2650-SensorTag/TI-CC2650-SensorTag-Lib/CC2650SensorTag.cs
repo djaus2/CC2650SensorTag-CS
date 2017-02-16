@@ -125,8 +125,12 @@ namespace TICC2650SensorTag
             1,
             2,
             18,
-            -1 //Can be 1 to 4 for Registers
+            -1, //Can be 1 to 4 for Registers
+            1,
         };
+
+        public static int BATT_INDX = 8; //Num Bytes for Battery Level is 1
+
 
         /// <summary>
         /// The prefix for sensor Guids. Keys, IO_SENSOR and REGISTERS excluded as these are specifically defined.
