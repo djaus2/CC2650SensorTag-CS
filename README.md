@@ -29,7 +29,7 @@ Another small change is that the moving dot for accelerator x-Y display has a va
 Also there is option to display RAW data.
 
 Further versions could implement:
-- Rather than in **Notifications Mode**,  implement **Poll mode to read data directly from sensors** (WORKS: Have to disbale sensor first; but can't re-enable (TODO).)
+- Rather than in **Notifications Mode**,  implement **Poll mode to read data directly from sensors** (WORKS: Have to disable sensor first; but can't re-enable (TODO).)
 - A Headless version of the code
 - An integration with the [Azure IoT Gateway SDK](https://github.com/Azure/azure-iot-gateway-sdk/) This SDK does support the CC2650 tag as an example using the RPI3 but the code is only for Linux running on the RPI3
 
