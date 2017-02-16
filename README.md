@@ -42,3 +42,7 @@ UI Changes:
 PS I think that there might be a problem with GATT on the Creator Editions of Windows 10.
 This code was going swimmingly on my laptop until I installed my first 150XX (Windows Insider Fast Ring) build then things went haywire.
 I have done the latest testing on build 14393, Anniversary Update, with the same code, and all seems well.
+
+ADDED:
+- Get SensorTag (TI) BLE properties
+- Get Battery Level
