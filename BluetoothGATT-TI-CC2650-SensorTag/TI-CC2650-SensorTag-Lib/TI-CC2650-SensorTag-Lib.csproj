@@ -107,6 +107,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BLEWatcher.cs" />
     <Compile Include="CC2650SensorTag.cs" />
     <Compile Include="CC2650SensorTagEvents.cs" />
     <Compile Include="CC2650SensorTagProperties.cs" />

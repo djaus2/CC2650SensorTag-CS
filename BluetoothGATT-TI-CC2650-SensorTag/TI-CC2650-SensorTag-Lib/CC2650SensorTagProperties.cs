@@ -28,8 +28,10 @@ namespace TICC2650SensorTag
         public const string UUID_PROPERTY_MANUF_NR = "00002A29-0000-1000-8000-00805f9b34fb";
         public const string UUID_PROPERTY_CERT = "00002A2A-0000-1000-8000-00805f9b34fb";
         public const string UUID_PROPERTY_PNP_ID = "00002A50-0000-1000-8000-00805f9b34fb";
+        public const string UUID_PROPERTY_NAME = "00002A00-0000-1000-8000-00805f9b34fb";
+       
 
-        public enum SensorTagProperties {sysid, model_name, serial_num, firmware_date, hardware_rev, software_rev, manufacturer_id, cert, pnp_id };
+        public enum SensorTagProperties {sysid, device_name, model_name, serial_num, firmware_date, hardware_rev, software_rev, manufacturer_id, cert, pnp_id };
 
 
     
@@ -134,8 +136,11 @@ namespace TICC2650SensorTag
                 case SensorTagProperties.cert:
                     guidstr = UUID_PROPERTY_CERT;
                     break;
+                case SensorTagProperties.device_name:
+                    guidstr = UUID_PROPERTY_NAME;
+                    break;
             }
-            string resultStr = "error";
+
             IReadOnlyList<GattCharacteristic> sidCharacteristicList = DevicePropertyService.GetCharacteristics(new Guid(guidstr));
             GattCharacteristicProperties flag = GattCharacteristicProperties.Read;
             if (sidCharacteristicList != null)

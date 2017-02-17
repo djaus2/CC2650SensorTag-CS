@@ -58,7 +58,10 @@ namespace BluetoothGATT
         private TypedEventHandler<DeviceWatcher, Object> handlerEnumCompleted = null;
         private TypedEventHandler<DeviceWatcher, Object> handlerStopped = null;
 
-        private TICC2650SensorTag_BLEWatcher CC2650SensorTag_BLEWatcher = null;
+        private DeviceWatcher blewatcher = null;
+        private TypedEventHandler<DeviceWatcher, DeviceInformation> OnBLEAdded = null;
+        private TypedEventHandler<DeviceWatcher, DeviceInformationUpdate> OnBLEUpdated = null;
+        private TypedEventHandler<DeviceWatcher, DeviceInformationUpdate> OnBLERemoved = null;
 
         TaskCompletionSource<string> providePinTaskSrc;
         TaskCompletionSource<bool> confirmPinTaskSrc;
@@ -72,7 +75,6 @@ namespace BluetoothGATT
 
         public MainPage()
         {
-            this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
             this.InitializeComponent();
             CC2650SensorTag.SetUp();
 
@@ -84,34 +86,12 @@ namespace BluetoothGATT
 
             DataContext = this;
             //Start Watcher for pairable/paired devices
-            CC2650SensorTag_BLEWatcher = new TICC2650SensorTag_BLEWatcher(this.UpdateButtons_WhenSensorsAreReady_CallBack, this.CallMeBackTemp, this.initSensor);
             StartWatcher();
         }
 
         ~MainPage()
         {
             StopWatcher();
-        }
-
-
-        public void UpdateButtons_WhenSensorsAreReady_CallBack()
-        {
-            Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-            {
-                SensorList.IsEnabled = true;
-                DisableButton.IsEnabled = true;
-                EnableButton.IsEnabled = true;
-                InitButton.IsEnabled = false;
-
-                EnableIOButton.IsEnabled = true;
-                DisableIOButton.IsEnabled = true;
-                AllOffIOButton.IsEnabled = true;
-                BUZZButton.IsEnabled = true;
-                LED1Button.IsEnabled = true;
-                LED2Button.IsEnabled = true;
-
-                UserOut.Text = "Sensors on!";
-            });
         }
 
         //Watcher for Bluetooth LE Devices based on the Protocol ID
@@ -269,7 +249,190 @@ namespace BluetoothGATT
             }
         }
 
+        //Watcher for Bluetooth LE Services
+        private void StartBLEWatcher()
+        {
+            int discoveredServices = 0;
+            // Hook up handlers for the watcher events before starting the watcher
+            OnBLEAdded = async (watcher, deviceInfo) =>
+            {
+                Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
+                {
+                    Debug.WriteLine("OnBLEAdded: " + deviceInfo.Id);
+                    GattDeviceService service = null;
+                    try
+                    {
+                        service = await GattDeviceService.FromIdAsync(deviceInfo.Id);
+                    }
+                    catch (Exception ex)
+                    {
+                        string msg = ex.Message;
+                    }
+                    if (service != null)
+                    {
+                        CC2650SensorTag.SensorIndexes sensorIndx = CC2650SensorTag.SensorIndexes.NOTFOUND;
+                        string svcGuid = service.Uuid.ToString().ToUpper();
+                        Debug.WriteLine("Found Service: " + svcGuid);
 
+                        // Add this service to the list if it conforms to the TI-GUID pattern for most sensors
+                        if (svcGuid == CC2650SensorTag.DEVICE_BATTERY_SERVICE)
+                        {
+                            CC2650SensorTag.SetUpBattery(service);
+                            byte[] bytes = await CC2650SensorTag.GetBatteryLevel();
+                            return;
+                        }
+                        else if (svcGuid == CC2650SensorTag.UUID_PROPERTIES_SERVICE.ToUpper())
+                        {
+                            var qaz = service.GetIncludedServices(new Guid(svcGuid));
+                            CC2650SensorTag.DevicePropertyService = service;
+                            //IReadOnlyList<GattDeviceService> svcs =  service.GetAllIncludedServices();
+                            //var arr = svcs.ToArray<GattDeviceService>();
+                            //var lst = svcs.ToList<GattDeviceService>();
+                            //var sxc = svcs[0];
+                            //int count = svcGuid.Count();
+                            ////var azx = svcs.First();
+                            //foreach (GattDeviceService svc in svcs)
+                            //{
+                            //    Debug.WriteLine("{0} {1} {2} ",count, svc.DeviceId, svc.Uuid);
+                            //}
+                            await CC2650SensorTag.GetProperties();
+
+                            return;
+                        }
+
+
+                        else if (svcGuid == CC2650SensorTag.IO_SENSOR_GUID_STR)
+                        {
+                            sensorIndx = CC2650SensorTag.SensorIndexes.IO_SENSOR;
+                        }
+                        else if (svcGuid == CC2650SensorTag.REGISTERS_GUID_STR)
+                        {
+                            sensorIndx = CC2650SensorTag.SensorIndexes.REGISTERS;
+                        }
+                        // otherwise, if this is the GUID for the KEYS, then handle it special
+                        else if (svcGuid == CC2650SensorTag.BUTTONS_GUID_STR)
+                        {
+                            sensorIndx = CC2650SensorTag.SensorIndexes.KEYS;
+                        }
+                        else if (svcGuid.StartsWith(CC2650SensorTag.SENSOR_GUID_PREFIX))
+                        {
+                            // The character at this position indicates the index into the ServiceList 
+                            // container that we want to save this service to.  The rest of this program
+                            // assumes that specific sensor types are at specific indexes in this array
+                            int Indx = (svcGuid[6] - '0');
+                            sensorIndx = CC2650SensorTag.GetSensorIndex(Indx);
+                        }
+                        // If the index is legal and a service hasn't already been cached, then
+                        // cache this service in our ServiceList
+                        if (((sensorIndx >= 0) && (sensorIndx <= (CC2650SensorTag.SensorIndexes)CC2650SensorTag.SENSOR_MAX)) && (CC2650SensorTag.ServiceList[(int)sensorIndx] == null))
+                        {
+                            CC2650SensorTag.ServiceList[(int)sensorIndx] = service;
+                            await initSensor(sensorIndx);
+                            System.Threading.Interlocked.Increment(ref discoveredServices);
+                        }
+                        else
+                        {
+
+                        }
+
+                        // When all sensors have been discovered, notify the user
+                        if (discoveredServices > 0) // == NUM_SENSORS)
+                        {
+                            SensorList.IsEnabled = true;
+                            DisableButton.IsEnabled = true; 
+                            EnableButton.IsEnabled = true;
+                            InitButton.IsEnabled = false;
+
+                            EnableIOButton.IsEnabled = true;
+                            DisableIOButton.IsEnabled = true;
+                            AllOffIOButton.IsEnabled = true;
+                            BUZZButton.IsEnabled = true;
+                            LED1Button.IsEnabled = true;
+                            LED2Button.IsEnabled = true;
+                            if (discoveredServices == CC2650SensorTag.NUM_SENSORS_TO_TEST)
+                            {
+                                blewatcher.Stop();
+                                Debug.WriteLine("blewatcher Stopped.");
+                            }
+                            discoveredServices = 0;
+                            UserOut.Text = "Sensors on!";
+                        }
+
+                    }
+                });
+            };
+
+
+            OnBLEUpdated = async (watcher, deviceInfoUpdate) =>
+                    {
+                        Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                        {
+                           // Debug.WriteLine($"OnBLEUpdated: {deviceInfoUpdate.Id}");
+                        });
+                    };
+
+
+            OnBLERemoved = async (watcher, deviceInfoUpdate) =>
+            {
+                Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    Debug.WriteLine("OnBLERemoved");
+
+                });
+            };
+
+            string aqs = "";
+            for (int ii = 0; ii < CC2650SensorTag.NUM_SENSORS_TO_TEST; ii++)
+            {
+                int i = CC2650SensorTag.FIRST_SENSOR + ii;
+                CC2650SensorTag.SensorIndexes sensorIndx = (CC2650SensorTag.SensorIndexes)i;
+                Guid BLE_GUID; Debug.WriteLine("NUMSENSORS " + sensorIndx.ToString());
+                if (sensorIndx == CC2650SensorTag.SensorIndexes.IO_SENSOR)
+                    BLE_GUID = CC2650SensorTag.IO_SENSOR_GUID;
+                else if (sensorIndx == CC2650SensorTag.SensorIndexes.REGISTERS)
+                    BLE_GUID = CC2650SensorTag.REGISTERS_GUID;
+                else if (sensorIndx != CC2650SensorTag.SensorIndexes.KEYS)
+                    BLE_GUID = new Guid(CC2650SensorTag.UUIDBase[i] + CC2650SensorTag.SENSOR_GUID_SUFFFIX);
+                else
+                    BLE_GUID = CC2650SensorTag.BUTTONS_GUID;
+
+                aqs += "(" + GattDeviceService.GetDeviceSelectorFromUuid(BLE_GUID) + ")";
+
+                if (ii < CC2650SensorTag.NUM_SENSORS_TO_TEST - 1)
+                {
+                    
+                }
+            }
+
+
+            aqs += " OR ";
+            aqs += "(" + GattDeviceService.GetDeviceSelectorFromUuid(new Guid(CC2650SensorTag.DEVICE_BATTERY_SERVICE)) + ")";
+            aqs += " OR ";
+            aqs += "(" + GattDeviceService.GetDeviceSelectorFromUuid(new Guid(CC2650SensorTag.UUID_PROPERTIES_SERVICE)) + ")";
+
+
+            blewatcher = DeviceInformation.CreateWatcher(aqs);
+            blewatcher.Added += OnBLEAdded;
+            blewatcher.Updated += OnBLEUpdated;
+            blewatcher.Removed += OnBLERemoved;
+            blewatcher.Start();
+        }
+
+        private void StopBLEWatcher()
+        {
+            if (null != blewatcher)
+            {
+                blewatcher.Added -= OnBLEAdded;
+                blewatcher.Updated -= OnBLEUpdated;
+                blewatcher.Removed -= OnBLERemoved;
+
+                if (DeviceWatcherStatus.Started == blewatcher.Status ||
+                    DeviceWatcherStatus.EnumerationCompleted == blewatcher.Status)
+                {
+                    blewatcher.Stop();
+                }
+            }
+        }
 
         /// <summary>
         /// A little care here with threading to avoid issues with the data state (Values/Raw).
@@ -278,8 +441,6 @@ namespace BluetoothGATT
         //See https://msdn.microsoft.com/en-us/library/system.threading.readerwriterlockslim(v=vs.110).aspx
         //for ReaderWriterLockSlim
         private ReaderWriterLockSlim gattDataModeLock = new ReaderWriterLockSlim();
-        private MainPage owner;
-
         private void chkDataModeValues_Checked(object sender, RoutedEventArgs e)
         {
             if (sender is RadioButton)
@@ -300,47 +461,7 @@ namespace BluetoothGATT
             }
         }
 
-        private async Task initSensor(CC2650SensorTag.SensorIndexes sensorIndx)
-        {
-            Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-            {
-                if (sensorIndx >= 0 && sensorIndx != CC2650SensorTag.SensorIndexes.IO_SENSOR && sensorIndx != CC2650SensorTag.SensorIndexes.REGISTERS)
-                {
-                    //temp.CallMeBack = CallMeBackTemp;
-                    switch (sensorIndx)
-                    {
-                        case (CC2650SensorTag.SensorIndexes.IR_SENSOR):
-                            IRTitle.Foreground = new SolidColorBrush(Colors.Green);
-                            break;
-                        case (CC2650SensorTag.SensorIndexes.MOVEMENT):
-                            AccelTitle.Foreground = new SolidColorBrush(Colors.Green);
-                            GyroTitle.Foreground = new SolidColorBrush(Colors.Green);
-                            MagnoTitle.Foreground = new SolidColorBrush(Colors.Green);
-                            //temp.setSensorPeriod(1000);
-                            break;
-                        case (CC2650SensorTag.SensorIndexes.HUMIDITY):
-                            HumidTitle.Foreground = new SolidColorBrush(Colors.Green);
-                            break;
-                        case (CC2650SensorTag.SensorIndexes.OPTICAL):
-                            LuxTitle.Foreground = new SolidColorBrush(Colors.Green);
-                            break; ;
-                        case (CC2650SensorTag.SensorIndexes.BAROMETRIC_PRESSURE):
-                            BaroTitle.Foreground = new SolidColorBrush(Colors.Green);
-                            BaroTitleTemp.Foreground = new SolidColorBrush(Colors.Green);
-                            break;
-                        case (CC2650SensorTag.SensorIndexes.KEYS):
-                            KeyTitle.Foreground = new SolidColorBrush(Colors.Green);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            });
-
-            Debug.WriteLine("End init sensor(new): " + sensorIndx.ToString());
-        }
-
-
+        
 
         public async void CallMeBackTemp(CC2650SensorTag.SensorData data )
         {
@@ -495,6 +616,132 @@ namespace BluetoothGATT
 
 
        
+        //private List<int> valid = new List<int>() { 0, 2,4, 6 };
+        private List<CC2650SensorTag.SensorIndexes> invalid = new List<CC2650SensorTag.SensorIndexes>() { };
+
+        // Enable and subscribe to specified GATT characteristic
+
+        private async Task initSensor(CC2650SensorTag.SensorIndexes sensorIndx)
+        {
+            if (invalid.Contains(sensorIndx))
+                return;
+
+            Debug.WriteLine("Begin init sensor: " + sensorIndx.ToString());
+            GattDeviceService gattService = CC2650SensorTag.ServiceList[(int)sensorIndx];
+            if (gattService != null)
+            {
+                CC2650SensorTag temp = new CC2650SensorTag(gattService, sensorIndx, CallMeBackTemp);
+                if (temp != null)
+                {
+                    if (sensorIndx >= 0 &&  sensorIndx != CC2650SensorTag.SensorIndexes.IO_SENSOR && sensorIndx != CC2650SensorTag.SensorIndexes.REGISTERS)
+                    {
+                        //temp.CallMeBack = CallMeBackTemp;
+                        switch (sensorIndx)
+                        {
+                            case (CC2650SensorTag.SensorIndexes.IR_SENSOR):
+                                IRTitle.Foreground = new SolidColorBrush(Colors.Green);
+                                break;
+                            case (CC2650SensorTag.SensorIndexes.MOVEMENT):
+                                AccelTitle.Foreground = new SolidColorBrush(Colors.Green);
+                                GyroTitle.Foreground = new SolidColorBrush(Colors.Green);
+                                MagnoTitle.Foreground = new SolidColorBrush(Colors.Green);
+                                temp.setSensorPeriod( 1000);
+                                break;
+                            case (CC2650SensorTag.SensorIndexes.HUMIDITY):
+                                HumidTitle.Foreground = new SolidColorBrush(Colors.Green);
+                                break;
+                            case (CC2650SensorTag.SensorIndexes.OPTICAL):
+                                LuxTitle.Foreground = new SolidColorBrush(Colors.Green);
+                                break; ;
+                            case (CC2650SensorTag.SensorIndexes.BAROMETRIC_PRESSURE):
+                                BaroTitle.Foreground = new SolidColorBrush(Colors.Green);
+                                BaroTitleTemp.Foreground = new SolidColorBrush(Colors.Green);
+                                break;
+                            case (CC2650SensorTag.SensorIndexes.KEYS):
+                                KeyTitle.Foreground = new SolidColorBrush(Colors.Green);
+                                break;
+                            default:
+                                break;
+                        }
+                        //GATTClassCharacteristics.ActiveCharacteristicNotifications[sensorIndx] = temp.Notification;
+                        
+                        //await temp.EnableNotify();
+                        //await temp.TurnOnSensor();
+                    }
+                    else if (sensorIndx == CC2650SensorTag.SensorIndexes.REGISTERS)
+                    {
+                    }
+                    else if (sensorIndx == CC2650SensorTag.SensorIndexes.IO_SENSOR)
+                    {
+                    }
+                    else
+                    {
+                        //Error                       
+                    }
+                }
+                //SensorsCharacteristicsList[sensorIndx] = temp;
+            }
+            
+            Debug.WriteLine("End init sensor(new): " + sensorIndx.ToString());
+        } 
+
+        private async Task enableSensor(CC2650SensorTag.SensorIndexes sensorIndx)
+        {
+            Debug.WriteLine("Begin enable sensor: " + sensorIndx.ToString());
+            GattDeviceService gattService = CC2650SensorTag.ServiceList[(int)sensorIndx];
+            if (gattService != null)
+            {
+                
+                IReadOnlyList<GattCharacteristic> characteristicList;
+                if (sensorIndx >= 0 && sensorIndx != CC2650SensorTag.SensorIndexes.KEYS)
+                    characteristicList = gattService.GetCharacteristics(new Guid(CC2650SensorTag.SENSOR_GUID_PREFIX + sensorIndx + CC2650SensorTag.SENSOR_NOTIFICATION_GUID_SUFFFIX));
+                else
+                    characteristicList = gattService.GetCharacteristics(CC2650SensorTag.BUTTONS_NOTIFICATION_GUID);
+
+
+                if (characteristicList != null)
+                {
+                    GattCharacteristic characteristic = characteristicList[0];
+                    if (characteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
+                    {
+                        GattCommunicationStatus status = await characteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
+                        switch (sensorIndx)
+                        {
+                            case (CC2650SensorTag.SensorIndexes.IR_SENSOR):
+                                IRTitle.Foreground = new SolidColorBrush(Colors.Green);
+                                break;
+                            case (CC2650SensorTag.SensorIndexes.MOVEMENT):
+                                AccelTitle.Foreground = new SolidColorBrush(Colors.Green);
+                                GyroTitle.Foreground = new SolidColorBrush(Colors.Green);
+                                MagnoTitle.Foreground = new SolidColorBrush(Colors.Green);
+                                break;
+                            case (CC2650SensorTag.SensorIndexes.HUMIDITY):
+                                HumidTitle.Foreground = new SolidColorBrush(Colors.Green);
+                                break;
+                            case (CC2650SensorTag.SensorIndexes.OPTICAL):
+                                LuxTitle.Foreground = new SolidColorBrush(Colors.Green);
+                                break;
+                            case (CC2650SensorTag.SensorIndexes.BAROMETRIC_PRESSURE):
+                                BaroTitle.Foreground = new SolidColorBrush(Colors.Green);
+                                BaroTitleTemp.Foreground = new SolidColorBrush(Colors.Green);
+                                break;
+                            case (CC2650SensorTag.SensorIndexes.KEYS):
+                                KeyTitle.Foreground = new SolidColorBrush(Colors.Green);
+                                KeyROut.Background = new SolidColorBrush(Colors.Red);
+                                KeyLOut.Background = new SolidColorBrush(Colors.Red);
+                                ReedOut.Background = new SolidColorBrush(Colors.Red);
+                                break;
+                            default:
+                                break;
+                        }
+                        CC2650SensorTag.ActiveCharacteristicNotifications[(int)sensorIndx] = characteristic;
+
+                    }
+                }
+            }
+            Debug.WriteLine("End enable sensor: " + sensorIndx.ToString());
+
+        }
 
 
         private async void PairButton_Click(object sender, RoutedEventArgs e)
@@ -537,7 +784,7 @@ namespace BluetoothGATT
                     DeviceInfoConnected = deviceInfoDisp;
 
                     //Start watcher for Bluetooth LE Services
-                    CC2650SensorTag_BLEWatcher.StartBLEWatcher();
+                    StartBLEWatcher();
                 }
                 UpdatePairingButtons();
             }
@@ -885,11 +1132,6 @@ namespace BluetoothGATT
             Application.Current.Exit();
         }
 
-        private void InitButton1_Click(object sender, RoutedEventArgs e)
-        {
-            //new DeviceProperties { owner = this }.ShowDialog();
-            this.Frame.Navigate(typeof(DeviceProperties), this);
 
-        }
     }
 }

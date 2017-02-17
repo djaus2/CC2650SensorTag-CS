@@ -199,6 +199,7 @@
                             </StackPanel>
                         </StackPanel>
                     </Border>
+
                 </StackPanel>
 
 
@@ -247,6 +248,8 @@
                             <Button x:Name="EnableIOButton" Content="Enable" Background="#CCFFFFFF" Click="BuzzButton_ClickOff" Margin="10,0,0,0" IsEnabled="False"/>
                             <Button x:Name="AllOffIOButton" Content="Off" Background="#CCFFFFFF" Click="BuzzButton_ClickOff" Margin="10,0,0,0" IsEnabled="False"/>
                         <Button x:Name="DisableIOButton" Content="Disable" Background="#CCFFFFFF" Click="BuzzButton_ClickOff" Margin="10,0,0,0" IsEnabled="False"/>
+                        <Button x:Name="InitButton1" Content="Proptys" Background="#CCFFFFFF" Click="InitButton1_Click" Margin="10,0,0,0" IsEnabled="True" Visibility="Visible"/>
+
                     </StackPanel>
                 </StackPanel>
                 <Grid>
