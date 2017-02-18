@@ -349,7 +349,7 @@ namespace TICC2650SensorTag
                         var writer = new Windows.Storage.Streams.DataWriter();
                         if (SensorIndex == SensorIndexes.MOVEMENT)
                         {
-                            byte[] bytes = new byte[] { 0x00, 0x00 };
+                            byte[] bytes = new byte[] { 0x00, 0x00 };//Fixed
                             writer.WriteBytes(bytes);
                         }
                         else
