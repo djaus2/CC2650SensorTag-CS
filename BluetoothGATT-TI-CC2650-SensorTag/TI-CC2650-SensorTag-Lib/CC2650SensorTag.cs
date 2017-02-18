@@ -339,7 +339,7 @@ namespace TICC2650SensorTag
 
         public async Task TurnOffSensor()
         {
-            Debug.WriteLine("Begin turn on sensor: " + SensorIndex.ToString());
+            Debug.WriteLine("Begin turn off sensor: " + SensorIndex.ToString());
             // Turn on sensor
             if (SensorIndex >= 0 && SensorIndex != SensorIndexes.KEYS && SensorIndex != SensorIndexes.IO_SENSOR && SensorIndex != SensorIndexes.REGISTERS)
             {
@@ -347,13 +347,19 @@ namespace TICC2650SensorTag
                     if (Configuration.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
                     {
                         var writer = new Windows.Storage.Streams.DataWriter();
+                        if (SensorIndex == SensorIndexes.MOVEMENT)
+                        {
+                            byte[] bytes = new byte[] { 0x00, 0x00 };
+                            writer.WriteBytes(bytes);
+                        }
+                        else
 
-                        writer.WriteByte((Byte)0x00);
+                            writer.WriteByte((Byte)0x00);
 
                         var status = await Configuration.WriteValueAsync(writer.DetachBuffer());
                     }
             }
-            Debug.WriteLine("End turn on sensor: " + SensorIndex.ToString());
+            Debug.WriteLine("End turn off sensor: " + SensorIndex.ToString());
         }
 
         private bool HasSetCallBacks = false;

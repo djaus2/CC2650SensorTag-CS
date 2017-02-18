@@ -821,6 +821,7 @@ namespace BluetoothGATT
                 await CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].EnableNotify();
                 //enableSensor(GATTClassCharacteristics.SensorIndexes[SensorList.SelectedIndex]);
                 CC2650SensorTag.ActiveCharacteristicNotifications[SensorList.SelectedIndex] = CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].Notification;
+                await CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].TurnOnSensor();
             }
         }
 
@@ -828,9 +829,11 @@ namespace BluetoothGATT
         {
             if (SensorList.SelectedIndex >= 0)
             {
+                await CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].TurnOffSensor();
                 await CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].DisableNotify();
                 //disableSensor(GATTClassCharacteristics.SensorIndexes[SensorList.SelectedIndex]);
                 CC2650SensorTag.ActiveCharacteristicNotifications[SensorList.SelectedIndex] = null;
+                
             }
         }
 
