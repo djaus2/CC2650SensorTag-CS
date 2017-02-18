@@ -17,6 +17,13 @@ namespace TICC2650SensorTag
         private static int SetUpRunTimes = 0;
         //Class specific enums
 
+        /// <summary>
+        /// When manually reading data it is suggested to disable sensor before and after, to save power.
+        /// Have found that only disabling Notifications is needed.
+        /// Have also found that manual reads are unreliable when you do a Disable/Enable sensor around a manualk data read
+        /// </summary>
+        public static bool DisableSensorWithDisableNotifications { get; private set; } = false;
+
 
         public enum ServiceCharacteristicsEnum
         {
@@ -190,6 +197,7 @@ namespace TICC2650SensorTag
 
         public static void SetUp()
         {
+            DisableSensorWithDisableNotifications = false;
             if (System.Threading.Interlocked.Increment(ref SetUpRunTimes) == 1)
             {
                 SensorsCharacteristicsList = new CC2650SensorTag[NUM_SENSORS];
@@ -467,9 +475,11 @@ namespace TICC2650SensorTag
         /// <summary>
         /// Manually read sensor values from their Data Characteristic
         /// </summary>
-        /// <param name="disableNotify">Notify should be off. Can optionally set this.</param>
+        /// <param name="disableNotify">Notify needs to be off. Can optionally set this.</param>
+        /// <param name="updateDisplay">Whether to callback to UI with data.</param>
+        /// <param name="turnSensorOffOn">Whether to turn sensor on before data read and off afterwards. PS: Have found reads don't work reliably with this. Only need notifications turned off.</param>
         /// <returns>Buffer for data. Is created in the call.</returns>
-        public async Task<SensorData> ReadSensor( bool disableNotify, bool updateDisplay)
+        public async Task<SensorData> ReadSensor( bool disableNotify, bool updateDisplay, bool turnSensorOffOn)
         {
             byte[] bytes = null;
             SensorData sensorData = null;
@@ -481,14 +491,16 @@ namespace TICC2650SensorTag
                     if (disableNotify)
                         await DisableNotify();
                     //Enable Sensor
-                    await TurnOnSensor();
+                    if (turnSensorOffOn)
+                        await TurnOnSensor();
                     bytes = await ReadSensorBase(ServiceCharacteristicsEnum.Notification);//..Data);
                     //Disable Sensor
-                    await TurnOffSensor();
+                    if (turnSensorOffOn)
+                        await TurnOffSensor();
                 }
             }
 
-            if (bytes != null)
+            if ( (bytes != null) && (updateDisplay))
             {
                 switch (SensorIndex)
                 {

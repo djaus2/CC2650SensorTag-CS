@@ -275,6 +275,9 @@ namespace BluetoothGATT
         /// A little care here with threading to avoid issues with the data state (Values/Raw).
         /// </summary>
         private CC2650SensorTag.GattDataModes gattDataMode { get; set; } = CC2650SensorTag.GattDataModes.Values;
+
+
+
         //See https://msdn.microsoft.com/en-us/library/system.threading.readerwriterlockslim(v=vs.110).aspx
         //for ReaderWriterLockSlim
         private ReaderWriterLockSlim gattDataModeLock = new ReaderWriterLockSlim();
@@ -821,7 +824,8 @@ namespace BluetoothGATT
                 await CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].EnableNotify();
                 //enableSensor(GATTClassCharacteristics.SensorIndexes[SensorList.SelectedIndex]);
                 CC2650SensorTag.ActiveCharacteristicNotifications[SensorList.SelectedIndex] = CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].Notification;
-                await CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].TurnOnSensor();
+                if (CC2650SensorTag.DisableSensorWithDisableNotifications)
+                    await CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].TurnOnSensor();
             }
         }
 
@@ -829,7 +833,8 @@ namespace BluetoothGATT
         {
             if (SensorList.SelectedIndex >= 0)
             {
-                await CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].TurnOffSensor();
+                if (CC2650SensorTag.DisableSensorWithDisableNotifications)
+                    await CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].TurnOffSensor();
                 await CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].DisableNotify();
                 //disableSensor(GATTClassCharacteristics.SensorIndexes[SensorList.SelectedIndex]);
                 CC2650SensorTag.ActiveCharacteristicNotifications[SensorList.SelectedIndex] = null;
@@ -840,7 +845,7 @@ namespace BluetoothGATT
         private async void ReadButton_Click(object sender, RoutedEventArgs e)
         {
             CC2650SensorTag.SensorData sensorData = await CC2650SensorTag.SensorsCharacteristicsList
-                [SensorList.SelectedIndex].ReadSensor(false,true);
+                [SensorList.SelectedIndex].ReadSensor(true,true, CC2650SensorTag.DisableSensorWithDisableNotifications);
         }
 
         private async void BuzzButton_ClickOn(object sender, RoutedEventArgs e)
