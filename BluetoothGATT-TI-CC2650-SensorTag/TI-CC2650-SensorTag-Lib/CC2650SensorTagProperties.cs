@@ -31,7 +31,7 @@ namespace TICC2650SensorTag
         public const string UUID_PROPERTY_NAME = "00002A00-0000-1000-8000-00805f9b34fb";
        
 
-        public enum SensorTagProperties {sysid, device_name, model_name, serial_num, firmware_date, hardware_rev, software_rev, manufacturer_id, cert, pnp_id };
+        public enum SensorTagProperties {BatteryLevel, SysId, DeviceName, ModelName, SerialNumber, FirmwareDate, HardwareRevision, SoftwareRevision, ManufacturerId, BTSigCertification, PNPId };
 
 
     
@@ -109,36 +109,38 @@ namespace TICC2650SensorTag
             byte[] bytes = null;
             switch (property)
             {
-                case SensorTagProperties.firmware_date:
+                case SensorTagProperties.FirmwareDate:
                     guidstr = UUID_PROPERTY_FW_NR;
                     break;
-                case SensorTagProperties.hardware_rev:
+                case SensorTagProperties.HardwareRevision:
                     guidstr = UUID_PROPERTY_HW_NR;
                     break;
-                case SensorTagProperties.manufacturer_id:
+                case SensorTagProperties.ManufacturerId:
                     guidstr = UUID_PROPERTY_MANUF_NR;
                     break;
-                case SensorTagProperties.model_name:
+                case SensorTagProperties.ModelName:
                     guidstr = UUID_PROPERTY_MODEL_NR;
                     break;
-                case SensorTagProperties.pnp_id:
+                case SensorTagProperties.PNPId:
                     guidstr = UUID_PROPERTY_PNP_ID;
                     break;
-                case SensorTagProperties.serial_num:
+                case SensorTagProperties.SerialNumber:
                     guidstr = UUID_PROPERTY_SERIAL_NR;
                     break;
-                case SensorTagProperties.software_rev:
+                case SensorTagProperties.SoftwareRevision:
                     guidstr = UUID_PROPERTY_SW_NR;
                     break;
-                case SensorTagProperties.sysid:
+                case SensorTagProperties.SysId:
                     guidstr = UUID_PROPERTY_SYSID;
                     break;
-                case SensorTagProperties.cert:
+                case SensorTagProperties.BTSigCertification:
                     guidstr = UUID_PROPERTY_CERT;
                     break;
-                case SensorTagProperties.device_name:
+                case SensorTagProperties.DeviceName:
                     guidstr = UUID_PROPERTY_NAME;
                     break;
+                case SensorTagProperties.BatteryLevel:
+                    return bytes;
             }
 
             IReadOnlyList<GattCharacteristic> sidCharacteristicList = DevicePropertyService.GetCharacteristics(new Guid(guidstr));
@@ -193,15 +195,22 @@ namespace TICC2650SensorTag
             return bytes;
         }
 
-        public async static Task GetProperties()
+        public static List<SensorTagProperties> showbytes = new List<SensorTagProperties>() { SensorTagProperties.BatteryLevel, SensorTagProperties.SysId, SensorTagProperties.BTSigCertification, SensorTagProperties.PNPId };
+
+        public async static Task<Dictionary<SensorTagProperties, byte[]> > GetProperties()
         {
-            List<SensorTagProperties> showbytes = new List<SensorTagProperties>() { SensorTagProperties.sysid, SensorTagProperties.cert, SensorTagProperties.pnp_id };
+            byte[] bytes = null;
+            Dictionary<SensorTagProperties, byte[]> deviceProprties = new Dictionary<SensorTagProperties, byte[]>();
+
             Array values = Enum.GetValues(typeof(SensorTagProperties));
 
             foreach (SensorTagProperties val in values)
             {
-                byte[] bytes = null;
-                bytes = await ReadProperty( val,false);
+                bytes = null;
+                if (val== SensorTagProperties.BatteryLevel)
+                    bytes =    await GetBatteryLevel();
+                else
+                    bytes = await ReadProperty( val,false);
                 if (bytes != null)
                 {
                     if (!showbytes.Contains(val))
@@ -210,8 +219,9 @@ namespace TICC2650SensorTag
                         if (res != null)
                             if (res != "")
                             {
-                                
+                                deviceProprties.Add(val, bytes);
                                 Debug.WriteLine("{0} [{1}]: {2}", val.ToString(), res.Length, res);
+
                             }
 
                     }
@@ -219,6 +229,7 @@ namespace TICC2650SensorTag
                     {
                         if (bytes != null)
                         {
+                            deviceProprties.Add(val, bytes);
                             string str = val.ToString() + "[" + bytes.Length.ToString() + "] {";
                             Debug.Write(str);
                             for (int i = 0; i < bytes.Length; i++)
@@ -242,6 +253,7 @@ namespace TICC2650SensorTag
                     }
                 }
             }
+            return deviceProprties;
         }
 
 

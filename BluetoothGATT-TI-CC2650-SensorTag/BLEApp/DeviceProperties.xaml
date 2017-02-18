@@ -5,17 +5,59 @@
     xmlns:local="using:BluetoothGATT"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Background="#FF1E1D42" Loaded="Page_Loaded">
+    <ScrollViewer VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid Background="#FF1E1D42" Margin="20">
+            <Border x:Name="pairingPanel2" BorderThickness="1" BorderBrush="AntiqueWhite" Margin="10,10,10,10" Visibility="Visible">
+                <Grid Background="#FF1E1D42" Margin="0,0,-10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="65"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Name="pairingTextBlock2"  Grid.Row="0" Grid.Column="2" FontSize="30"  Foreground ="White" Margin="0,0,0,2" TextWrapping="WrapWholeWords"><Run Text="Properties"/></TextBlock>
+                    <TextBlock x:Name="Name1"  Grid.Row="1" Grid.Column="1" Foreground ="Yellow" Margin="0,0,0,2"  FontSize="12" Text="Waiting" />
+                    <TextBlock x:Name="Value1"  Grid.Row="1" Grid.Column="2" Foreground ="Red" Margin="0,0,0,2" FontSize="12" Text="Getting properties"/>
+                    <TextBlock x:Name="Name2"  Grid.Row="2" Grid.Column="1" Foreground ="Yellow" Margin="0,0,0,2"  FontSize="12" Text="Waiting" />
+                    <TextBlock x:Name="Value2"  Grid.Row="2" Grid.Column="2" Foreground ="Red" Margin="0,0,0,2" FontSize="12" Text="Getting properties"/>
+                    <TextBlock x:Name="Name3"  Grid.Row="3" Grid.Column="1" Foreground ="Yellow" Margin="0,0,0,2"  FontSize="12" Text="Waiting" />
+                    <TextBlock x:Name="Value3"  Grid.Row="3" Grid.Column="2" Foreground ="Red" Margin="0,0,0,2" FontSize="12" Text="Getting properties"/>
+                    <TextBlock x:Name="Name4"  Grid.Row="4" Grid.Column="1" Foreground ="Yellow" Margin="0,0,0,2"  FontSize="12" Text="Waiting" />
+                    <TextBlock x:Name="Value4"  Grid.Row="4" Grid.Column="2" Foreground ="Red" Margin="0,0,0,2" FontSize="12" Text="Getting properties"/>
+                    <TextBlock x:Name="Name5"  Grid.Row="5" Grid.Column="1" Foreground ="Yellow" Margin="0,0,0,2"  FontSize="12" Text="Waiting" />
+                    <TextBlock x:Name="Value5"  Grid.Row="5" Grid.Column="2" Foreground ="Red" Margin="0,0,0,2" FontSize="12" Text="Getting properties"/>
+                    <TextBlock x:Name="Name6"  Grid.Row="6" Grid.Column="1" Foreground ="Yellow" Margin="0,0,0,2"  FontSize="12" Text="Waiting" />
+                    <TextBlock x:Name="Value6"  Grid.Row="6" Grid.Column="2" Foreground ="Red" Margin="0,0,0,2" FontSize="12" Text="Getting properties"/>
+                    <TextBlock x:Name="Name7"  Grid.Row="7" Grid.Column="1" Foreground ="Yellow" Margin="0,0,0,2"  FontSize="12" Text="Waiting" />
+                    <TextBlock x:Name="Value7"  Grid.Row="7" Grid.Column="2" Foreground ="Red" Margin="0,0,0,2" FontSize="12" Text="Getting properties"/>
+                    <TextBlock x:Name="Name8"  Grid.Row="8" Grid.Column="1" Foreground ="Yellow" Margin="0,0,0,2"  FontSize="12" Text="Waiting" />
+                    <TextBlock x:Name="Value8"  Grid.Row="8" Grid.Column="2" Foreground ="Red" Margin="0,0,0,2" FontSize="12" Text="Getting properties"/>
+                    <TextBlock x:Name="Name9"  Grid.Row="9" Grid.Column="1" Foreground ="Yellow" Margin="0,0,0,2"  FontSize="12" Text="Waiting" />
+                    <TextBlock x:Name="Value9"  Grid.Row="9" Grid.Column="2" Foreground ="Red" Margin="0,0,0,2" FontSize="12" Text="Getting properties"/>
+                    <TextBlock x:Name="Name10"  Grid.Row="10" Grid.Column="1" Foreground ="Yellow" Margin="0,0,0,2"  FontSize="12" Text="Waiting" />
+                    <TextBlock x:Name="Value10"  Grid.Row="10" Grid.Column="2" Foreground ="Red" Margin="0,0,0,2" FontSize="12" Text="Getting properties"/>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Border x:Name="pairingPanel2" BorderThickness="1" BorderBrush="AntiqueWhite" Margin="10,0,0,10" Visibility="Visible">
-            <StackPanel Orientation="Vertical">
-                <TextBlock x:Name="pairingTextBlock2" Foreground ="White" Margin="0,0,0,2" TextWrapping="WrapWholeWords"><Run Text="Properties"/></TextBlock>
-                <StackPanel Orientation="Horizontal" >
-                    <TextBox x:Name="pinEntryTextBox2" Foreground ="White" MinWidth="100" Margin="2" Visibility="Visible" Text="JKL" />
-                </StackPanel>
-                <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Height="95" Margin="44,0,0,0" Width="175" Click="button_Click"/>
-            </StackPanel>
-        </Border>
-    </Grid>
+
+                    <Button x:Name="buttonDone" Content="Done" Grid.Row="0" Grid.Column="0" Foreground="White" Background="DarkGreen"  FontSize="12" HorizontalAlignment="Left"  Margin="4" Click="buttonDone_Click"/>
+                    <Button x:Name="buttonRefresh" Content="Refresh" Grid.Row="0" Grid.Column="1" Foreground="Blue" Background="Yellow"  FontSize="12"   HorizontalAlignment="Left"  Margin="4" Click="buttonRefresh_Click" />
+                </Grid>
+
+            </Border>
+        </Grid>
+    </ScrollViewer>
 </Page>
