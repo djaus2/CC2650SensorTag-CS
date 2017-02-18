@@ -9,7 +9,7 @@ The code establishes a connection to the service for each of the BTE characteris
 
 This code also supports the IO Characteristic enabling turning on/off of the LEDs 1 & 2 as well as the Buzzer on and off.
 
-The supported characteristics/services are:            
+**The supported characteristics/services are:**           
 - IR_SENSOR
 - HUMIDITY
 - BAROMETRIC_PRESSURE
@@ -18,6 +18,12 @@ The supported characteristics/services are:
 - OPTICAL
 - MOVEMENT
 - REGISTERS
+
+**The app has been tested  on:**
+- Windows 10 IoT Core, RPI3
+- Windows 10 Desktop Builds prior to 15031 **
+- Windows 10 Phone Builds prior to 15031 *
+  * There is a major bug in 15031 with Bluetooth.
 
 The code has been specifically refactored so that the CC2650 functionality is defined in a separate class. Whilst the Bluetooth connectivity and UI for displaying data and for user input remains in the MainPage class, characteristic metadata, service code and event handlers are all in the CC2650 class. The class uses a callback mechanism to update data in the UI.
 
@@ -34,7 +40,7 @@ Also there is option to display RAW data.
 - An integration with the [Azure IoT Gateway SDK](https://github.com/Azure/azure-iot-gateway-sdk/) This SDK does support the CC2650 tag as an example using the RPI3 but the code is only for Linux running on the RPI3
 - Further refactoring of code:
   - Move BLEWatcher from UI **(Done)**
-  - MOve underlying Connection/Pairing code from UI
+  - Move underlying Connection/Pairing code from UI
 
 **UI Changes:**
 - Once one CC2650 SensorTag is found the Device Watcher stops and conection can start. Don't have to wait for enumeration to complete :)'
