@@ -49,7 +49,7 @@ Also there is option to display RAW data.
 - **Note:** When manually read, a sensor's Notifications are stopped. Can re-enable
 - Enable/Disable only impact sensor Notifications , not the sesnor.
 - Properties are displayed on a separate page.
-- Implemented UI as SplitView with most buttons in the SlitView Pane on left.
+- Implemented UI as SplitView with most buttons in the SplitView Pane on left.
 
 **NOTE**
 PS I think that there might be a problem with GATT on the Creator Editions of Windows 10.
