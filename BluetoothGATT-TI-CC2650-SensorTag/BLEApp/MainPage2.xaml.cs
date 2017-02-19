@@ -1,7 +1,5 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-//
-// Note that this sample only supports the CC2541 Sensor Tag: http://processors.wiki.ti.com/index.php/CC2541_SensorTag
+﻿//
+// Note that this sample only supports the CC2650 Sensor Tag: http://processors.wiki.ti.com/index.php/CC2650_SensorTag
 //
 
 
@@ -30,6 +28,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading;
 using TICC2650SensorTag;
+using Windows.UI.Xaml.Input;
 
 // Disable warning "...execution of the current method continues before the call is completed..."
 #pragma warning disable 4014
@@ -37,13 +36,106 @@ using TICC2650SensorTag;
 // Disable warning to "consider using the 'await' operator to await non-blocking API calls"
 #pragma warning disable 1998
 
+// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
+
 namespace BluetoothGATT
 {
     /// <summary>
-    /// Sample app that communicates with Bluetooth device using the GATT profile
+    /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage2 : Page
     {
+        //public MainPage2()
+        //{
+        //    this.InitializeComponent();
+        //}
+
+        private void AA()
+        {
+            MySplitView.IsPaneOpen = false;
+        }
+        private void AB()
+        {
+            MySplitView.IsPaneOpen = true;
+        }
+        private void HamburgerButton_Click(object sender, RoutedEventArgs e)
+
+        {
+
+            MySplitView.IsPaneOpen = !MySplitView.IsPaneOpen;
+
+        }
+
+
+
+
+        //private void PairButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    AA();
+        //}
+
+        //private void UnpairButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    AA();
+        //}
+
+        //private void ExitButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    AA();
+        //}
+
+        //private void EnableButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    AA();
+        //}
+
+        //private void DisableButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    AA();
+        //}
+
+        //private void ReadButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    AA();
+        //}
+
+        //private void BuzzButton_ClickOn(object sender, RoutedEventArgs e)
+        //{
+        //    AA();
+        //}
+        //private void BuzzButton_ClickOff(object sender, RoutedEventArgs e)
+        //{
+        //    AA();
+        //}
+
+        //private void InitButton1_Click(object sender, RoutedEventArgs e)
+        //{
+        //    AA();
+        //}
+
+        //private void chkDataModeValues_Checked(object sender, RoutedEventArgs e)
+        //{
+
+        //}
+
+        //private void InitButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    AA();
+        //}
+
+        //private void InitButton_Click(object sender, TappedRoutedEventArgs e)
+        //{
+        //    AA();
+        //}
+
+        //private void InitButton1_Click(object sender, TappedRoutedEventArgs e)
+        //{
+        //    AA();
+        //}
+
+
+
+        ///////////////////////////////////////////////////////////
 
 
 
@@ -70,7 +162,7 @@ namespace BluetoothGATT
             private set;
         }
 
-        public MainPage()
+        public MainPage2()
         {
             this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
             this.InitializeComponent();
@@ -88,7 +180,7 @@ namespace BluetoothGATT
             StartWatcher();
         }
 
-        ~MainPage()
+        ~MainPage2()
         {
             StopWatcher();
         }
@@ -145,7 +237,7 @@ namespace BluetoothGATT
                         Debug.WriteLine("Watcher Add: " + deviceInfo.Id);
                         ResultCollection.Add(new DeviceInformationDisplay(deviceInfo));
                         UpdatePairingButtons();
-                        UserOut.Text = "Found at least one " +CC2650SensorTag.DeviceAltSensorNames + " Select for pairing. Still searching for others though.";
+                        UserOut.Text = "Found at least one " + CC2650SensorTag.DeviceAltSensorNames + " Select for pairing. Still searching for others though.";
                         var st = watcher.Status;
                         if (watcher != null)
                             if (st != DeviceWatcherStatus.Stopped)
@@ -243,7 +335,7 @@ namespace BluetoothGATT
             deviceWatcher.Start();
         }
 
- 
+
         private void StopWatcher()
         {
             if (null != deviceWatcher)
@@ -265,7 +357,7 @@ namespace BluetoothGATT
 
                     deviceWatcher.Stop();
                 }
-                
+
             }
         }
 
@@ -285,6 +377,7 @@ namespace BluetoothGATT
 
         private void chkDataModeValues_Checked(object sender, RoutedEventArgs e)
         {
+            
             if (sender is RadioButton)
             {
                 RadioButton ChkValues = (RadioButton)sender;
@@ -345,151 +438,151 @@ namespace BluetoothGATT
 
 
 
-        public async void CallMeBackTemp(CC2650SensorTag.SensorData data )
+        public async void CallMeBackTemp(CC2650SensorTag.SensorData data)
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                bool state = true;
+                gattDataModeLock.EnterReadLock();
                 {
-                    bool state = true;
-                    gattDataModeLock.EnterReadLock();
+                    if (gattDataMode == CC2650SensorTag.GattDataModes.Values)
+                        state = true;
+                    else
+                        state = false;
+                }
+                gattDataModeLock.ExitReadLock();
+                if (state)
+                {
+                    switch (data.Sensor_Index)
                     {
-                        if (gattDataMode == CC2650SensorTag.GattDataModes.Values)
-                            state = true;
-                        else
-                            state = false;
-                    }
-                    gattDataModeLock.ExitReadLock();
-                    if (state)
-                    {
-                        switch (data.Sensor_Index)
-                        {
-                            case (CC2650SensorTag.SensorIndexes.IR_SENSOR):
-                                AmbTempOut.Text = string.Format("Chip:\t{0:0.0####}", data.Values[0]);
-                                ObjTempOut.Text = string.Format("IR:  \t{0:0.0####}", data.Values[1]);
-                                break;
-                            case (CC2650SensorTag.SensorIndexes.MOVEMENT):
-                                GyroXOut.Text = string.Format("X:  \t{0:0.0####}", data.Values[0]);
-                                GyroYOut.Text = string.Format("Y:  \t{0:0.0####}", data.Values[1]);
-                                GyroZOut.Text = string.Format("Z:  \t{0:0.0####}", data.Values[2]);
+                        case (CC2650SensorTag.SensorIndexes.IR_SENSOR):
+                            AmbTempOut.Text = string.Format("Chip:\t{0:0.0####}", data.Values[0]);
+                            ObjTempOut.Text = string.Format("IR:  \t{0:0.0####}", data.Values[1]);
+                            break;
+                        case (CC2650SensorTag.SensorIndexes.MOVEMENT):
+                            GyroXOut.Text = string.Format("X:  \t{0:0.0####}", data.Values[0]);
+                            GyroYOut.Text = string.Format("Y:  \t{0:0.0####}", data.Values[1]);
+                            GyroZOut.Text = string.Format("Z:  \t{0:0.0####}", data.Values[2]);
 
 
-                                AccelXOut.Text = string.Format("X:  \t{0:0.0####}", data.Values[3]);
-                                AccelYOut.Text = string.Format("Y:  \t{0:0.0####}", data.Values[4]);
-                                AccelZOut.Text = string.Format("Z:  \t{0:0.0####}", data.Values[5]);
+                            AccelXOut.Text = string.Format("X:  \t{0:0.0####}", data.Values[3]);
+                            AccelYOut.Text = string.Format("Y:  \t{0:0.0####}", data.Values[4]);
+                            AccelZOut.Text = string.Format("Z:  \t{0:0.0####}", data.Values[5]);
 
-                                RecTranslateTransform.X = data.Values[3] * 40;
+                            RecTranslateTransform.X = data.Values[3] * 40;
 
-                                RecTranslateTransform.Y = data.Values[4] * -40;
+                            RecTranslateTransform.Y = data.Values[4] * -40;
 
-                                SolidColorBrush purpleBrush = new SolidColorBrush();
-                                purpleBrush.Color = Colors.Purple;
-                                SolidColorBrush redBrush = new SolidColorBrush();
-                                redBrush.Color = Colors.Red;
-                                SolidColorBrush greenBrush = new SolidColorBrush();
-                                greenBrush.Color = Colors.Green;
-                                SolidColorBrush yellowBrush = new SolidColorBrush();
-                                yellowBrush.Color = Colors.Yellow;
-                                SolidColorBrush whiteBrush = new SolidColorBrush();
-                                whiteBrush.Color = Colors.White;
+                            SolidColorBrush purpleBrush = new SolidColorBrush();
+                            purpleBrush.Color = Colors.Purple;
+                            SolidColorBrush redBrush = new SolidColorBrush();
+                            redBrush.Color = Colors.Red;
+                            SolidColorBrush greenBrush = new SolidColorBrush();
+                            greenBrush.Color = Colors.Green;
+                            SolidColorBrush yellowBrush = new SolidColorBrush();
+                            yellowBrush.Color = Colors.Yellow;
+                            SolidColorBrush whiteBrush = new SolidColorBrush();
+                            whiteBrush.Color = Colors.White;
 
-                                if (Math.Abs(data.Values[5]) < 0.2)
-                                    AccPointer.Fill = whiteBrush;
-                                else if (data.Values[5] < -1.5)
-                                    AccPointer.Fill = redBrush;
-                                else if (data.Values[5] < 0)
-                                    AccPointer.Fill = purpleBrush;
-                                else if (data.Values[5] > 1.5)
-                                    AccPointer.Fill = greenBrush;
-                                else //if (data.Values[5] > 0)
+                            if (Math.Abs(data.Values[5]) < 0.2)
+                                AccPointer.Fill = whiteBrush;
+                            else if (data.Values[5] < -1.5)
+                                AccPointer.Fill = redBrush;
+                            else if (data.Values[5] < 0)
+                                AccPointer.Fill = purpleBrush;
+                            else if (data.Values[5] > 1.5)
+                                AccPointer.Fill = greenBrush;
+                            else //if (data.Values[5] > 0)
                                 AccPointer.Fill = yellowBrush;
 
 
-                                MagnoXOut.Text = string.Format("X:  \t{0:0.0####}", data.Values[6]);
-                                MagnoYOut.Text = string.Format("Y:  \t{0:0.0####}", data.Values[7]);
-                                MagnoZOut.Text = string.Format("Z:  \t{0:0.0####}", data.Values[8]);
-                                break;
-                            case (CC2650SensorTag.SensorIndexes.HUMIDITY):
-                                HumidOut.Text = string.Format("H:\t{0:0.0####}", data.Values[0]);
-                                break;
-                            case (CC2650SensorTag.SensorIndexes.OPTICAL):
-                                LuxOut.Text = string.Format("L:\t{0:0.0####}", data.Values[0]);
-                                break; ;
-                            case (CC2650SensorTag.SensorIndexes.BAROMETRIC_PRESSURE):
-                                BaroOutTemp.Text = string.Format("T:\t{0:0.0####}", data.Values[1]);
-                                BaroOut.Text = string.Format("P:\t{0:0.0####}", data.Values[0]);
-                                break;
-                            case (CC2650SensorTag.SensorIndexes.KEYS):
-                                if (data.Values[0] > 0)
-                                    KeyROut.Background = new SolidColorBrush(Colors.Green);
-                                else
-                                    KeyROut.Background = new SolidColorBrush(Colors.Red);
+                            MagnoXOut.Text = string.Format("X:  \t{0:0.0####}", data.Values[6]);
+                            MagnoYOut.Text = string.Format("Y:  \t{0:0.0####}", data.Values[7]);
+                            MagnoZOut.Text = string.Format("Z:  \t{0:0.0####}", data.Values[8]);
+                            break;
+                        case (CC2650SensorTag.SensorIndexes.HUMIDITY):
+                            HumidOut.Text = string.Format("H:\t{0:0.0####}", data.Values[0]);
+                            break;
+                        case (CC2650SensorTag.SensorIndexes.OPTICAL):
+                            LuxOut.Text = string.Format("L:\t{0:0.0####}", data.Values[0]);
+                            break; ;
+                        case (CC2650SensorTag.SensorIndexes.BAROMETRIC_PRESSURE):
+                            BaroOutTemp.Text = string.Format("T:\t{0:0.0####}", data.Values[1]);
+                            BaroOut.Text = string.Format("P:\t{0:0.0####}", data.Values[0]);
+                            break;
+                        case (CC2650SensorTag.SensorIndexes.KEYS):
+                            if (data.Values[0] > 0)
+                                KeyROut.Background = new SolidColorBrush(Colors.Green);
+                            else
+                                KeyROut.Background = new SolidColorBrush(Colors.Red);
 
-                                if (data.Values[1] > 0)
-                                    KeyLOut.Background = new SolidColorBrush(Colors.Green);
-                                else
-                                    KeyLOut.Background = new SolidColorBrush(Colors.Red);
+                            if (data.Values[1] > 0)
+                                KeyLOut.Background = new SolidColorBrush(Colors.Green);
+                            else
+                                KeyLOut.Background = new SolidColorBrush(Colors.Red);
 
-                                if (data.Values[2] > 0)
-                                    ReedOut.Background = new SolidColorBrush(Colors.Green);
-                                else
-                                    ReedOut.Background = new SolidColorBrush(Colors.Red);
-                                break;
-                            default:
-                                break;
-                        }
+                            if (data.Values[2] > 0)
+                                ReedOut.Background = new SolidColorBrush(Colors.Green);
+                            else
+                                ReedOut.Background = new SolidColorBrush(Colors.Red);
+                            break;
+                        default:
+                            break;
                     }
-                    else
+                }
+                else
+                {
+                    switch (data.Sensor_Index)
                     {
-                        switch (data.Sensor_Index)
-                        {
-                            case (CC2650SensorTag.SensorIndexes.IR_SENSOR):
-                                AmbTempOut.Text = string.Format("Chip:\t{0:000} {1:000} {2:000} {3:000}", data.Raw[3], data.Raw[2], data.Raw[1], data.Raw[0]);
-                                ObjTempOut.Text = string.Format("");
-                                break;
-                            case (CC2650SensorTag.SensorIndexes.MOVEMENT):
-                                GyroXOut.Text = string.Format("X:  \t{0:000} {1:000}", data.Raw[17], data.Raw[16]);
-                                GyroYOut.Text = string.Format("Y:  \t{0:000} {1:000}", data.Raw[15], data.Raw[14]);
-                                GyroZOut.Text = string.Format("Z:  \t{0:000} {1:000}", data.Raw[13], data.Raw[11]);
+                        case (CC2650SensorTag.SensorIndexes.IR_SENSOR):
+                            AmbTempOut.Text = string.Format("Chip:\t{0:000} {1:000} {2:000} {3:000}", data.Raw[3], data.Raw[2], data.Raw[1], data.Raw[0]);
+                            ObjTempOut.Text = string.Format("");
+                            break;
+                        case (CC2650SensorTag.SensorIndexes.MOVEMENT):
+                            GyroXOut.Text = string.Format("X:  \t{0:000} {1:000}", data.Raw[17], data.Raw[16]);
+                            GyroYOut.Text = string.Format("Y:  \t{0:000} {1:000}", data.Raw[15], data.Raw[14]);
+                            GyroZOut.Text = string.Format("Z:  \t{0:000} {1:000}", data.Raw[13], data.Raw[11]);
 
 
-                                AccelXOut.Text = string.Format("X:  \t{0:000} {1:000}", data.Raw[11], data.Raw[10]);
-                                AccelYOut.Text = string.Format("Y:  \t{0:000} {1:000}", data.Raw[9], data.Raw[8]);
-                                AccelZOut.Text = string.Format("Z:  \t{0:000} {1:000}", data.Raw[7], data.Raw[6]);
+                            AccelXOut.Text = string.Format("X:  \t{0:000} {1:000}", data.Raw[11], data.Raw[10]);
+                            AccelYOut.Text = string.Format("Y:  \t{0:000} {1:000}", data.Raw[9], data.Raw[8]);
+                            AccelZOut.Text = string.Format("Z:  \t{0:000} {1:000}", data.Raw[7], data.Raw[6]);
 
-                                MagnoXOut.Text = string.Format("X:  \t{0:000} {1:000}", data.Raw[5], data.Raw[4]);
-                                MagnoYOut.Text = string.Format("Y:  \t{0:000} {1:000}", data.Raw[3], data.Raw[2]);
-                                MagnoZOut.Text = string.Format("Z:  \t{0:000} {1:000}", data.Raw[1], data.Raw[0]);
-                                break;
-                            case (CC2650SensorTag.SensorIndexes.HUMIDITY):
-                                HumidOut.Text = string.Format("H:\t{0:000} {1:000} {2:000} {3:000}", data.Raw[3], data.Raw[2], data.Raw[1], data.Raw[0]);
-                                break;
-                            case (CC2650SensorTag.SensorIndexes.OPTICAL):
-                                LuxOut.Text = string.Format("L:  \t{0:000} {1:000}", data.Raw[1], data.Raw[0]);
-                                break; ;
-                            case (CC2650SensorTag.SensorIndexes.BAROMETRIC_PRESSURE):
-                                BaroOut.Text = string.Format("T:\t{0:000} {1:000} {2:000}", data.Raw[5], data.Raw[4], data.Raw[3]);
-                                BaroOutTemp.Text = string.Format("P:\t{0:000} {1:000} {2:000}", data.Raw[2], data.Raw[1], data.Raw[0]);
-                                break;
-                            case (CC2650SensorTag.SensorIndexes.KEYS):
-                                if (data.Values[0] > 0)
-                                    KeyROut.Background = new SolidColorBrush(Colors.Green);
-                                else
-                                    KeyROut.Background = new SolidColorBrush(Colors.Red);
+                            MagnoXOut.Text = string.Format("X:  \t{0:000} {1:000}", data.Raw[5], data.Raw[4]);
+                            MagnoYOut.Text = string.Format("Y:  \t{0:000} {1:000}", data.Raw[3], data.Raw[2]);
+                            MagnoZOut.Text = string.Format("Z:  \t{0:000} {1:000}", data.Raw[1], data.Raw[0]);
+                            break;
+                        case (CC2650SensorTag.SensorIndexes.HUMIDITY):
+                            HumidOut.Text = string.Format("H:\t{0:000} {1:000} {2:000} {3:000}", data.Raw[3], data.Raw[2], data.Raw[1], data.Raw[0]);
+                            break;
+                        case (CC2650SensorTag.SensorIndexes.OPTICAL):
+                            LuxOut.Text = string.Format("L:  \t{0:000} {1:000}", data.Raw[1], data.Raw[0]);
+                            break; ;
+                        case (CC2650SensorTag.SensorIndexes.BAROMETRIC_PRESSURE):
+                            BaroOut.Text = string.Format("T:\t{0:000} {1:000} {2:000}", data.Raw[5], data.Raw[4], data.Raw[3]);
+                            BaroOutTemp.Text = string.Format("P:\t{0:000} {1:000} {2:000}", data.Raw[2], data.Raw[1], data.Raw[0]);
+                            break;
+                        case (CC2650SensorTag.SensorIndexes.KEYS):
+                            if (data.Values[0] > 0)
+                                KeyROut.Background = new SolidColorBrush(Colors.Green);
+                            else
+                                KeyROut.Background = new SolidColorBrush(Colors.Red);
 
-                                if (data.Values[1] > 0)
-                                    KeyLOut.Background = new SolidColorBrush(Colors.Green);
-                                else
-                                    KeyLOut.Background = new SolidColorBrush(Colors.Red);
+                            if (data.Values[1] > 0)
+                                KeyLOut.Background = new SolidColorBrush(Colors.Green);
+                            else
+                                KeyLOut.Background = new SolidColorBrush(Colors.Red);
 
-                                if (data.Values[2] > 0)
-                                    ReedOut.Background = new SolidColorBrush(Colors.Green);
-                                else
-                                    ReedOut.Background = new SolidColorBrush(Colors.Red);
-                                break;
-                            default:
-                                break;
-                        }
+                            if (data.Values[2] > 0)
+                                ReedOut.Background = new SolidColorBrush(Colors.Green);
+                            else
+                                ReedOut.Background = new SolidColorBrush(Colors.Red);
+                            break;
+                        default:
+                            break;
                     }
-                });
+                }
+            });
         }
 
         // ---------------------------------------------------
@@ -497,11 +590,12 @@ namespace BluetoothGATT
         // ---------------------------------------------------
 
 
-       
+
 
 
         private async void PairButton_Click(object sender, RoutedEventArgs e)
         {
+            AA();
             DeviceInformationDisplay deviceInfoDisp = resultsListView.SelectedItem as DeviceInformationDisplay;
 
             if (deviceInfoDisp != null)
@@ -718,6 +812,7 @@ namespace BluetoothGATT
 
         private async void UnpairButton_Click(object sender, RoutedEventArgs e)
         {
+            AA();
             DeviceInformationDisplay deviceInfoDisp = resultsListView.SelectedItem as DeviceInformationDisplay;
             Debug.WriteLine("Unpair");
 
@@ -772,7 +867,7 @@ namespace BluetoothGATT
             bool bSelectableDevices = (resultsListView.Items.Count > 0);
 
             // If something on the list of bluetooth devices is selected
-            if ((null != deviceInfoDisp) && ( (deviceWatcher.Status == DeviceWatcherStatus.EnumerationCompleted)
+            if ((null != deviceInfoDisp) && ((deviceWatcher.Status == DeviceWatcherStatus.EnumerationCompleted)
                 || deviceWatcher.Status == DeviceWatcherStatus.Stopped))
             {
                 bool bIsConnected = (DeviceInfoConnected != null);
@@ -819,6 +914,7 @@ namespace BluetoothGATT
 
         private async void EnableButton_Click(object sender, RoutedEventArgs e)
         {
+            AA();
             if (SensorList.SelectedIndex >= 0)
             {
                 await CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].EnableNotify();
@@ -831,6 +927,7 @@ namespace BluetoothGATT
 
         private async void DisableButton_Click(object sender, RoutedEventArgs e)
         {
+            AA();
             if (SensorList.SelectedIndex >= 0)
             {
                 if (CC2650SensorTag.DisableSensorWithDisableNotifications)
@@ -838,25 +935,27 @@ namespace BluetoothGATT
                 await CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].DisableNotify();
                 //disableSensor(GATTClassCharacteristics.SensorIndexes[SensorList.SelectedIndex]);
                 CC2650SensorTag.ActiveCharacteristicNotifications[SensorList.SelectedIndex] = null;
-                
+
             }
         }
 
         private async void ReadButton_Click(object sender, RoutedEventArgs e)
         {
+            AA();
             CC2650SensorTag.SensorData sensorData = await CC2650SensorTag.SensorsCharacteristicsList
-                [SensorList.SelectedIndex].ReadSensor(true,true, CC2650SensorTag.DisableSensorWithDisableNotifications);
+                [SensorList.SelectedIndex].ReadSensor(true, true, CC2650SensorTag.DisableSensorWithDisableNotifications);
         }
 
         private async void BuzzButton_ClickOn(object sender, RoutedEventArgs e)
         {
+            AA();
             Button butt = (Button)sender;
             if (butt != null)
             {
-                switch (butt.Name.Substring(0,4))
+                switch (butt.Name.Substring(0, 4))
                 {
                     case "LED1":
-                        await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.On , 1);
+                        await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.On, 1);
                         break;
                     case "LED2":
                         await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.On, 2);
@@ -870,10 +969,11 @@ namespace BluetoothGATT
 
         private async void BuzzButton_ClickOff(object sender, RoutedEventArgs e)
         {
+            AA();
             Button butt = (Button)sender;
             if (butt != null)
             {
-                switch (butt.Name.Replace("IOButton",""))
+                switch (butt.Name.Replace("IOButton", ""))
                 {
                     case "AllOff":
                         await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.AllOff, 0);
@@ -890,14 +990,17 @@ namespace BluetoothGATT
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
+            AA();
             Application.Current.Exit();
         }
 
         private void InitButton1_Click(object sender, RoutedEventArgs e)
         {
+            AA();
             //new DeviceProperties { owner = this }.ShowDialog();
             this.Frame.Navigate(typeof(MainPage2), this); // DeviceProperties), this);
 
         }
+
     }
 }

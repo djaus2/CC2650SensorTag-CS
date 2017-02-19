@@ -20,7 +20,7 @@ This code also supports the IO Characteristic enabling turning on/off of the LED
 - REGISTERS
 
 **The app has been tested  on:**
-- Windows 10 IoT Core, RPI3. Dragonboard test coming. I don't have any suitable x86 systems to test on, eg Edison.
+- Windows 10 IoT Core, RPI3. Dragonboard test coming. I don't have any suitable x86 systems to test on, eg Edison./
 - Windows 10 Desktop Builds prior to 15031 **
 - Windows 10 Phone Builds prior to 15031 *
   * There is a major bug in 15031 with Bluetooth.
@@ -49,6 +49,7 @@ Also there is option to display RAW data.
 - **Note:** When manually read, a sensor's Notifications are stopped. Can re-enable
 - Enable/Disable only impact sensor Notifications , not the sesnor.
 - Properties are displayed on a separate page.
+- Implemented UI as SplitView with most buttons in the SlitView Pane on left.
 
 **NOTE**
 PS I think that there might be a problem with GATT on the Creator Editions of Windows 10.
@@ -59,4 +60,5 @@ I have done the latest testing on build 14393, Anniversary Update, with the same
 - Get SensorTag (TI) BLE properties
 - Get Battery Level
 - Manual reads now work. 
+- Buttons moved to SlipView Pane
 
