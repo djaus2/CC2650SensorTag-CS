@@ -45,16 +45,13 @@ namespace BluetoothGATT
     /// </summary>
     public sealed partial class MainPage2 : Page
     {
-        //public MainPage2()
-        //{
-        //    this.InitializeComponent();
-        //}
 
-        private void AA()
+
+        private void HideMenu()
         {
             MySplitView.IsPaneOpen = false;
         }
-        private void AB()
+        private void ShowMenu()
         {
             MySplitView.IsPaneOpen = true;
         }
@@ -595,7 +592,7 @@ namespace BluetoothGATT
 
         private async void PairButton_Click(object sender, RoutedEventArgs e)
         {
-            AA();
+            HideMenu();
             DeviceInformationDisplay deviceInfoDisp = resultsListView.SelectedItem as DeviceInformationDisplay;
 
             if (deviceInfoDisp != null)
@@ -812,7 +809,7 @@ namespace BluetoothGATT
 
         private async void UnpairButton_Click(object sender, RoutedEventArgs e)
         {
-            AA();
+            HideMenu();
             DeviceInformationDisplay deviceInfoDisp = resultsListView.SelectedItem as DeviceInformationDisplay;
             Debug.WriteLine("Unpair");
 
@@ -914,7 +911,7 @@ namespace BluetoothGATT
 
         private async void EnableButton_Click(object sender, RoutedEventArgs e)
         {
-            AA();
+            HideMenu();
             if (SensorList.SelectedIndex >= 0)
             {
                 await CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].EnableNotify();
@@ -927,7 +924,7 @@ namespace BluetoothGATT
 
         private async void DisableButton_Click(object sender, RoutedEventArgs e)
         {
-            AA();
+            HideMenu();
             if (SensorList.SelectedIndex >= 0)
             {
                 if (CC2650SensorTag.DisableSensorWithDisableNotifications)
@@ -941,14 +938,14 @@ namespace BluetoothGATT
 
         private async void ReadButton_Click(object sender, RoutedEventArgs e)
         {
-            AA();
+            HideMenu();
             CC2650SensorTag.SensorData sensorData = await CC2650SensorTag.SensorsCharacteristicsList
                 [SensorList.SelectedIndex].ReadSensor(true, true, CC2650SensorTag.DisableSensorWithDisableNotifications);
         }
 
         private async void BuzzButton_ClickOn(object sender, RoutedEventArgs e)
         {
-            AA();
+            HideMenu();
             Button butt = (Button)sender;
             if (butt != null)
             {
@@ -969,7 +966,7 @@ namespace BluetoothGATT
 
         private async void BuzzButton_ClickOff(object sender, RoutedEventArgs e)
         {
-            AA();
+            HideMenu();
             Button butt = (Button)sender;
             if (butt != null)
             {
@@ -990,15 +987,14 @@ namespace BluetoothGATT
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
-            AA();
+            HideMenu();
             Application.Current.Exit();
         }
 
-        private void InitButton1_Click(object sender, RoutedEventArgs e)
+        private void InitButton1_Click(object sender, TappedRoutedEventArgs e)
         {
-            AA();
-            //new DeviceProperties { owner = this }.ShowDialog();
-            this.Frame.Navigate(typeof(MainPage2), this); // DeviceProperties), this);
+            HideMenu();
+            this.Frame.Navigate(typeof( DeviceProperties), this);
 
         }
 

@@ -3,7 +3,7 @@
 
 [This repository](https://github.com/djaus2/CC2650SensorTag-CS) is a port of the [ms-iot/Samples/BluetoothGatt/CS GitHub](https://github.com/ms-iot/samples/tree/develop/BluetoothGATT/CS) code to support the Texas Instruments CC2650STK, the **CC2650 SensorTag**. The Microsoft code only supports the TI CC2541 Sensor Tag. This code has been refactored and extended to only support the CC2650.
 
-Note also Windows 8.1 code on Codeplex: https://sensortag.codeplex.com/
+Note also Windows 8.1 code on Codeplex: https://sensortag.codeplex.com/ (Not mine)
 
 The code establishes a connection to the service for each of the BTE characteristics and displays their values in real time. A major difference from the CC2541 is that the Gyroscope, Magnetometer and Accelerometer are one characteristic, Motion. Also this tag has a reed switch. By default, sensors run in Notification mode where they periodically update their values to the UI through a UI Callback.
 
