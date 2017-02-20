@@ -188,14 +188,15 @@ namespace BluetoothGATT
             Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
                 SensorList.IsEnabled = true;
-                DisableButton.IsEnabled = true;
-                EnableButton.IsEnabled = true;
+                DisableNotifButton.IsEnabled = true;
+                EnableNotifButton.IsEnabled = true;
+                ReadButton.IsEnabled = true;
                 InitButton.IsEnabled = false;
 
-                EnableIOButton.IsEnabled = true;
-                DisableIOButton.IsEnabled = true;
+                EnableIOIOButton.IsEnabled = true;
+                DisableIOIOButton.IsEnabled = true;
                 AllOffIOButton.IsEnabled = true;
-                BUZZButton.IsEnabled = true;
+                BuzzButton.IsEnabled = true;
                 LED1Button.IsEnabled = true;
                 LED2Button.IsEnabled = true;
 
@@ -816,12 +817,13 @@ namespace BluetoothGATT
             UnpairButton.IsEnabled = false;
             SensorList.IsEnabled = false;
             InitButton.IsEnabled = false;
-            EnableButton.IsEnabled = false;
+            EnableNotifButton.IsEnabled = false;
+            DisableNotifButton.IsEnabled = false;
 
-            EnableIOButton.IsEnabled = false;
-            DisableIOButton.IsEnabled = false;
+            EnableIOIOButton.IsEnabled = false;
+            DisableIOIOButton.IsEnabled = false;
             AllOffIOButton.IsEnabled = false;
-            BUZZButton.IsEnabled = false;
+            BuzzButton.IsEnabled = false;
             LED1Button.IsEnabled = false;
             LED2Button.IsEnabled = false;
             DeviceInfoConnected = null;
@@ -946,43 +948,78 @@ namespace BluetoothGATT
         private async void BuzzButton_ClickOn(object sender, RoutedEventArgs e)
         {
             HideMenu();
-            Button butt = (Button)sender;
-            if (butt != null)
+            string name = "";
+            if (sender is Button)
             {
-                switch (butt.Name.Substring(0, 4))
+                Button butt = (Button)sender;
+
+                if (butt != null)
                 {
-                    case "LED1":
-                        await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.On, 1);
-                        break;
-                    case "LED2":
-                        await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.On, 2);
-                        break;
-                    case "BUZZ":
-                        await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.On, 4);
-                        break;
+                    name = butt.Name.Substring(0, 4);
                 }
             }
+            else if (sender is TextBlock)
+            {
+                TextBlock tb = (TextBlock)sender;
+
+                if (tb != null)
+                {
+                    name = tb.Text.Replace(" " ,"");
+                }
+            }
+
+            switch (name)
+            {
+                case "LED1":
+                    await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.On, 1);
+                    break;
+                case "LED2":
+                    await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.On, 2);
+                    break;
+                case "Buzz":
+                    await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.On, 4);
+                    break;
+            }
+            
         }
 
         private async void BuzzButton_ClickOff(object sender, RoutedEventArgs e)
         {
             HideMenu();
-            Button butt = (Button)sender;
-            if (butt != null)
+            string name = "";
+            if (sender is Button)
             {
-                switch (butt.Name.Replace("IOButton", ""))
+                Button butt = (Button)sender;
+
+                if (butt != null)
                 {
-                    case "AllOff":
-                        await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.AllOff, 0);
-                        break;
-                    case "Enable":
-                        await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.Enable, 0);
-                        break;
-                    case "Disable":
-                        await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.Disable, 0);
-                        break;
+                    name = butt.Name.Replace("IOButton", "");
                 }
             }
+            else if (sender is TextBlock)
+            {
+                TextBlock tb = (TextBlock)sender;
+
+                if (tb != null)
+                {
+                    name = tb.Text.Replace(" ", "");
+                }
+            }
+
+            switch (name)
+     
+            {
+                case "AllOff":
+                    await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.AllOff, 0);
+                    break;
+                case "EnableIO":
+                    await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.Enable, 0);
+                    break;
+                case "DisableIO":
+                    await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.Disable, 0);
+                    break;
+            }
+            
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)

@@ -219,23 +219,24 @@
                             <TextBlock  Text="Init"  Visibility="Collapsed"  FontSize="18" VerticalAlignment="Center" Tapped="InitButton_Click" />
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal">
-                            <Button x:Name="EnableButton" FontFamily="Segoe MDL2 Assets" Content="&#xE73A;"
-                        Width="50" Height="50" Background="Transparent" IsEnabled="False" Visibility="Visible" Click="EnableButton_Click"/>
-                            <TextBlock  Text="Enable"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center"/>
-                        </StackPanel>
+
                         <!---->
                     <StackPanel Orientation="Horizontal">
                         <!--<Button x:Name="DisableButton" Content="Disable" Background="#CCFFFFFF" Click="DisableButton_Click" Margin="10,0,0,0" IsEnabled="False"/>-->
-                        <Button x:Name="DisableButton" FontFamily="Segoe MDL2 Assets" Content="&#xE739;"
+                        <Button x:Name="DisableNotifButton" FontFamily="Segoe MDL2 Assets" Content="&#xE739;"
                         Width="50" Height="50" Background="Transparent" IsEnabled="False" Visibility="Visible" Click="DisableButton_Click"/>
-                        <TextBlock  Text="Disable"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center"/>
+                        <TextBlock  Text="Disable Notif"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" Tapped="DisableButton_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <!--<Button x:Name="ReadButton" Content="Read" Background="#CCFFFFFF" Click="ReadButton_Click" Margin="10,0,0,0" IsEnabled="True"/>-->
                         <Button x:Name="ReadButton" FontFamily="Segoe MDL2 Assets" Content="&#xE8B6;"
                         Width="50" Height="50" Background="Transparent" IsEnabled="False" Visibility="Visible" Click="ReadButton_Click"/>
-                        <TextBlock  Text="Read"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center"/>
+                        <TextBlock  Text="Read"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" Tapped="ReadButton_Click"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="EnableNotifButton" FontFamily="Segoe MDL2 Assets" Content="&#xE73A;"
+                        Width="50" Height="50" Background="Transparent" IsEnabled="False" Visibility="Visible" Click="EnableButton_Click"/>
+                        <TextBlock  Text="Enable Notif"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" Tapped="EnableButton_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Button x:Name="DataMode" FontFamily="Segoe MDL2 Assets" Content="&#xE713;"
@@ -247,40 +248,41 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <!--<Button x:Name="LED1Button" Content="Buzz" Background="#CCFFFFFF" Click="BuzzButton_ClickOn" Margin="10,0,0,0" IsEnabled="False"/>-->
-                        <Button x:Name="DisableIOButton" FontFamily="Segoe MDL2 Assets" Content="&#xE739;"
+                        <Button x:Name="EnableIOIOButton" FontFamily="Segoe MDL2 Assets" Content="&#xE73A;"
                         Width="50" Height="50" Background="Transparent" IsEnabled="False" Visibility="Visible" Click="BuzzButton_ClickOff"/>
-                        <TextBlock  Text="Disable Not"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center"/>
+                        <TextBlock  Text="Enable IO"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" Tapped="BuzzButton_ClickOff"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <!--<Button x:Name="LED1Button" Content="LED1" Background="#CCFFFFFF" Click="BuzzButton_ClickOn" Margin="10,0,0,0" IsEnabled="False"/>-->
                         <Button x:Name="LED1Button" FontFamily="Segoe MDL2 Assets" Content="&#xE706;"
                         Width="50" Height="50" Background="Transparent" IsEnabled="False" Visibility="Visible" Click="BuzzButton_ClickOn"/>
-                        <TextBlock  Text="LED1"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" />
+                        <TextBlock  Text="LED1"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" Tapped="BuzzButton_ClickOn"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <!--<Button x:Name="LE21Button" Content="LED2" Background="#CCFFFFFF" Click="BuzzButton_ClickOn" Margin="10,0,0,0" IsEnabled="False"/>-->
                         <Button x:Name="LED2Button" FontFamily="Segoe MDL2 Assets" Content="&#xE706;"
                         Width="50" Height="50" Background="Transparent" IsEnabled="False" Visibility="Visible" Click="BuzzButton_ClickOn"/>
-                        <TextBlock  Text="LED2"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center"/>
+                        <TextBlock  Text="LED2"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" Tapped="BuzzButton_ClickOn"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <!--<Button x:Name="LED1Button" Content="Buzz" Background="#CCFFFFFF" Click="BuzzButton_ClickOn" Margin="10,0,0,0" IsEnabled="False"/>-->
-                        <Button x:Name="BUZZButton" FontFamily="Segoe MDL2 Assets" Content="&#xE189;"
+                        <Button x:Name="BuzzButton" FontFamily="Segoe MDL2 Assets" Content="&#xE189;"
                         Width="50" Height="50" Background="Transparent" IsEnabled="False" Visibility="Visible" Click="BuzzButton_ClickOn"/>
-                        <TextBlock  Text="Buzz"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center"/>
+                        <TextBlock  Text="Buzz"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" Tapped="BuzzButton_ClickOn"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <!--<Button x:Name="LED1Button" Content="Buzz" Background="#CCFFFFFF" Click="BuzzButton_ClickOn" Margin="10,0,0,0" IsEnabled="False"/>-->
                         <Button x:Name="AllOffIOButton" FontFamily="Segoe MDL2 Assets" Content="&#xEB90;"
                         Width="50" Height="50" Background="Transparent" IsEnabled="False" Visibility="Visible" Click="BuzzButton_ClickOff"/>
-                        <TextBlock  Text="All Off"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center"/>
+                        <TextBlock  Text="All Off"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center"  Tapped="BuzzButton_ClickOff"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <!--<Button x:Name="LED1Button" Content="Buzz" Background="#CCFFFFFF" Click="BuzzButton_ClickOn" Margin="10,0,0,0" IsEnabled="False"/>-->
-                        <Button x:Name="EnableIOButton" FontFamily="Segoe MDL2 Assets" Content="&#xE73A;"
+                        <Button x:Name="DisableIOIOButton" FontFamily="Segoe MDL2 Assets" Content="&#xE739;" 
                         Width="50" Height="50" Background="Transparent" IsEnabled="False" Visibility="Visible" Click="BuzzButton_ClickOff"/>
-                        <TextBlock  Text="Enable Not"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center"/>
+                        <TextBlock  Text="Disable IO"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" Tapped="BuzzButton_ClickOff"/>
                     </StackPanel>
+
 
 
                     <StackPanel Orientation="Horizontal">

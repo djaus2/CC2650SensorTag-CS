@@ -1,5 +1,5 @@
 
-## TI CC2650 SensorTag V3.01
+## TI CC2650 SensorTag V3.02
 
 [This repository](https://github.com/djaus2/CC2650SensorTag-CS) is a port of the [ms-iot/Samples/BluetoothGatt/CS GitHub](https://github.com/ms-iot/samples/tree/develop/BluetoothGATT/CS) code to support the Texas Instruments CC2650STK, the **CC2650 SensorTag**. The Microsoft code only supports the TI CC2541 Sensor Tag. This code has been refactored and extended to only support the CC2650.
 
@@ -50,6 +50,7 @@ Also there is option to display RAW data.
 - Enable/Disable only impact sensor Notifications , not the sesnor.
 - Properties are displayed on a separate page.
 - Implemented UI as SplitView with most buttons in the SplitView Pane on left.
+- Can now tap menu item text (Bug fix)
 
 **NOTE**
 PS I think that there might be a problem with GATT on the Creator Editions of Windows 10.
