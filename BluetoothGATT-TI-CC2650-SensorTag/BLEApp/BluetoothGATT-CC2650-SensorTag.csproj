@@ -8,7 +8,7 @@
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BluetoothGATT</RootNamespace>
-    <AssemblyName>BluetoothGATT</AssemblyName>
+    <AssemblyName>CC2650SensorTag</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
@@ -19,8 +19,9 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>BluetoothGATT-CC2650-SensorTag_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
-    <PackageCertificateThumbprint>3F75921158D9D69564560A3B69FA1D06382B78B3</PackageCertificateThumbprint>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <PackageCertificateThumbprint>DD54307B4289ECB5927E17DCE9D0B536276D99F0</PackageCertificateThumbprint>
+    <AppxBundle>Always</AppxBundle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -98,6 +99,7 @@
     </Content>
     <None Include="BluetoothGATT-CC2650-SensorTag_TemporaryKey.pfx" />
     <None Include="project.json" />
+    <None Include="Sportronics.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -122,14 +124,20 @@
     <None Include="BluetoothGATT_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Package.StoreAssociation.xml" />
+    <Content Include="Assets\SensorTag.Logo.scale-200.png" />
+    <Content Include="Assets\SensorTag300x300Logo.scale-100 .png" />
+    <Content Include="Assets\SensorTag300x300Logo.scale-200.png" />
+    <Content Include="Assets\SensorTag44x44Logo.scale-100.png" />
+    <Content Include="Assets\SensorTag44x44Logo.scale-200.png" />
+    <Content Include="Assets\SensorTag88x88Logo.scale-100.png" />
+    <Content Include="Assets\SensorTag88x88Logo.scale-200.png" />
+    <Content Include="Assets\SensorTagSplashscreen.scale-100.png" />
+    <Content Include="Assets\SensorTagSplashscreen.scale-200.png" />
     <Content Include="Properties\Default.rd.xml" />
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
-    <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\Square150x150Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\StoreLogo.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Assets\SensorTagLockScreenLogo.scale-200.png" />
+    <Content Include="Assets\SensorTagStoreLogo.scale-200.png" />
+    <Content Include="Assets\SensorTagWide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -157,6 +165,12 @@
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Sportronics.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="BluetoothGATT-CC2650" Publisher="CN=Sportronics" Version="1.0.0.0" />
+  <Identity Name="61795Spotrtronics.CC2650SensorTag" Publisher="CN=B04DFAC7-365A-45B0-8B00-97A2B852DA4B" Version="3.0.14.0" />
   <mp:PhoneIdentity PhoneProductId="f21a452f-f92e-401a-bce0-cf0173835522" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>BluetoothGATT-CC2650</DisplayName>
-    <PublisherDisplayName>Sportronics</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
+    <DisplayName>CC2650SensorTag</DisplayName>
+    <PublisherDisplayName>Spotrtronics</PublisherDisplayName>
+    <Logo>Assets\SensorTagStoreLogo.png</Logo>
   </Properties>
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
@@ -15,10 +15,14 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="BluetoothGATT.App">
-      <uap:VisualElements DisplayName="BluetoothGATT-CC2650-SensorTag" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="BluetoothGATT" BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
+      <uap:VisualElements DisplayName="CC2650-SensorTag" Square150x150Logo="Assets\SensorTag.Logo.png" Square44x44Logo="Assets\SensorTag44x44Logo.png" Description="BluetoothGATT" BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\SensorTagWide310x150Logo.png">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo" />
+            <uap:ShowOn Tile="wide310x150Logo" />
+          </uap:ShowNameOnTiles>
         </uap:DefaultTile>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:SplashScreen Image="Assets\SensorTagSplashscreen.png" />
       </uap:VisualElements>
     </Application>
   </Applications>
