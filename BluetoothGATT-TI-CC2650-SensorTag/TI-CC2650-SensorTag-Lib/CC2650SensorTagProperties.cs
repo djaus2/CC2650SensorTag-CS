@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Windows.System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace TICC2650SensorTag
 {

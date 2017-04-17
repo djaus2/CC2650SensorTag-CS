@@ -163,7 +163,7 @@ namespace BluetoothGATT
         {
             this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
             this.InitializeComponent();
-            CC2650SensorTag.SetUp();
+            CC2650SensorTag.SetUp_SensorsLists();
 
             UserOut.Text = "Searching for Bluetooth LE Devices...";
             resultsListView.IsEnabled = false;
@@ -173,8 +173,11 @@ namespace BluetoothGATT
 
             DataContext = this;
             //Start Watcher for pairable/paired devices
+
+
+
             CC2650SensorTag_BLEWatcher = new TICC2650SensorTag_BLEWatcher(this.UpdateButtons_WhenSensorsAreReady_CallBack, this.CallMeBackTemp, this.initSensor);
-            StartWatcher();
+            var res = Task<bool>.Run(() => StartWatcher());
         }
 
         ~MainPage2()
@@ -205,11 +208,83 @@ namespace BluetoothGATT
         }
 
         //Watcher for Bluetooth LE Devices based on the Protocol ID
-        private void StartWatcher()
+        private async void StartWatcher()
         {
             string aqsFilter;
 
-            ResultCollection.Clear();
+            
+
+            //Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
+            //{
+
+            //    var access = await BT.RequestAccessAsync();
+            //    UserOut.Text = "No Bluetooth radios available";
+            //    System.Diagnostics.Debug.WriteLine("No Bluetooth radios available!");
+            //});
+
+            var bTSupported = await  BT.GetBluetoothIsSupportedAsync();
+
+            if (!bTSupported)
+            {
+                Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    UserOut.Text = "No Bluetooth radios available";
+                    System.Diagnostics.Debug.WriteLine("No Bluetooth radios available!");
+                });
+                return;
+            }
+
+            //bool bAccess2 = true;
+            //Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
+            //{
+            //    var access2 = await BT.RequestAccessAsync();
+            //    bAccess2 = access2;
+            //});
+
+
+
+            //if (bAccess2)
+            //{
+
+            //    var bTIsEnabled2 = await BT.SetBluetoothStateOffAsync();
+            //}
+
+                var bTIsEnabled = await  BT.GetBluetoothIsEnabledAsync();
+            if (!bTIsEnabled)
+            {
+                bool bAccess = true;
+                Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
+                {
+                    var access = await BT.RequestAccessAsync();
+                    bAccess = access;
+                });
+
+                
+
+                if (bAccess)
+                {
+
+                    bTIsEnabled = await BT.SetBluetoothStateOnAsync();
+                    if (!bTIsEnabled)
+                    {
+                        Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                        {
+                            UserOut.Text = "Bluetooth isn't enabled! Turn on Failed";
+                            System.Diagnostics.Debug.WriteLine("Bluetooth isn't enabled! Turn on Failed.");
+                        });
+                        return;
+                    }
+                }
+
+
+            }
+
+            Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                ResultCollection.Clear();
+            });
+
+           
 
             // Request the IsPaired property so we can display the paired status in the UI
             string[] requestedProperties = { "System.Devices.Aep.IsPaired" };
@@ -230,12 +305,16 @@ namespace BluetoothGATT
                 // Since we have the collection databound to a UI element, we need to update the collection on the UI thread.
                 this.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
                 {
+                    //Depending upon firware there are two names.
                     if (CC2650SensorTag.DeviceAltSensorNames.Contains(deviceInfo.Name))
                     {
                         Debug.WriteLine("Watcher Add: " + deviceInfo.Id);
                         ResultCollection.Add(new DeviceInformationDisplay(deviceInfo));
+                        
+                   
                         UpdatePairingButtons();
-                        UserOut.Text = "Found at least one " + CC2650SensorTag.DeviceAltSensorNames + " Select for pairing. Still searching for others though.";
+                        //resultsListView.IsEnabled = true;
+                        UserOut.Text = "Found at least one SensorTag. " + " Select for pairing. Still searching for others though.";
                         var st = watcher.Status;
                         if (watcher != null)
                             if (st != DeviceWatcherStatus.Stopped)
@@ -371,7 +450,7 @@ namespace BluetoothGATT
         //See https://msdn.microsoft.com/en-us/library/system.threading.readerwriterlockslim(v=vs.110).aspx
         //for ReaderWriterLockSlim
         private ReaderWriterLockSlim gattDataModeLock = new ReaderWriterLockSlim();
-        private MainPage owner;
+        private MainPage2 owner;
 
         private void chkDataModeValues_Checked(object sender, RoutedEventArgs e)
         {
@@ -604,23 +683,43 @@ namespace BluetoothGATT
                 {
                     paired = false;
                     DevicePairingKinds ceremoniesSelected = DevicePairingKinds.ConfirmOnly | DevicePairingKinds.DisplayPin | DevicePairingKinds.ProvidePin | DevicePairingKinds.ConfirmPinMatch;
-                    DevicePairingProtectionLevel protectionLevel = DevicePairingProtectionLevel.Default;
+                    DevicePairingProtectionLevel protectionLevel = DevicePairingProtectionLevel.None;//.Default;
 
                     // Specify custom pairing with all ceremony types and protection level EncryptionAndAuthentication
                     DeviceInformationCustomPairing customPairing = deviceInfoDisp.DeviceInformation.Pairing.Custom;
 
+#if (WINDOWS_10_IOT_CORE)
+                    UserOut.Text = "Not paired. With IoT-Core you need to pair outside of app. Use Device Portal";
+                  
+                    DevicePairingKinds _ceremoniesSelected = DevicePairingKinds.ConfirmOnly; 
+                    ShowPairingPanel("Confirm Pairing",_ceremoniesSelected);
+
+
+                    PairingRequestedHandler2(null, DevicePairingKinds.ConfirmOnly);
+                    HidePairingPanel();
+                    DevicePairingResult result = await customPairing.PairAsync(ceremoniesSelected, protectionLevel);
+                    DevicePairingResultStatus resultStatus = result.Status;
+
+
+#else
                     customPairing.PairingRequested += PairingRequestedHandler;
                     DevicePairingResult result = await customPairing.PairAsync(ceremoniesSelected, protectionLevel);
 
                     customPairing.PairingRequested -= PairingRequestedHandler;
-
-                    if (result.Status == DevicePairingResultStatus.Paired)
+                     DevicePairingResultStatus resultStatus =result.Status;
+#endif
+                    if (resultStatus == DevicePairingResultStatus.Paired)
                     {
                         paired = true;
                     }
                     else
                     {
-                        UserOut.Text = "Pairing Failed " + result.Status.ToString();
+#if (WINDOWS_10_IOT_CORE)
+                        UserOut.Text = "Not paired. With IoT-Core you need to pair outside of app. Use Device Portal";
+#else
+                        UserOut.Text = "Pairing Failed " + resultStatus.ToString();
+#endif
+                        System.Diagnostics.Debug.WriteLine(UserOut.Text);
                     }
                 }
 
@@ -641,11 +740,19 @@ namespace BluetoothGATT
         {
             UpdatePairingButtons();
         }
+
         private async void PairingRequestedHandler(
-             DeviceInformationCustomPairing sender,
-             DevicePairingRequestedEventArgs args)
+         DeviceInformationCustomPairing sender,
+         DevicePairingRequestedEventArgs args)
         {
-            switch (args.PairingKind)
+            await PairingRequestedHandler2(args, args.PairingKind);
+        }
+        private async Task PairingRequestedHandler2(
+             DevicePairingRequestedEventArgs args,
+             DevicePairingKinds kind)
+        {
+
+            switch (kind)
             {
                 case DevicePairingKinds.ConfirmOnly:
                     // Windows itself will pop the confirmation dialog as part of "consent" if this is running on Desktop or Mobile
@@ -834,7 +941,15 @@ namespace BluetoothGATT
                 if (CC2650SensorTag.ServiceList[i] != null)
                 {
                     //await disableSensor(i);
-                    await CC2650SensorTag.SensorsCharacteristicsList[i].DisableNotify();
+                    try
+                    {
+                        //await disableSensor(i);
+                        await CC2650SensorTag.SensorsCharacteristicsList[i].DisableNotify();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine("UnpairButton_Click(): DisableNotify error. Service:  " +  i.ToString() + "\r\n" + ex.Message);
+                    }
                 }
             }
 
@@ -895,7 +1010,9 @@ namespace BluetoothGATT
                 resultsListView.IsEnabled = bSelectableDevices;
                 PairButton.IsEnabled = false;
             }
+           
         }
+
 
         // ---------------------------------------------------
         //             Pairing Process Handlers and Functions -- End

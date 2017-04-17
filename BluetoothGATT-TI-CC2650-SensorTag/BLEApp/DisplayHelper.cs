@@ -100,10 +100,17 @@ namespace BluetoothGATT
 
         private async void UpdateGlyphBitmapImage()
         {
+            BitmapImage glyphBitmapImage;
+#if NOT_IOT_CORE
+            glyphBitmapImage = new BitmapImage();
             DeviceThumbnail deviceThumbnail = await deviceInfo.GetGlyphThumbnailAsync();
-            BitmapImage glyphBitmapImage = new BitmapImage();
             await glyphBitmapImage.SetSourceAsync(deviceThumbnail);
+#else
+            string path = "ms-appx:///Assets/AAA.png";
+            glyphBitmapImage = new BitmapImage(new Uri(path, UriKind.Absolute));
+#endif
             GlyphBitmapImage = glyphBitmapImage;
+
             OnPropertyChanged("GlyphBitmapImage");
         }
 

@@ -29,7 +29,7 @@ namespace BluetoothGATT
             this.InitializeComponent();
         }
 
-        public MainPage owner { get; internal set; }
+        public MainPage2 owner { get; internal set; }
 
 
 

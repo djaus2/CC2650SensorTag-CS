@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Windows.System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,10 +9,93 @@ using Windows.Foundation;
 using Windows.UI.Core;
 using System.Threading.Tasks;
 using System.ServiceModel;
+using Windows.Devices.Radios;
+using System;
 
 namespace TICC2650SensorTag
 {
-    public class TICC2650SensorTag_BLEWatcher
+    public static class BT
+    {
+        //https://docs.microsoft.com/en-us/uwp/api/windows.devices.radios.radio#Windows_Devices_Radios_Radio_RequestAccessAsync
+        public static async Task<bool> GetBluetoothIsEnabledAsync()
+        {
+            var radios = await Radio.GetRadiosAsync();
+            if (radios != null)
+            {
+                int count = radios.Count();
+            }
+            var bluetoothRadio = radios.FirstOrDefault(radio => radio.Kind == RadioKind.Bluetooth);
+            return (bluetoothRadio != null && bluetoothRadio.State == RadioState.On);
+        }
+
+
+        
+        public static async Task<bool> GetBluetoothIsSupportedAsync()
+        {
+            var radios = await Radio.GetRadiosAsync();
+            if (radios != null)
+            {
+                int count = radios.Count();
+            }
+                return radios.FirstOrDefault(radio => radio.Kind == RadioKind.Bluetooth) != null;
+        }
+
+        public static async Task<bool> SetBluetoothStateOnAsync()
+        {
+            var radios = await Radio.GetRadiosAsync();
+            if (radios != null)
+            {
+                int count = radios.Count();
+            }
+            if (radios.FirstOrDefault(radio => radio.Kind == RadioKind.Bluetooth) != null)
+            {
+                var btRadio = radios.FirstOrDefault(radio => radio.Kind == RadioKind.Bluetooth);
+                var state = await btRadio.SetStateAsync(RadioState.On);
+                return (state == RadioAccessStatus.Allowed);
+
+            }
+            else
+                return false;
+        }
+
+        public static async Task<bool> SetBluetoothStateOffAsync()
+        {
+            var radios = await Radio.GetRadiosAsync();
+            if (radios != null)
+            {
+                int count = radios.Count();
+            }
+            if (radios.FirstOrDefault(radio => radio.Kind == RadioKind.Bluetooth) != null)
+            {
+                var btRadio = radios.FirstOrDefault(radio => radio.Kind == RadioKind.Bluetooth);
+                var state = await btRadio.SetStateAsync(RadioState.Off);
+                return (state == RadioAccessStatus.Allowed);
+            }
+            else
+                return false;
+        }
+
+        public static async Task<bool> RequestAccessAsync()
+        {
+            var radios = await Radio.GetRadiosAsync();
+            if (radios != null)
+            {
+                int count = radios.Count();
+
+                if (count != 0)
+                {
+                    if (radios.FirstOrDefault(radio => radio.Kind == RadioKind.Bluetooth) != null)
+                    {
+                        var access = await Radio.RequestAccessAsync();
+
+                        return (access == RadioAccessStatus.Allowed);
+                    }
+                }
+            }
+            return false;
+        }
+    }
+    public class TICC2650SensorTag_BLEWatcher : ITICC2650SensorTag_BLEWatcher
     {
 
         private DeviceWatcher blewatcher = null;
@@ -175,10 +258,16 @@ namespace TICC2650SensorTag
             }
 
 
-            aqs += " OR ";
-            aqs += "(" + GattDeviceService.GetDeviceSelectorFromUuid(new Guid(CC2650SensorTag.DEVICE_BATTERY_SERVICE)) + ")";
-            aqs += " OR ";
-            aqs += "(" + GattDeviceService.GetDeviceSelectorFromUuid(new Guid(CC2650SensorTag.UUID_PROPERTIES_SERVICE)) + ")";
+            if (CC2650SensorTag.Use_DEVICE_BATTERY_SERVICE)
+            {
+                aqs += " OR ";
+                aqs += "(" + GattDeviceService.GetDeviceSelectorFromUuid(new Guid(CC2650SensorTag.DEVICE_BATTERY_SERVICE)) + ")";
+            }
+            if (CC2650SensorTag.Use_UUID_PROPERTIES_SERVICE)
+            { 
+                aqs += " OR ";
+                aqs += "(" + GattDeviceService.GetDeviceSelectorFromUuid(new Guid(CC2650SensorTag.UUID_PROPERTIES_SERVICE)) + ")";
+            }
 
 
             blewatcher = DeviceInformation.CreateWatcher(aqs);
@@ -226,7 +315,7 @@ namespace TICC2650SensorTag
             }
         }
 
-        private void StopBLEWatcher()
+        public void StopBLEWatcher()
         {
             if (null != blewatcher)
             {

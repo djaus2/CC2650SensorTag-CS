@@ -1,5 +1,5 @@
 ﻿
-using System;
+using Windows.System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Windows.Foundation;
@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System;
 
 // Disable warning "...execution of the current method continues before the call is completed..."
 #pragma warning disable 4014

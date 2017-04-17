@@ -2,7 +2,8 @@
   "dependencies": {
     "Microsoft.ApplicationInsights": "1.0.0",
     "Microsoft.ApplicationInsights.PersistenceChannel": "1.0.0",
-    "Microsoft.ApplicationInsights.WindowsApps": "1.0.0"
+    "Microsoft.ApplicationInsights.WindowsApps": "1.0.0",
+    "xcc": "1.0.9"
   },
   "frameworks": {
     "uap10.0": {}

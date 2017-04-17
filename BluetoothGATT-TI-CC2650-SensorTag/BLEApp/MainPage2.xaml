@@ -5,21 +5,24 @@
     xmlns:local="using:BluetoothGATT"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    xmlns:notiotcore="condition:NOT_IOT_CORE"
+    mc:Ignorable="d notiotcore"
+    mc:ProcessContent="notiotcore:*">
+
 
 
     <Page.Resources>
         <DataTemplate x:Key="ResultsListViewTemplate">
             <Grid Margin="5">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="50"/>
                     <ColumnDefinition Width="*" MinWidth="100"/>
                 </Grid.ColumnDefinitions>
                 <Border Grid.Column="0" Height="40" Width="40" Margin="5" VerticalAlignment="Top">
-                    <Image Source="{Binding Path=GlyphBitmapImage}"
+                    <notiotcore:Image Source="{Binding Path=GlyphBitmapImage}"
                            Stretch="UniformToFill"/>
                 </Border>
-                <Border Grid.Column="1" Margin="5">
+                <Border Grid.Column="1" Margin="5" Background="LightYellow">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Name:" Margin="0,0,5,0"/>
@@ -319,7 +322,7 @@
                         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
                             <Border x:Name="pairingPanel" BorderThickness="1" BorderBrush="AntiqueWhite" Margin="10,0,0,10" Visibility="Collapsed">
                                 <StackPanel Orientation="Vertical">
-                                    <TextBlock x:Name="pairingTextBlock" Foreground ="White" Margin="0,0,0,2" TextWrapping="WrapWholeWords"/>
+                                    <TextBlock x:Name="pairingTextBlock" Foreground ="White" Margin="0,0,0,2" TextWrapping="WrapWholeWords">JKL</TextBlock>
                                     <StackPanel Orientation="Horizontal" >
                                         <TextBox x:Name="pinEntryTextBox" Foreground ="White" MinWidth="100" Margin="2" Visibility="Collapsed" />
                                         <Button x:Name="okButton"  Style="{StaticResource ButtonStyleGATT}" Margin="2" Click="okButton_Click" Visibility="Collapsed">OK</Button>
@@ -334,7 +337,7 @@
 
                         <ScrollViewer VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" Height="80" Background="#FFF3E4E4" Margin="10,0,10,10">
                             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,15,0">
-                                <Border BorderBrush="AntiqueWhite" BorderThickness="1">
+                                <Border BorderBrush="Red" BorderThickness="1">
                                     <ListView x:Name="resultsListView"
                 				ItemTemplate="{StaticResource ResultsListViewTemplate}"
                 				ItemsSource="{Binding ResultCollection}"
@@ -343,6 +346,50 @@
                                 </Border>
                             </StackPanel>
                         </ScrollViewer>
+                        <!--<ScrollViewer VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" Height="80" Background="#FFF3E4E4" Margin="10,0,10,10">
+                            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,15,0">
+                                <Border BorderBrush="Green" BorderThickness="1">
+                                    <ListView x:Name="resultsListView2"
+                                              ItemsSource="{Binding ResultCollection}"
+                                    SelectionChanged="ResultsListView_SelectionChanged" >
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="54"/>
+                                                        <ColumnDefinition Width="*" MinWidth="100"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Grid.Column="0" Height="44" Width="44" Margin="5" VerticalAlignment="Top">
+                                                        --><!--<Image Source="{Binding Path=GlyphBitmapImage}"  Stretch="None"/>--><!--
+                                                    </Border>
+                                                    <Border Grid.Column="1" Margin="5"
+                                                         Background="LightYellow" >
+                                                        <StackPanel Orientation="Vertical">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="Name:" Margin="0,0,5,0" Foreground="Blue"/>
+                                                                <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" Foreground="Red" TextWrapping="WrapWholeWords"/>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="Id:" Margin="0,0,5,0" Foreground="Blue"/>
+                                                                <TextBlock Text="{Binding Path=Id}" TextWrapping="Wrap" Foreground="Black"/>
+                                                            </StackPanel>
+                                                            <StackPanel   Orientation="Horizontal">
+                                                                <TextBlock Text="CanPair:" Margin="0,0,5,0" Foreground="Blue" />
+                                                                <TextBlock Text="{Binding Path=CanPair}" Foreground="Green"/>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="IsPaired:" Margin="0,0,5,0"  Foreground="Blue"/>
+                                                                <TextBlock Text="{Binding Path=IsPaired}" Foreground="Purple"/>
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>-->
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                             <TextBlock  x:Name="UserOutLabel" Foreground="White" VerticalAlignment="Center" Margin="10,0,0,0">Message:</TextBlock>
                             <TextBlock x:Name="UserOut" Foreground="White" VerticalAlignment="Center" Margin="30,0,0,0">

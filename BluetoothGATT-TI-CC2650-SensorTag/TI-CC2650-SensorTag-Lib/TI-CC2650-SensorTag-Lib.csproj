@@ -111,6 +111,8 @@
     <Compile Include="CC2650SensorTag.cs" />
     <Compile Include="CC2650SensorTagEvents.cs" />
     <Compile Include="CC2650SensorTagProperties.cs" />
+    <Compile Include="ICC2650SensorTag.cs" />
+    <Compile Include="ITICC2650SensorTag_BLEWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\TI_CC2650_SensorTag_Lib.rd.xml" />
   </ItemGroup>

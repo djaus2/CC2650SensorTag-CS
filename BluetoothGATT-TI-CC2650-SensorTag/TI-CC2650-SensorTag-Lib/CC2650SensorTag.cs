@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Windows.System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace TICC2650SensorTag
 {
-    public sealed partial class CC2650SensorTag
+    public sealed partial class CC2650SensorTag : ICC2650SensorTag
     {
         public static List<string> DeviceAltSensorNames { get; internal set; } = new List<string> { "CC2650 SensorTag" , "SensorTag 2.0" };
 
@@ -31,14 +32,14 @@ namespace TICC2650SensorTag
         }
 
         /// <summary>
-        public static CC2650SensorTag IR_SensorCharacteristics = null; // new GATTClassCharacteristics();
-        public static CC2650SensorTag HumidityrCharacteristics = null; //new GATTClassCharacteristics();
-        public static CC2650SensorTag BarometricPressureCharacteristics = null; //new GATTClassCharacteristics();
-        public static CC2650SensorTag KeysCharacteristics = null; //new GATTClassCharacteristics();
-        public static CC2650SensorTag OpticalCharacteristics = null; // new GATTClassCharacteristics();
-        public static CC2650SensorTag MovementCharacteristics = null; //new GATTClassCharacteristics();
-        public static CC2650SensorTag IO_SensorCharacteristics = null; //new GATTClassCharacteristics();
-        public static CC2650SensorTag RegistersCharacteristics = null; //new GATTClassCharacteristics();
+        internal static CC2650SensorTag IR_SensorCharacteristics = null; // new GATTClassCharacteristics();
+        internal static CC2650SensorTag HumidityrCharacteristics = null; //new GATTClassCharacteristics();
+        internal static CC2650SensorTag BarometricPressureCharacteristics = null; //new GATTClassCharacteristics();
+        internal static CC2650SensorTag KeysCharacteristics = null; //new GATTClassCharacteristics();
+        internal static CC2650SensorTag OpticalCharacteristics = null; // new GATTClassCharacteristics();
+        internal static CC2650SensorTag MovementCharacteristics = null; //new GATTClassCharacteristics();
+        internal static CC2650SensorTag IO_SensorCharacteristics = null; //new GATTClassCharacteristics();
+        internal static CC2650SensorTag RegistersCharacteristics = null; //new GATTClassCharacteristics();
 
         public static CC2650SensorTag[] SensorsCharacteristicsList = new CC2650SensorTag[NUM_SENSORS];
 
@@ -46,64 +47,75 @@ namespace TICC2650SensorTag
         public static GattCharacteristic[] ActiveCharacteristicNotifications = new GattCharacteristic[NUM_SENSORS];
 
 
-        public const string SENSOR_GUID_PREFIX = "F000AA";
+        internal const string SENSOR_GUID_PREFIX = "F000AA";
         //The following 4 are prefixed by UUIDBase[i], which is SENSOR_GUID_PREFIX plus a digit, depending upon the sensor.
-        public const string SENSOR_GUID_SUFFFIX = "0-0451-4000-B000-000000000000";
-        public const string SENSOR_NOTIFICATION_GUID_SUFFFIX = "1-0451-4000-B000-000000000000";
-        public const string SENSOR_ENABLE_GUID_SUFFFIX = "2-0451-4000-B000-000000000000";
-        public const string SENSOR_PERIOD_GUID_SUFFFIX = "3-0451-4000-B000-000000000000";
+        internal const string SENSOR_GUID_SUFFFIX = "0-0451-4000-B000-000000000000";
+        internal const string SENSOR_NOTIFICATION_GUID_SUFFFIX = "1-0451-4000-B000-000000000000";
+        internal const string SENSOR_ENABLE_GUID_SUFFFIX = "2-0451-4000-B000-000000000000";
+        internal const string SENSOR_PERIOD_GUID_SUFFFIX = "3-0451-4000-B000-000000000000";
 
-        public const string valueServiceUuid = "F000AA71-0451-4000-B000-000000000000";
+        internal const string valueServiceUuid = "F000AA71-0451-4000-B000-000000000000";
 
-        public const string BUTTONS_GUID_STR = "0000FFE0-0000-1000-8000-00805F9B34FB";
-        public static readonly Guid BUTTONS_GUID = new Guid(BUTTONS_GUID_STR);
-        public static readonly Guid BUTTONS_NOTIFICATION_GUID = new Guid("0000FFE1-0000-1000-8000-00805F9B34FB");
+        internal const string BUTTONS_GUID_STR = "0000FFE0-0000-1000-8000-00805F9B34FB";
+        internal static readonly Guid BUTTONS_GUID = new Guid(BUTTONS_GUID_STR);
+        internal static readonly Guid BUTTONS_NOTIFICATION_GUID = new Guid("0000FFE1-0000-1000-8000-00805F9B34FB");
 
-        //public static readonly Guid BAROMETER_CONFIGURATION_GUID = new Guid("F000AA42-0451-4000-B000-000000000000");
-        //public static readonly Guid BAROMETER_CALIBRATION_GUID = new Guid("F000AA43-0451-4000-B000-000000000000");
+        //internal static readonly Guid BAROMETER_CONFIGURATION_GUID = new Guid("F000AA42-0451-4000-B000-000000000000");
+        //internal static readonly Guid BAROMETER_CALIBRATION_GUID = new Guid("F000AA43-0451-4000-B000-000000000000");
 
-        public const string IO_SENSOR_GUID_STR = "F000AA64-0451-4000-B000-000000000000";
-        public static readonly Guid IO_SENSOR_GUID = new Guid(IO_SENSOR_GUID_STR);
-        public static readonly Guid IO_SENSOR_DATA_GUID = new Guid("F000AA65-0451-4000-B000-000000000000");
-        public static readonly Guid IO_SENSOR_CONFIGURATION_GUID = new Guid("F000AA66-0451-4000-B000-000000000000");
-
-
-
-        public const string REGISTERS_GUID_STR = "F000AC00-0451-4000-B000-000000000000";
-        public static readonly Guid REGISTERS_GUID = new Guid(REGISTERS_GUID_STR);
-        public static readonly Guid REGISTERS_DATA_GUID = new Guid("F000AC01-0451-4000-B000-000000000000");
-        public static readonly Guid REGISTERS_ADDRESS_GUID = new Guid("F000AC02-0451-4000-B000-000000000000");
-        public static readonly Guid REGISTERS_DEVICE_ID_GUID = new Guid("F000AC03-0451-4000-B000-000000000000");
+        internal const string IO_SENSOR_GUID_STR = "F000AA64-0451-4000-B000-000000000000";
+        internal static readonly Guid IO_SENSOR_GUID = new Guid(IO_SENSOR_GUID_STR);
+        internal static readonly Guid IO_SENSOR_DATA_GUID = new Guid("F000AA65-0451-4000-B000-000000000000");
+        internal static readonly Guid IO_SENSOR_CONFIGURATION_GUID = new Guid("F000AA66-0451-4000-B000-000000000000");
 
 
 
-        //Constants for the Sensor device
-        /// <summary>
-        /// The relative "address" of the characteristic in the service.
-        /// There is an overlap.
-        /// </summary>
-        /// <param name="characteristic">A Service Characteristic</param>
-        /// <returns>The relative "address"</returns>
-        public int ReAddr(ServiceCharacteristicsEnum characteristic)
-        {
-            int ret = (int)characteristic;
-            switch (characteristic)
-            {
-                case ServiceCharacteristicsEnum.Address:
-                    ret = 2;
-                    break;
-                case ServiceCharacteristicsEnum.Device_Id:
-                    ret = 3;
-                    break;
-            }
-            return ret;
-        }
+        internal const string REGISTERS_GUID_STR = "F000AC00-0451-4000-B000-000000000000";
+        internal static readonly Guid REGISTERS_GUID = new Guid(REGISTERS_GUID_STR);
+        internal static readonly Guid REGISTERS_DATA_GUID = new Guid("F000AC01-0451-4000-B000-000000000000");
+        internal static readonly Guid REGISTERS_ADDRESS_GUID = new Guid("F000AC02-0451-4000-B000-000000000000");
+        internal static readonly Guid REGISTERS_DEVICE_ID_GUID = new Guid("F000AC03-0451-4000-B000-000000000000");
+
+
+
+        //////Constants for the Sensor device
+        /////// <summary>
+        /////// The relative "address" of the characteristic in the service.
+        /////// There is an overlap.
+        /////// </summary>
+        /////// <param name="characteristic">A Service Characteristic</param>
+        /////// <returns>The relative "address"</returns>
+        ////public int ReAddr(ServiceCharacteristicsEnum characteristic)
+        ////{
+        ////    int ret = (int)characteristic;
+        ////    switch (characteristic)
+        ////    {
+        ////        case ServiceCharacteristicsEnum.Address:
+        ////            ret = 2;
+        ////            break;
+        ////        case ServiceCharacteristicsEnum.Device_Id:
+        ////            ret = 3;
+        ////            break;
+        ////    }
+        ////    return ret;
+        ////}
 
         /// //////////////////////////
-        public const int SENSOR_MAX = (int)SensorIndexes.REGISTERS;
-        public const int NUM_SENSORS = SENSOR_MAX + 1;
-        public const int NUM_SENSORS_TO_TEST =  NUM_SENSORS;
-        public const int FIRST_SENSOR = 0;
+        ////internal const int SENSOR_MAX = (int)SensorIndexes.REGISTERS;
+        ////public const int NUM_SENSORS = SENSOR_MAX + 1;
+        ////internal const int NUM_SENSORS_TO_TEST = NUM_SENSORS;
+        ////internal const int FIRST_SENSOR = 0;
+
+        public static bool Use_DEVICE_BATTERY_SERVICE = true;
+        public static   bool Use_UUID_PROPERTIES_SERVICE = true;
+
+        internal const int SENSOR_MAX = (int)SensorIndexes.REGISTERS;
+        public static int NUM_SENSORS { get; set; } =  SENSOR_MAX;
+        public const int NUM_SENSORS_ALL = SENSOR_MAX + 1;
+        public static int NUM_SENSORS_TO_TEST { get; set; } = NUM_SENSORS;
+        public static int FIRST_SENSOR { get; set; } = (int)SensorIndexes.IR_SENSOR;
+
+
 
         /// <summary>
         /// List of sensors
@@ -124,7 +136,7 @@ namespace TICC2650SensorTag
         /// <summary>
         /// The number of bytes in for each sensor's Data characteristic
         /// </summary>
-        public static readonly List<int> DataLength = new List<int>(){
+        internal static readonly List<int> DataLength = new List<int>(){
             4,
             4,
             6,
@@ -136,13 +148,13 @@ namespace TICC2650SensorTag
             1,
         };
 
-        public static int BATT_INDX = 8; //Num Bytes for Battery Level is 1
+        internal static int BATT_INDX = 8; //Num Bytes for Battery Level is 1
 
 
         /// <summary>
         /// The prefix for sensor Guids. Keys, IO_SENSOR and REGISTERS excluded as these are specifically defined.
         /// </summary>
-        public static readonly List<string> UUIDBase = new List<string>(){
+        internal static readonly List<string> UUIDBase = new List<string>(){
             "F000AA0",
             "F000AA2",
             "F000AA4",
@@ -195,29 +207,36 @@ namespace TICC2650SensorTag
         public SensorIndexes SensorIndex { get; set; }
 
 
-        public static void SetUp()
+        public static void SetUp_SensorsLists()
         {
-            DisableSensorWithDisableNotifications = false;
-            if (System.Threading.Interlocked.Increment(ref SetUpRunTimes) == 1)
+            Debug.WriteLine("Begin SetUp_SensorsLists() " );
+            try { 
+                DisableSensorWithDisableNotifications = false;
+                if (System.Threading.Interlocked.Increment(ref SetUpRunTimes) == 1)
+                {
+                    SensorsCharacteristicsList = new CC2650SensorTag[NUM_SENSORS_ALL];
+                    for (int i = 0; i < SensorsCharacteristicsList.Length; i++)
+                    {
+                        SensorsCharacteristicsList[i] = null;
+                    }
+                    ServiceList = new GattDeviceService[NUM_SENSORS_ALL];
+
+                    for (int i = 0; i < ServiceList.Length; i++)
+                    {
+                        ServiceList[i] = null;
+                    }
+                    ActiveCharacteristicNotifications = new GattCharacteristic[NUM_SENSORS_ALL];
+                    for (int i = 0; i < ActiveCharacteristicNotifications.Length; i++)
+                    {
+                        ActiveCharacteristicNotifications[i] = null;
+                    }
+
+                }
+            } catch (Exception ex)
             {
-                SensorsCharacteristicsList = new CC2650SensorTag[NUM_SENSORS];
-                for (int i = 0; i < SensorsCharacteristicsList.Length; i++)
-                {
-                    SensorsCharacteristicsList[i] = null;
-                }
-                ServiceList = new GattDeviceService[NUM_SENSORS];
-
-                for (int i = 0; i < ServiceList.Length; i++)
-                {
-                    ServiceList[i] = null;
-                }
-                ActiveCharacteristicNotifications = new GattCharacteristic[NUM_SENSORS];
-                for (int i = 0; i < ActiveCharacteristicNotifications.Length; i++)
-                {
-                    ActiveCharacteristicNotifications[i] = null;
-                }
-
+                Debug.WriteLine("Error: SetUp() - " + ex.Message);
             }
+            Debug.WriteLine("End SetUp_SensorsLists() ");
         }
 
         /// <summary>
@@ -228,94 +247,99 @@ namespace TICC2650SensorTag
         public CC2650SensorTag(GattDeviceService gattService, SensorIndexes sensorIndex, SensorDataDelegate callMeBack)
         {
             Debug.WriteLine("Begin sensor constructor: " + sensorIndex.ToString());
-
-            GattService = gattService;
-            HasSetCallBacks = false;
-            SensorIndex = sensorIndex;
-            Guid guidNull = Guid.Empty;
-            Guid guidData = guidNull;
-            Guid guidNotification = guidNull;
-            Guid guidConfiguraton = guidNull;
-            Guid guidPeriod = guidNull;
-            Guid guidAddress = guidNull;
-            Guid guidDevId = guidNull;
-
-            CallMeBack = callMeBack;
-
-            IO_IsOn = false;
-
-            switch (SensorIndex)
+            try
             {
-                case SensorIndexes.KEYS:
-                    guidNotification = BUTTONS_NOTIFICATION_GUID;
-                    break;
-                case SensorIndexes.IO_SENSOR:
-                    guidData = IO_SENSOR_DATA_GUID;
-                    guidConfiguraton = IO_SENSOR_CONFIGURATION_GUID;
-                    break;
-                case SensorIndexes.REGISTERS:
-                    guidData = REGISTERS_DATA_GUID;
-                    guidAddress = REGISTERS_ADDRESS_GUID;
-                    guidDevId = REGISTERS_DEVICE_ID_GUID;
-                    break;
-                default:
-                    guidData = new Guid(UUIDBase[(int)SensorIndex] + SENSOR_GUID_SUFFFIX);
-                    guidNotification = new Guid(UUIDBase[(int)SensorIndex] + SENSOR_NOTIFICATION_GUID_SUFFFIX);
-                    guidConfiguraton = new Guid(UUIDBase[(int)SensorIndex] + SENSOR_ENABLE_GUID_SUFFFIX);
-                    guidPeriod = new Guid(UUIDBase[(int)SensorIndex] + SENSOR_PERIOD_GUID_SUFFFIX);
-                    break;
+                GattService = gattService;
+                HasSetCallBacks = false;
+                SensorIndex = sensorIndex;
+                Guid guidNull = Guid.Empty;
+                Guid guidData = guidNull;
+                Guid guidNotification = guidNull;
+                Guid guidConfiguraton = guidNull;
+                Guid guidPeriod = guidNull;
+                Guid guidAddress = guidNull;
+                Guid guidDevId = guidNull;
 
-            }
+                CallMeBack = callMeBack;
 
-            IReadOnlyList<GattCharacteristic> characteristicList_Data = null;
-            IReadOnlyList<GattCharacteristic> characteristicList_Notification = null;
-            IReadOnlyList<GattCharacteristic> characteristicList_Configuration = null;
-            IReadOnlyList<GattCharacteristic> characteristicList_Period = null;
+                IO_IsOn = false;
 
-            IReadOnlyList<GattCharacteristic> characteristicList_Address = null;
-            IReadOnlyList<GattCharacteristic> characteristicList_Device_Id = null;
+                switch (SensorIndex)
+                {
+                    case SensorIndexes.KEYS:
+                        guidNotification = BUTTONS_NOTIFICATION_GUID;
+                        break;
+                    case SensorIndexes.IO_SENSOR:
+                        guidData = IO_SENSOR_DATA_GUID;
+                        guidConfiguraton = IO_SENSOR_CONFIGURATION_GUID;
+                        break;
+                    case SensorIndexes.REGISTERS:
+                        guidData = REGISTERS_DATA_GUID;
+                        guidAddress = REGISTERS_ADDRESS_GUID;
+                        guidDevId = REGISTERS_DEVICE_ID_GUID;
+                        break;
+                    default:
+                        guidData = new Guid(UUIDBase[(int)SensorIndex] + SENSOR_GUID_SUFFFIX);
+                        guidNotification = new Guid(UUIDBase[(int)SensorIndex] + SENSOR_NOTIFICATION_GUID_SUFFFIX);
+                        guidConfiguraton = new Guid(UUIDBase[(int)SensorIndex] + SENSOR_ENABLE_GUID_SUFFFIX);
+                        guidPeriod = new Guid(UUIDBase[(int)SensorIndex] + SENSOR_PERIOD_GUID_SUFFFIX);
+                        break;
 
-            if (guidData != guidNull)
-                characteristicList_Data = gattService.GetCharacteristics(guidData);
-            if (guidNotification != guidNull)
-                characteristicList_Notification = gattService.GetCharacteristics(guidNotification);
-            if (guidConfiguraton != guidNull)
-                characteristicList_Configuration = gattService.GetCharacteristics(guidConfiguraton);
-            if (guidPeriod != guidNull)
-                characteristicList_Period = gattService.GetCharacteristics(guidPeriod);
+                }
 
-            if (guidAddress != guidNull)
-                characteristicList_Address = gattService.GetCharacteristics(guidAddress);
-            if (guidDevId != guidNull)
-                characteristicList_Device_Id = gattService.GetCharacteristics(guidDevId);
+                IReadOnlyList<GattCharacteristic> characteristicList_Data = null;
+                IReadOnlyList<GattCharacteristic> characteristicList_Notification = null;
+                IReadOnlyList<GattCharacteristic> characteristicList_Configuration = null;
+                IReadOnlyList<GattCharacteristic> characteristicList_Period = null;
 
-            if (characteristicList_Data != null)
-                if (characteristicList_Data.Count > 0)
-                    Data = characteristicList_Data[0];
-            if (characteristicList_Notification != null)
-                if (characteristicList_Notification.Count > 0)
-                    Notification = characteristicList_Notification[0];
-            if (characteristicList_Configuration != null)
-                if (characteristicList_Configuration.Count > 0)
-                    Configuration = characteristicList_Configuration[0];
-            if (characteristicList_Period != null)
-                if (characteristicList_Period.Count > 0)
-                    Data = characteristicList_Period[0];
+                IReadOnlyList<GattCharacteristic> characteristicList_Address = null;
+                IReadOnlyList<GattCharacteristic> characteristicList_Device_Id = null;
 
-            if (characteristicList_Address != null)
-                if (characteristicList_Address.Count > 0)
-                    Address = characteristicList_Address[0];
-            if (characteristicList_Device_Id != null)
-                if (characteristicList_Device_Id.Count > 0)
-                    Device_Id = characteristicList_Device_Id[0];
+                if (guidData != guidNull)
+                    characteristicList_Data = gattService.GetCharacteristics(guidData);
+                if (guidNotification != guidNull)
+                    characteristicList_Notification = gattService.GetCharacteristics(guidNotification);
+                if (guidConfiguraton != guidNull)
+                    characteristicList_Configuration = gattService.GetCharacteristics(guidConfiguraton);
+                if (guidPeriod != guidNull)
+                    characteristicList_Period = gattService.GetCharacteristics(guidPeriod);
 
-            SensorsCharacteristicsList[(int)sensorIndex] = this;
+                if (guidAddress != guidNull)
+                    characteristicList_Address = gattService.GetCharacteristics(guidAddress);
+                if (guidDevId != guidNull)
+                    characteristicList_Device_Id = gattService.GetCharacteristics(guidDevId);
 
-            if (SensorIndex >= 0 && SensorIndex != SensorIndexes.IO_SENSOR && SensorIndex != SensorIndexes.REGISTERS)
+                if (characteristicList_Data != null)
+                    if (characteristicList_Data.Count > 0)
+                        Data = characteristicList_Data[0];
+                if (characteristicList_Notification != null)
+                    if (characteristicList_Notification.Count > 0)
+                        Notification = characteristicList_Notification[0];
+                if (characteristicList_Configuration != null)
+                    if (characteristicList_Configuration.Count > 0)
+                        Configuration = characteristicList_Configuration[0];
+                if (characteristicList_Period != null)
+                    if (characteristicList_Period.Count > 0)
+                        Data = characteristicList_Period[0];
+
+                if (characteristicList_Address != null)
+                    if (characteristicList_Address.Count > 0)
+                        Address = characteristicList_Address[0];
+                if (characteristicList_Device_Id != null)
+                    if (characteristicList_Device_Id.Count > 0)
+                        Device_Id = characteristicList_Device_Id[0];
+
+                SensorsCharacteristicsList[(int)sensorIndex] = this;
+
+                if (SensorIndex >= 0 && SensorIndex != SensorIndexes.IO_SENSOR && SensorIndex != SensorIndexes.REGISTERS)
+                {
+                    ActiveCharacteristicNotifications[(int)SensorIndex] = Notification;
+                    Task.Run(() => this.EnableNotify()).Wait(); //Could leave out Wait but potentially could action this instance too soon
+                    Task.Run(() => this.TurnOnSensor()).Wait(); //This launches a new thread for this action but stalls the constructor thread.
+                }
+            } catch (Exception ex)
             {
-                ActiveCharacteristicNotifications[(int)SensorIndex] = Notification;
-                Task.Run(() => this.EnableNotify()).Wait(); //Could leave out Wait but potentially could action this instance too soon
-                Task.Run(() => this.TurnOnSensor()).Wait(); //This launches a new thread for this action but stalls the constructor thread.
+                Debug.WriteLine("Error: CC2650SensorTag() Constructor -  " + ex.Message);
             }
 
             Debug.WriteLine("End sensor constructor: " + SensorIndex.ToString());
@@ -325,28 +349,35 @@ namespace TICC2650SensorTag
         {
             Debug.WriteLine("Begin turn on sensor: " + SensorIndex.ToString());
             // Turn on sensor
-            if (SensorIndex >= 0 && SensorIndex != SensorIndexes.KEYS && SensorIndex != SensorIndexes.IO_SENSOR && SensorIndex != SensorIndexes.REGISTERS)
+            try
             {
-                if (Configuration != null)
-                    if (Configuration.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
-                    {
-                        var writer = new Windows.Storage.Streams.DataWriter();
-                        if (SensorIndex == SensorIndexes.MOVEMENT)
+                if (SensorIndex >= 0 && SensorIndex != SensorIndexes.KEYS && SensorIndex != SensorIndexes.IO_SENSOR && SensorIndex != SensorIndexes.REGISTERS)
+                {
+                    if (Configuration != null)
+                        if (Configuration.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
                         {
-                            byte[] bytes = new byte[] { 0x7f, 0x00 };
-                            writer.WriteBytes(bytes);
-                        }
-                        else
-                            writer.WriteByte((Byte)0x01);
+                            var writer = new Windows.Storage.Streams.DataWriter();
+                            if (SensorIndex == SensorIndexes.MOVEMENT)
+                            {
+                                byte[] bytes = new byte[] { 0x7f, 0x00 };
+                                writer.WriteBytes(bytes);
+                            }
+                            else
+                                writer.WriteByte((Byte)0x01);
 
-                        var status = await Configuration.WriteValueAsync(writer.DetachBuffer());
-                    }
+                            var status = await Configuration.WriteValueAsync(writer.DetachBuffer());
+                        }
+                }
+            } catch (Exception ex)
+            {
+                Debug.WriteLine("Error: TurnOnSensor() - " + ex.Message);
             }
             Debug.WriteLine("End turn on sensor: " + SensorIndex.ToString());
         }
 
         public async Task TurnOffSensor()
         {
+            try { 
             Debug.WriteLine("Begin turn off sensor: " + SensorIndex.ToString());
             // Turn on sensor
             if (SensorIndex >= 0 && SensorIndex != SensorIndexes.KEYS && SensorIndex != SensorIndexes.IO_SENSOR && SensorIndex != SensorIndexes.REGISTERS)
@@ -367,6 +398,11 @@ namespace TICC2650SensorTag
                         var status = await Configuration.WriteValueAsync(writer.DetachBuffer());
                     }
             }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: TurnOffSensor() - " + ex.Message);
+            }
             Debug.WriteLine("End turn off sensor: " + SensorIndex.ToString());
         }
 
@@ -376,99 +412,120 @@ namespace TICC2650SensorTag
         {
 
             Debug.WriteLine("Begin EnableNotify sensor: " + SensorIndex.ToString());
-            if (Notification != null)
+            try
             {
-                if (!HasSetCallBacks)
-                {
-                    switch (SensorIndex)
-                    {
-                        case SensorIndexes.KEYS:
-                            Notification.ValueChanged += keyChanged;
-                            break;
-                        case SensorIndexes.IR_SENSOR:
-                            Notification.ValueChanged += tempChanged;
-                            break;
-                        case SensorIndexes.HUMIDITY:
-                            Notification.ValueChanged += humidChanged;
-                            break;
-                        case SensorIndexes.OPTICAL:
-                            Notification.ValueChanged += opticalChanged;
-                            break;
-                        case SensorIndexes.MOVEMENT:
-                            Notification.ValueChanged += movementChanged;
-                            break;
-                        case SensorIndexes.BAROMETRIC_PRESSURE:
-                            Notification.ValueChanged += pressureCC2650Changed;
-                            break;
-                        case SensorIndexes.IO_SENSOR:
-                            break;
-                        case SensorIndexes.REGISTERS:
-                            break;
-                        default:
-                            break;
-                    }
-                    HasSetCallBacks = true;
-                }
                 if (Notification != null)
-                    if (Notification.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
-                        await Notification.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
+                {
+                    if (!HasSetCallBacks)
+                    {
+                        switch (SensorIndex)
+                        {
+                            case SensorIndexes.KEYS:
+                                Notification.ValueChanged += keyChanged;
+                                break;
+                            case SensorIndexes.IR_SENSOR:
+                                Notification.ValueChanged += tempChanged;
+                                break;
+                            case SensorIndexes.HUMIDITY:
+                                Notification.ValueChanged += humidChanged;
+                                break;
+                            case SensorIndexes.OPTICAL:
+                                Notification.ValueChanged += opticalChanged;
+                                break;
+                            case SensorIndexes.MOVEMENT:
+                                Notification.ValueChanged += movementChanged;
+                                break;
+                            case SensorIndexes.BAROMETRIC_PRESSURE:
+                                Notification.ValueChanged += pressureCC2650Changed;
+                                break;
+                            case SensorIndexes.IO_SENSOR:
+                                break;
+                            case SensorIndexes.REGISTERS:
+                                break;
+                            default:
+                                break;
+                        }
+                        HasSetCallBacks = true;
+                    }
+                    if (Notification != null)
+                        if (Notification.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
+                            await Notification.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
+                }
             }
-            Debug.WriteLine("End EnableNotify sensor: " + SensorIndex.ToString());
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: EnableNotify() - " + ex.Message);
+            }
+            Debug.WriteLine("(End EnableNotify sensor: " + SensorIndex.ToString());
         }
 
         public async Task DisableNotify()
         {
             Debug.WriteLine("Begin DisableNotify sensor: " + SensorIndex.ToString());
-            if (Notification != null)
-                if (Notification.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
-                    await Notification.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.None);
+            try
+            {
+                if (Notification != null)
+                    if (Notification.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
+                        await Notification.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.None);
+            } 
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: DisableNotify() - " + ex.Message);
+            }
             Debug.WriteLine("End DisableNotify sensor: " + SensorIndex.ToString());
         }
 
         private async Task<bool> WriteSensor(byte[] bytes, ServiceCharacteristicsEnum character)
         {
-            Debug.WriteLine("Begin write sensor: " + SensorIndex.ToString());
             bool ret = false;
-            if (GattService != null)
+            Debug.WriteLine("Begin WriteSensor: " + SensorIndex.ToString());
+            try
             {
-                GattCharacteristic characteristic = null;
-                GattCharacteristicProperties flag = GattCharacteristicProperties.Write;
-                switch (character)
+                if (GattService != null)
                 {
-                    case ServiceCharacteristicsEnum.Data:
-                        characteristic = this.Data;
-                        break;
-                    case ServiceCharacteristicsEnum.Notification:
-                        flag = GattCharacteristicProperties.Notify;
-                        characteristic = this.Notification;
-                        break;
-                    case ServiceCharacteristicsEnum.Configuration:
-                        characteristic = this.Configuration;
-                        break;
-                    case ServiceCharacteristicsEnum.Period:
-                        characteristic = this.Period;
-                        break;
-                    case ServiceCharacteristicsEnum.Address:
-                        characteristic = this.Address;
-                        break;
-                    case ServiceCharacteristicsEnum.Device_Id:
-                        characteristic = this.Device_Id;
-                        break;
-                }
-                if (characteristic != null)
-                {
-                    if (characteristic.CharacteristicProperties.HasFlag(flag))
+                    GattCharacteristic characteristic = null;
+                    GattCharacteristicProperties flag = GattCharacteristicProperties.Write;
+                    switch (character)
                     {
-                        var writer = new Windows.Storage.Streams.DataWriter();
-                        writer.WriteBytes(bytes);
+                        case ServiceCharacteristicsEnum.Data:
+                            characteristic = this.Data;
+                            break;
+                        case ServiceCharacteristicsEnum.Notification:
+                            flag = GattCharacteristicProperties.Notify;
+                            characteristic = this.Notification;
+                            break;
+                        case ServiceCharacteristicsEnum.Configuration:
+                            characteristic = this.Configuration;
+                            break;
+                        case ServiceCharacteristicsEnum.Period:
+                            characteristic = this.Period;
+                            break;
+                        case ServiceCharacteristicsEnum.Address:
+                            characteristic = this.Address;
+                            break;
+                        case ServiceCharacteristicsEnum.Device_Id:
+                            characteristic = this.Device_Id;
+                            break;
+                    }
+                    if (characteristic != null)
+                    {
+                        if (characteristic.CharacteristicProperties.HasFlag(flag))
+                        {
+                            var writer = new Windows.Storage.Streams.DataWriter();
+                            writer.WriteBytes(bytes);
 
-                        var status = await characteristic.WriteValueAsync(writer.DetachBuffer());
-                        if (status == GattCommunicationStatus.Success)
-                            ret = true;
+                            var status = await characteristic.WriteValueAsync(writer.DetachBuffer());
+                            if (status == GattCommunicationStatus.Success)
+                                ret = true;
+                        }
                     }
                 }
             }
-            Debug.WriteLine("End write sensor: " + SensorIndex.ToString());
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: WriteSensor() - " + ex.Message);
+            }
+            Debug.WriteLine("End WriteSensor " + SensorIndex.ToString());
             return ret;
         }
 
@@ -483,55 +540,62 @@ namespace TICC2650SensorTag
         {
             byte[] bytes = null;
             SensorData sensorData = null;
-            Debug.WriteLine("Begin read sensor: " + SensorIndex.ToString());
-            if (SensorIndex >= 0 && SensorIndex != SensorIndexes.IO_SENSOR && SensorIndex != SensorIndexes.REGISTERS)
+            Debug.WriteLine("Begin ReadSensor: " + SensorIndex.ToString());
+            try
             {
-                if (GattService != null)
+                if (SensorIndex >= 0 && SensorIndex != SensorIndexes.IO_SENSOR && SensorIndex != SensorIndexes.REGISTERS)
                 {
-                    if (disableNotify)
-                        await DisableNotify();
-                    //Enable Sensor
-                    if (turnSensorOffOn)
-                        await TurnOnSensor();
-                    bytes = await ReadSensorBase(ServiceCharacteristicsEnum.Notification);//..Data);
-                    //Disable Sensor
-                    if (turnSensorOffOn)
-                        await TurnOffSensor();
-                }
-            }
-
-            if ( (bytes != null) && (updateDisplay))
-            {
-                switch (SensorIndex)
-                {
-                    case SensorIndexes.KEYS:
-                        sensorData = await keyChangedProc(bytes, updateDisplay);
-                        break;
-                    case SensorIndexes.IR_SENSOR:
-                        sensorData = await tempChangedProc(bytes, updateDisplay);
-                        break;
-                    case SensorIndexes.HUMIDITY:
-                        sensorData = await humidChangedProc(bytes, updateDisplay);
-                        break;
-                    case SensorIndexes.OPTICAL:
-                        sensorData = await opticalChangedProc(bytes, updateDisplay);
-                        break;
-                    case SensorIndexes.MOVEMENT:
-                        sensorData = await movementChangedProc(bytes, updateDisplay);
-                        break;
-                    case SensorIndexes.BAROMETRIC_PRESSURE:
-                        sensorData = await pressureCC2650ChangedProc(bytes, updateDisplay);
-                        break;
-                    case SensorIndexes.IO_SENSOR:
-                        break;
-                    case SensorIndexes.REGISTERS:
-                        break;
-                    default:
-                        break;
+                    if (GattService != null)
+                    {
+                        if (disableNotify)
+                            await DisableNotify();
+                        //Enable Sensor
+                        if (turnSensorOffOn)
+                            await TurnOnSensor();
+                        bytes = await ReadSensorBase(ServiceCharacteristicsEnum.Notification);//..Data);
+                                                                                              //Disable Sensor
+                        if (turnSensorOffOn)
+                            await TurnOffSensor();
+                    }
                 }
 
+                if ((bytes != null) && (updateDisplay))
+                {
+                    switch (SensorIndex)
+                    {
+                        case SensorIndexes.KEYS:
+                            sensorData = await keyChangedProc(bytes, updateDisplay);
+                            break;
+                        case SensorIndexes.IR_SENSOR:
+                            sensorData = await tempChangedProc(bytes, updateDisplay);
+                            break;
+                        case SensorIndexes.HUMIDITY:
+                            sensorData = await humidChangedProc(bytes, updateDisplay);
+                            break;
+                        case SensorIndexes.OPTICAL:
+                            sensorData = await opticalChangedProc(bytes, updateDisplay);
+                            break;
+                        case SensorIndexes.MOVEMENT:
+                            sensorData = await movementChangedProc(bytes, updateDisplay);
+                            break;
+                        case SensorIndexes.BAROMETRIC_PRESSURE:
+                            sensorData = await pressureCC2650ChangedProc(bytes, updateDisplay);
+                            break;
+                        case SensorIndexes.IO_SENSOR:
+                            break;
+                        case SensorIndexes.REGISTERS:
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
             }
-            Debug.WriteLine("End read sensor: " + SensorIndex.ToString());
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: ReadSensor() - " + ex.Message);
+            }
+            Debug.WriteLine("End ReadSensor: " + SensorIndex.ToString());
             return sensorData;
         }
 
@@ -543,38 +607,40 @@ namespace TICC2650SensorTag
         public async Task<byte[]> ReadSensorBase(ServiceCharacteristicsEnum character)
         {
             byte[] bytes = null;
-            Debug.WriteLine("Begin read sensor base: " + SensorIndex.ToString());
+            Debug.WriteLine("Begin ReadSensorBase: " + SensorIndex.ToString());
             bool ret = false;
-            if (GattService != null)
+            try
             {
-                bytes = new byte[DataLength[(int)SensorIndex]];
-                GattCharacteristic characteristic = null;
-                GattCharacteristicProperties flag = GattCharacteristicProperties.Read;
-                switch (character)
+                if (GattService != null)
                 {
-                    case ServiceCharacteristicsEnum.Data:
-                        characteristic = this.Data;
-                        break;
-                    case ServiceCharacteristicsEnum.Notification:
-                        characteristic = this.Notification;
-                        break;
-                    case ServiceCharacteristicsEnum.Configuration:
-                        characteristic = this.Configuration;
-                        break;
-                    case ServiceCharacteristicsEnum.Period:
-                        characteristic = this.Period;
-                        break;
-                    case ServiceCharacteristicsEnum.Address:
-                        characteristic = this.Address;
-                        break;
-                    case ServiceCharacteristicsEnum.Device_Id:
-                        characteristic = this.Device_Id;
-                        break;
-                }
-                if (characteristic != null)
-                {
-                    if (characteristic.CharacteristicProperties.HasFlag(flag))
+                    bytes = new byte[DataLength[(int)SensorIndex]];
+                    GattCharacteristic characteristic = null;
+                    GattCharacteristicProperties flag = GattCharacteristicProperties.Read;
+                    switch (character)
                     {
+                        case ServiceCharacteristicsEnum.Data:
+                            characteristic = this.Data;
+                            break;
+                        case ServiceCharacteristicsEnum.Notification:
+                            characteristic = this.Notification;
+                            break;
+                        case ServiceCharacteristicsEnum.Configuration:
+                            characteristic = this.Configuration;
+                            break;
+                        case ServiceCharacteristicsEnum.Period:
+                            characteristic = this.Period;
+                            break;
+                        case ServiceCharacteristicsEnum.Address:
+                            characteristic = this.Address;
+                            break;
+                        case ServiceCharacteristicsEnum.Device_Id:
+                            characteristic = this.Device_Id;
+                            break;
+                    }
+                    if (characteristic != null)
+                    {
+                        if (characteristic.CharacteristicProperties.HasFlag(flag))
+                        {
 
                             GattReadResult result = await characteristic.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
 
@@ -592,12 +658,18 @@ namespace TICC2650SensorTag
                                 Windows.Storage.Streams.DataReader.FromBuffer(result.Value).ReadBytes(bytes);
 
                             }
-                        
-                      
+
+
+                        }
                     }
                 }
+
             }
-            Debug.WriteLine("End read sensor base: " + SensorIndex.ToString());
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: ReadSensorBase() - " + ex.Message);
+            }
+            Debug.WriteLine("End ReadSensorBase: " + SensorIndex.ToString());
             if (!ret)
                 bytes = null;
             return bytes;
@@ -607,107 +679,126 @@ namespace TICC2650SensorTag
 
         public async static Task GlobalActionIO(IOActions action, int target)
         {
-            if (SensorsCharacteristicsList != null)
-                if (SensorsCharacteristicsList[(int)SensorIndexes.IO_SENSOR] != null)
-                    if (SensorsCharacteristicsList[(int)SensorIndexes.IO_SENSOR].Configuration != null)
-                        if (SensorsCharacteristicsList[(int)SensorIndexes.IO_SENSOR].Data != null)
-                            await SensorsCharacteristicsList[(int)SensorIndexes.IO_SENSOR].ActionIO(action, target);
+            Debug.WriteLine("Begin GlobalActionIO: " );
+            try
+            {
+                if (SensorsCharacteristicsList != null)
+                    if (SensorsCharacteristicsList[(int)SensorIndexes.IO_SENSOR] != null)
+                        if (SensorsCharacteristicsList[(int)SensorIndexes.IO_SENSOR].Configuration != null)
+                            if (SensorsCharacteristicsList[(int)SensorIndexes.IO_SENSOR].Data != null)
+                                await SensorsCharacteristicsList[(int)SensorIndexes.IO_SENSOR].ActionIO(action, target);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: GlobalActionIO() - " + ex.Message);
+            }
+            Debug.WriteLine("End GlobalActionIO: " );
         }
 
         private bool IO_IsOn { get; set;} = false;
-        private async  Task ActionIO(IOActions action, int target)
+        private async Task ActionIO(IOActions action, int target)
         {
+            Debug.WriteLine("Begin ActionIO: ");
             //Set in Remote mode
-            byte[] bytes = new byte[] {  0x00 };//off
+            byte[] bytes = new byte[] { 0x00 };//off
             bool res = true;
-            if (action == IOActions.Enable) 
+            try
             {
-                if (!IO_IsOn)
+                if (action == IOActions.Enable)
                 {
-                    //Turn IO ON
-                    bytes[0] = 0;
-                    res = await this.WriteSensor(bytes, ServiceCharacteristicsEnum.Data);
-                    if (res)
+                    if (!IO_IsOn)
                     {
-                        bytes[0] = 1;//on
-                        res = await this.WriteSensor(bytes, ServiceCharacteristicsEnum.Configuration);
+                        //Turn IO ON
+                        bytes[0] = 0;
+                        res = await this.WriteSensor(bytes, ServiceCharacteristicsEnum.Data);
                         if (res)
                         {
-                            IO_IsOn = true;
-                            Debug.WriteLine("Sensor IO enabled.");
+                            bytes[0] = 1;//on
+                            res = await this.WriteSensor(bytes, ServiceCharacteristicsEnum.Configuration);
+                            if (res)
+                            {
+                                IO_IsOn = true;
+                                Debug.WriteLine("Sensor IO enabled.");
+                            }
                         }
+                        if (!res)
+                            Debug.WriteLine("Sensor IO enable failed.");
                     }
-                    if (!res)
-                        Debug.WriteLine("Sensor IO enable failed.");
                 }
-            }
-            else if ((action == IOActions.On) || (action == IOActions.AllOff))
-            {
-                if (IO_IsOn)
+                else if ((action == IOActions.On) || (action == IOActions.AllOff))
                 {
-                    if (action == IOActions.AllOff)
-                        target = 0;
-                    if (!(new List<int> { 0, 1, 2, 4, 3, 5, 6, 7 }.Contains(target)))
-                        return;
-                    //Turn on target/s (Could toggle)
-                    bytes[0] = (byte)target;
-                    res = await this.WriteSensor(bytes, ServiceCharacteristicsEnum.Data);
-                    if (res)
+                    if (IO_IsOn)
                     {
-                        switch (target)
+                        if (action == IOActions.AllOff)
+                            target = 0;
+                        if (!(new List<int> { 0, 1, 2, 4, 3, 5, 6, 7 }.Contains(target)))
+                            return;
+                        //Turn on target/s (Could toggle)
+                        bytes[0] = (byte)target;
+                        res = await this.WriteSensor(bytes, ServiceCharacteristicsEnum.Data);
+                        if (res)
                         {
-                            case 0:
-                                Debug.WriteLine("LEDS/BUZZ OFF");
-                                break;
-                            case 1:
-                                Debug.WriteLine("LED1 ON");
-                                break;
-                            case 2:
-                                Debug.WriteLine("LED21 ON");
-                                break;
-                            case 4:
-                                Debug.WriteLine("BUZZ ON");
-                                break;
-                            case 3:
-                                Debug.WriteLine("LEDs 1&2 ON");
-                                break;
-                            case 5:
-                                Debug.WriteLine("BUZZ & LED1 ON");
-                                break;
-                            case 6:
-                                Debug.WriteLine("BUZZ & LED2 ON");
-                                break;
-                            case 7:
-                                Debug.WriteLine("LEDs 1&2 + BUZZ ON");
-                                break;
+                            switch (target)
+                            {
+                                case 0:
+                                    Debug.WriteLine("LEDS/BUZZ OFF");
+                                    break;
+                                case 1:
+                                    Debug.WriteLine("LED1 ON");
+                                    break;
+                                case 2:
+                                    Debug.WriteLine("LED21 ON");
+                                    break;
+                                case 4:
+                                    Debug.WriteLine("BUZZ ON");
+                                    break;
+                                case 3:
+                                    Debug.WriteLine("LEDs 1&2 ON");
+                                    break;
+                                case 5:
+                                    Debug.WriteLine("BUZZ & LED1 ON");
+                                    break;
+                                case 6:
+                                    Debug.WriteLine("BUZZ & LED2 ON");
+                                    break;
+                                case 7:
+                                    Debug.WriteLine("LEDs 1&2 + BUZZ ON");
+                                    break;
+                            }
                         }
+                        else
+                            Debug.WriteLine("IO failed for target {0}", target);
                     }
-                    else
-                        Debug.WriteLine("IO failed for target {0}", target);
                 }
-            }
-            else
-            {
-                //Disable
-                if (IO_IsOn)
+                else
                 {
-                    bytes[0] = 0;
-                    res = await this.WriteSensor(bytes, ServiceCharacteristicsEnum.Data);
-                    if (res)
+                    //Disable
+                    if (IO_IsOn)
                     {
-                        bytes[0] = 0;//off
-                        res = await this.WriteSensor(bytes, ServiceCharacteristicsEnum.Configuration);
+                        bytes[0] = 0;
+                        res = await this.WriteSensor(bytes, ServiceCharacteristicsEnum.Data);
+                        if (res)
+                        {
+                            bytes[0] = 0;//off
+                            res = await this.WriteSensor(bytes, ServiceCharacteristicsEnum.Configuration);
 
+                        }
+                        if (res)
+                        {
+                            IO_IsOn = false;
+                            Debug.WriteLine("Sensor IO disabled");
+                        }
+                        else
+                            Debug.WriteLine("Sensor IO disable failed");
                     }
-                    if (res)
-                    {
-                        IO_IsOn = false;
-                        Debug.WriteLine("Sensor IO disabled");
-                    }
-                    else
-                        Debug.WriteLine("Sensor IO disable failed");
-                }
+
+                } }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: ActionIO() - " + ex.Message);
             }
+            Debug.WriteLine("End ActionIO: ");
         }
-    }
+
+   }
 }
