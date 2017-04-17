@@ -1,4 +1,5 @@
 
+
 ## TI CC2650 SensorTag V3.02
 
 [This repository](https://github.com/djaus2/CC2650SensorTag-CS) is a port of the [ms-iot/Samples/BluetoothGatt/CS GitHub](https://github.com/ms-iot/samples/tree/develop/BluetoothGATT/CS) code to support the Texas Instruments CC2650STK, the **CC2650 SensorTag**. The Microsoft code only supports the TI CC2541 Sensor Tag. This code has been refactored and extended to only support the CC2650.
@@ -62,4 +63,7 @@ I have done the latest testing on build 14393, Anniversary Update, with the same
 - Get Battery Level
 - Manual reads now work. 
 - Buttons moved to SlipView Pane
+
+In App pairing dosn't work. Need to pair Sensortag in settings or in DeviceManager.
+New version to be uploaded to fix UX issue. See Closed Issues.
 
