@@ -105,10 +105,14 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Parameters.xaml.cs">
+      <DependentUpon>Parameters.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DeviceProperties.xaml.cs">
       <DependentUpon>DeviceProperties.xaml</DependentUpon>
     </Compile>
     <Compile Include="DisplayHelper.cs" />
+    <None Include="SysInfo.cs" />
     <None Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </None>
@@ -154,6 +158,10 @@
       <SubType>Designer</SubType>
     </None>
     <Page Include="MainPage2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Parameters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

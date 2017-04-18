@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:notiotcore="condition:NOT_IOT_CORE"
     mc:Ignorable="d notiotcore"
-    mc:ProcessContent="notiotcore:*">
+    mc:ProcessContent="notiotcore:*" Loaded="Page_Loaded">
 
 
 
@@ -314,8 +314,8 @@
                             <!--<Button x:Name="PairButton" Content="Pair -Connect" Background="#CCFFFFFF" Click="PairButton_Click" Margin="10,0,0,0" Style="{StaticResource ButtonStyleGATT}" IsEnabled="True"></Button>
                             <Button x:Name="UnpairButton" Content="Unpair Device" Background="#CCFFFFFF" Click="UnpairButton_Click" Margin="10,0,0,0" Style="{StaticResource ButtonStyleGATT}" IsEnabled="False"></Button>
                             <Button x:Name="ExitButton" Content="Exit" Background="#CCFFFFFF" Click="ExitButton_Click" Margin="10,0,0,0" Style="{StaticResource ButtonStyleGATT}" IsEnabled="True"></Button>-->
-                            <TextBlock FontSize="20" Foreground="White" Margin="10">
-                        <Run Text="Sportronics"/>
+                            <TextBlock x:Name="txtCompany"  FontSize="20" Foreground="White" Margin="10">
+                              Sportronics
                             </TextBlock>
                         </StackPanel>
 

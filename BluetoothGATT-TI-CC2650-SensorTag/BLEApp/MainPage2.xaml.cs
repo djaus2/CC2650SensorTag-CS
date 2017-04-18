@@ -174,7 +174,8 @@ namespace BluetoothGATT
             DataContext = this;
             //Start Watcher for pairable/paired devices
 
-
+            //SysInfo.GetInfo();
+            //txtCompany.Text += "    OS Version: " + SysInfo.SystemVersion;
 
             CC2650SensorTag_BLEWatcher = new TICC2650SensorTag_BLEWatcher(this.UpdateButtons_WhenSensorsAreReady_CallBack, this.CallMeBackTemp, this.initSensor);
             var res = Task<bool>.Run(() => StartWatcher());
@@ -183,6 +184,11 @@ namespace BluetoothGATT
         ~MainPage2()
         {
             StopWatcher();
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
 
 
@@ -203,7 +209,7 @@ namespace BluetoothGATT
                 LED1Button.IsEnabled = true;
                 LED2Button.IsEnabled = true;
 
-                UserOut.Text = "Sensors on!";
+                UserOut.Text = "Sensors on!     ";
             });
         }
 
@@ -473,6 +479,8 @@ namespace BluetoothGATT
             }
         }
 
+
+        //private int DoneSensorCout { get; set; } = 0;
         private async Task initSensor(CC2650SensorTag.SensorIndexes sensorIndx)
         {
             Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
@@ -508,6 +516,8 @@ namespace BluetoothGATT
                             break;
                     }
                 }
+                //DoneSensorCout++;
+                //UserOut.Text = UserOut.Text.Substring(0, UserOut.Text.Length - 5) + string.Format(" {0,4}", DoneSensorCout);
             });
 
             Debug.WriteLine("End init sensor(new): " + sensorIndx.ToString());
@@ -1151,6 +1161,7 @@ namespace BluetoothGATT
             this.Frame.Navigate(typeof( DeviceProperties), this);
 
         }
+
 
     }
 }

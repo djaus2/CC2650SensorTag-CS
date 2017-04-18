@@ -106,13 +106,13 @@ namespace TICC2650SensorTag
         ////internal const int NUM_SENSORS_TO_TEST = NUM_SENSORS;
         ////internal const int FIRST_SENSOR = 0;
 
-        public static bool Use_DEVICE_BATTERY_SERVICE = true;
-        public static   bool Use_UUID_PROPERTIES_SERVICE = true;
+        public static bool Use_DEVICE_BATTERY_SERVICE = false;
+        public static   bool Use_UUID_PROPERTIES_SERVICE = false;
 
         internal const int SENSOR_MAX = (int)SensorIndexes.REGISTERS;
         public static int NUM_SENSORS { get; set; } =  SENSOR_MAX;
         public const int NUM_SENSORS_ALL = SENSOR_MAX + 1;
-        public static int NUM_SENSORS_TO_TEST { get; set; } = NUM_SENSORS;
+        public static int NUM_SENSORS_TO_TEST { get; set; } =  NUM_SENSORS;
         public static int FIRST_SENSOR { get; set; } = (int)SensorIndexes.IR_SENSOR;
 
 
@@ -449,7 +449,11 @@ namespace TICC2650SensorTag
                     }
                     if (Notification != null)
                         if (Notification.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
+                        {
+                            Debug.WriteLine("Awaiting EnableNotify sensor: " + SensorIndex.ToString());
                             await Notification.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
+                            Debug.WriteLine("Awaited EnableNotify sensor: " + SensorIndex.ToString());
+                        }
                 }
             }
             catch (Exception ex)
