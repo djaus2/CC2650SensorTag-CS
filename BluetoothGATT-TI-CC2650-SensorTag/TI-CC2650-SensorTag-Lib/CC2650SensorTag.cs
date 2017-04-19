@@ -13,7 +13,7 @@ namespace TICC2650SensorTag
 {
     public sealed partial class CC2650SensorTag : ICC2650SensorTag
     {
-        public static List<string> DeviceAltSensorNames { get; internal set; } = new List<string> { "CC2650 SensorTag" , "SensorTag 2.0" };
+        public static List<string> DeviceAltSensorNames { get; internal set; } = new List<string> { "CC2650 SensorTag", "SensorTag 2.0" };
 
         private static int SetUpRunTimes = 0;
         //Class specific enums
@@ -106,8 +106,8 @@ namespace TICC2650SensorTag
         ////internal const int NUM_SENSORS_TO_TEST = NUM_SENSORS;
         ////internal const int FIRST_SENSOR = 0;
 
-        public static bool Use_DEVICE_BATTERY_SERVICE = false;
-        public static   bool Use_UUID_PROPERTIES_SERVICE = false;
+        public static bool Use_DEVICE_BATTERY_SERVICE { get; set; } = false;
+        public static bool Use_UUID_PROPERTIES_SERVICE { get; set; } = false;
 
         internal const int SENSOR_MAX = (int)SensorIndexes.REGISTERS;
         public static int NUM_SENSORS { get; set; } =  SENSOR_MAX;
@@ -339,7 +339,7 @@ namespace TICC2650SensorTag
                 }
             } catch (Exception ex)
             {
-                Debug.WriteLine("Error: CC2650SensorTag() Constructor -  " + ex.Message);
+                Debug.WriteLine("Error: CC2650SensorTag() Constructor: " + SensorIndex.ToString() + " " + ex.Message);
             }
 
             Debug.WriteLine("End sensor constructor: " + SensorIndex.ToString());
@@ -370,7 +370,7 @@ namespace TICC2650SensorTag
                 }
             } catch (Exception ex)
             {
-                Debug.WriteLine("Error: TurnOnSensor() - " + ex.Message);
+                Debug.WriteLine("Error: TurnOnSensor() : " + SensorIndex.ToString() +" " + ex.Message);
             }
             Debug.WriteLine("End turn on sensor: " + SensorIndex.ToString());
         }
@@ -401,7 +401,7 @@ namespace TICC2650SensorTag
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error: TurnOffSensor() - " + ex.Message);
+                Debug.WriteLine("Error: TurnOffSensor(): " + SensorIndex.ToString() + " " + ex.Message);
             }
             Debug.WriteLine("End turn off sensor: " + SensorIndex.ToString());
         }
@@ -458,9 +458,9 @@ namespace TICC2650SensorTag
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error: EnableNotify() - " + ex.Message);
+                Debug.WriteLine("Error: EnableNotify(): " + SensorIndex.ToString() + " " + ex.Message);
             }
-            Debug.WriteLine("(End EnableNotify sensor: " + SensorIndex.ToString());
+             Debug.WriteLine("(End EnableNotify sensor: " + SensorIndex.ToString());
         }
 
         public async Task DisableNotify()
@@ -474,7 +474,7 @@ namespace TICC2650SensorTag
             } 
             catch (Exception ex)
             {
-                Debug.WriteLine("Error: DisableNotify() - " + ex.Message);
+                Debug.WriteLine("Error: DisableNotify(): " + SensorIndex.ToString() + " " + ex.Message);
             }
             Debug.WriteLine("End DisableNotify sensor: " + SensorIndex.ToString());
         }
@@ -527,7 +527,7 @@ namespace TICC2650SensorTag
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error: WriteSensor() - " + ex.Message);
+                Debug.WriteLine("Error: WriteSensor(): " + SensorIndex.ToString() + " " + ex.Message);
             }
             Debug.WriteLine("End WriteSensor " + SensorIndex.ToString());
             return ret;
@@ -597,7 +597,7 @@ namespace TICC2650SensorTag
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error: ReadSensor() - " + ex.Message);
+                Debug.WriteLine("Error: ReadSensor(): " + SensorIndex.ToString() + " " + ex.Message);
             }
             Debug.WriteLine("End ReadSensor: " + SensorIndex.ToString());
             return sensorData;
@@ -671,7 +671,7 @@ namespace TICC2650SensorTag
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error: ReadSensorBase() - " + ex.Message);
+                Debug.WriteLine("Error: ReadSensorBase(): " + SensorIndex.ToString() + " " + ex.Message);
             }
             Debug.WriteLine("End ReadSensorBase: " + SensorIndex.ToString());
             if (!ret)

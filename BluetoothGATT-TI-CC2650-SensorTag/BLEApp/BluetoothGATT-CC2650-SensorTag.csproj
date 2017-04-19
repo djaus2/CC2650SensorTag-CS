@@ -112,7 +112,7 @@
       <DependentUpon>DeviceProperties.xaml</DependentUpon>
     </Compile>
     <Compile Include="DisplayHelper.cs" />
-    <None Include="SysInfo.cs" />
+    <Compile Include="SysInfo.cs" />
     <None Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </None>
