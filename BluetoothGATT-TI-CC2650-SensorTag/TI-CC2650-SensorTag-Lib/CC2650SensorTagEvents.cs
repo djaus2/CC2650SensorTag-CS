@@ -53,6 +53,33 @@ namespace TICC2650SensorTag
 
         public delegate void SensorDataDelegate(SensorData data);
 
+        private bool checkArray(byte[] bArray)
+        {
+            bool ret = false;
+            if (bArray != null)
+            {
+                if (bArray.Length == DataLength[(int)this.SensorIndex])
+                {
+                    int count = 0;
+                    for (int i = 0; i < bArray.Length; i++)
+                    {
+                        count += (int)bArray[i];
+                    }
+                    if (count == 0)
+                        Debug.WriteLine("Invalid byte[] recvd: All zeros");
+                    else
+                        ret = true;
+                }
+                else
+                    Debug.WriteLine("Invalid byte[] recvd: Num bytes");
+            }
+            else
+            {
+                Debug.WriteLine("Invalid byte[] recvd: Null");
+            }
+            return ret;
+        }
+
         public SensorDataDelegate CallMeBack { get; set; } = null;
         // ---------------------------------------------------
         //           GATT Notification Handlers
@@ -64,7 +91,8 @@ namespace TICC2650SensorTag
         {
             byte[] bArray = new byte[eventArgs.CharacteristicValue.Length];
             DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(bArray);
-            await tempChangedProc(bArray, true);
+            if (checkArray(bArray))
+                await tempChangedProc(bArray, true);
         }
 
         private async Task<SensorData> tempChangedProc(byte[] bArray , bool doCallback)
@@ -111,14 +139,15 @@ namespace TICC2650SensorTag
         {
             byte[] bArray = new byte[eventArgs.CharacteristicValue.Length];
             DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(bArray);
-            await humidChangedProc(bArray, true);
+            if (checkArray(bArray))
+                await humidChangedProc(bArray, true);
         }
 
         private async Task<SensorData> humidChangedProc(byte[] bArray, bool DoCallBack)
         {
             SensorData values = null;
-            if (bArray.Length== DataLength[(int)this.SensorIndex])
-            { 
+            if (bArray.Length == DataLength[(int)this.SensorIndex])
+            {
                 double humidity = (double)((((UInt16)bArray[1] << 8) + (UInt16)bArray[0]) & ~0x0003);
                 humidity = (-6.0 + 125.0 / 65536 * humidity); // RH= -6 + 125 * SRH/2^16
                 values =  new SensorData {Sensor_Index=SensorIndex, Values = new double[] { humidity }, Raw = bArray };
@@ -134,7 +163,8 @@ namespace TICC2650SensorTag
         {
             byte[] bArray = new byte[eventArgs.CharacteristicValue.Length];
             DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(bArray);
-            await movementChangedProc(bArray, true);
+            if (checkArray(bArray))
+                await movementChangedProc(bArray, true);
         }
 
         private async Task<SensorData> movementChangedProc(byte[] bArray, bool doCallback)
@@ -237,7 +267,8 @@ namespace TICC2650SensorTag
         {
             byte[] bArray = new byte[eventArgs.CharacteristicValue.Length];
             DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(bArray);
-            await opticalChangedProc(bArray, true);
+            if (checkArray(bArray))
+                await opticalChangedProc(bArray, true);
         }
 
         private async Task<SensorData> opticalChangedProc( byte[] bArray, bool doCallback)
@@ -272,7 +303,8 @@ namespace TICC2650SensorTag
 
             byte[] bArray = new byte[eventArgs.CharacteristicValue.Length];
             DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(bArray);
-            await pressureCC2650ChangedProc(bArray, true);
+            if (checkArray(bArray))
+                await pressureCC2650ChangedProc(bArray, true);
         }
 
         private async Task<SensorData> pressureCC2650ChangedProc(byte[] bArray, bool doCallback)
@@ -308,7 +340,8 @@ namespace TICC2650SensorTag
         {
             byte[] bArray = new byte[eventArgs.CharacteristicValue.Length];
             DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(bArray);
-            await keyChangedProc(bArray, true);
+            if (checkArray(bArray))
+                await keyChangedProc(bArray, true);
         }
 
         public async Task<SensorData> keyChangedProc(byte[] bArray, bool doCallback)
