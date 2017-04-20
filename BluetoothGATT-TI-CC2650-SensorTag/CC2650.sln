@@ -9,6 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TI-CC2650-SensorTag-Lib", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EB295C8B-3B4B-4D72-8E5D-C54FF7AF4B39}"
 	ProjectSection(SolutionItems) = preProject
+		BluetoothGATT-CC2650-SensorTag_4.2.21.0.zip = BluetoothGATT-CC2650-SensorTag_4.2.21.0.zip
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
