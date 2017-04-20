@@ -66,16 +66,24 @@ namespace TICC2650SensorTag
                         count += (int)bArray[i];
                     }
                     if (count == 0)
-                        Debug.WriteLine("Invalid byte[] recvd: All zeros");
+                        Debug.WriteLine("Invalid byte[] recvd: All zeros " + SensorIndex.ToString());
+                    else
+                    if (this.SensorIndex == SensorIndexes.HUMIDITY)
+                    {
+                        if (count != 2 * 0xff)
+                            ret = true;
+                        else
+                            Debug.WriteLine("Invalid byte[] recvd: ff ff 00 00 " + SensorIndex.ToString());
+                    }
                     else
                         ret = true;
                 }
                 else
-                    Debug.WriteLine("Invalid byte[] recvd: Num bytes");
+                    Debug.WriteLine("Invalid byte[] recvd: Num bytes " + SensorIndex.ToString());
             }
             else
             {
-                Debug.WriteLine("Invalid byte[] recvd: Null");
+                Debug.WriteLine("Invalid byte[] recvd: Null " + SensorIndex.ToString());
             }
             return ret;
         }
