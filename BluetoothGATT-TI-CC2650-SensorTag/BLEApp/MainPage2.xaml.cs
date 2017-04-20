@@ -40,13 +40,14 @@ using Windows.UI.Xaml.Input;
 
 namespace BluetoothGATT
 {
+    public delegate void DeviceInfoDel(DeviceInformation devInfo);
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class MainPage2 : Page
     {
-
-
+        
         private void HideMenu()
         {
             MySplitView.IsPaneOpen = false;
@@ -203,7 +204,7 @@ namespace BluetoothGATT
             {
                 UserOut.Text = "Setting up SensorTag";
             });
-            CC2650SensorTag_BLEWatcher.StartBLEWatcher();
+            CC2650SensorTag_BLEWatcher.StartBLEWatcher(this, SetDeviceInfo);
             return;
 
 
@@ -405,7 +406,7 @@ namespace BluetoothGATT
         //private int DoneSensorCout { get; set; } = 0;
         private async Task initSensor(CC2650SensorTag.SensorIndexes sensorIndx)
         {
-            Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (sensorIndx >= 0 && sensorIndx != CC2650SensorTag.SensorIndexes.IO_SENSOR && sensorIndx != CC2650SensorTag.SensorIndexes.REGISTERS)
                 {
@@ -452,14 +453,14 @@ namespace BluetoothGATT
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 bool state = true;
-                gattDataModeLock.EnterReadLock();
-                {
+                //gattDataModeLock.EnterReadLock();
+                //{
                     if (gattDataMode == CC2650SensorTag.GattDataModes.Values)
                         state = true;
                     else
                         state = false;
-                }
-                gattDataModeLock.ExitReadLock();
+               // }
+                //gattDataModeLock.ExitReadLock();
                 if (state)
                 {
                     switch (data.Sensor_Index)
@@ -604,7 +605,8 @@ namespace BluetoothGATT
 
         private async void PairButton_Click(object sender, RoutedEventArgs e)
         {
-            HideMenu();
+            return;
+            //HideMenu();
             DeviceInformationDisplay deviceInfoDisp = resultsListView.SelectedItem as DeviceInformationDisplay;
 
             if (deviceInfoDisp != null)
@@ -663,13 +665,14 @@ namespace BluetoothGATT
                     DeviceInfoConnected = deviceInfoDisp;
 
                     //Start watcher for Bluetooth LE Services
-                    CC2650SensorTag_BLEWatcher.StartBLEWatcher();
+                    CC2650SensorTag_BLEWatcher.StartBLEWatcher(this, SetDeviceInfo);
                 }
                 UpdatePairingButtons();
             }
         }
         private void ResultsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            return;
             UpdatePairingButtons();
             if (resultsListView.SelectedIndex != -1)
                 PairButton_Click(null, null);
@@ -851,7 +854,8 @@ namespace BluetoothGATT
 
         private async void UnpairButton_Click(object sender, RoutedEventArgs e)
         {
-            HideMenu();
+            return;
+            //HideMenu();
             DeviceInformationDisplay deviceInfoDisp = resultsListView.SelectedItem as DeviceInformationDisplay;
             Debug.WriteLine("Unpair");
 
@@ -964,7 +968,7 @@ namespace BluetoothGATT
 
         private async void EnableButton_Click(object sender, RoutedEventArgs e)
         {
-            HideMenu();
+            //HideMenu();
             if (SensorList.SelectedIndex >= 0)
             {
                 await CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].EnableNotify();
@@ -977,7 +981,7 @@ namespace BluetoothGATT
 
         private async void DisableButton_Click(object sender, RoutedEventArgs e)
         {
-            HideMenu();
+            //HideMenu();
             if (SensorList.SelectedIndex >= 0)
             {
                 if (CC2650SensorTag.DisableSensorWithDisableNotifications)
@@ -991,14 +995,14 @@ namespace BluetoothGATT
 
         private async void ReadButton_Click(object sender, RoutedEventArgs e)
         {
-            HideMenu();
+            //HideMenu();
             CC2650SensorTag.SensorData sensorData = await CC2650SensorTag.SensorsCharacteristicsList
                 [SensorList.SelectedIndex].ReadSensor(true, true, CC2650SensorTag.DisableSensorWithDisableNotifications);
         }
 
         private async void BuzzButton_ClickOn(object sender, RoutedEventArgs e)
         {
-            HideMenu();
+            //HideMenu();
             string name = "";
             if (sender is Button)
             {
@@ -1036,7 +1040,7 @@ namespace BluetoothGATT
 
         private async void BuzzButton_ClickOff(object sender, RoutedEventArgs e)
         {
-            HideMenu();
+            //HideMenu();
             string name = "";
             if (sender is Button)
             {
@@ -1075,15 +1079,23 @@ namespace BluetoothGATT
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
-            HideMenu();
+            //HideMenu();
             Application.Current.Exit();
         }
 
         private void InitButton1_Click(object sender, TappedRoutedEventArgs e)
         {
-            HideMenu();
+            //HideMenu();
             this.Frame.Navigate(typeof( DeviceProperties), this);
 
+        }
+
+        
+
+        public void SetDeviceInfo(DeviceInformation value)
+        {
+            Debug.WriteLine("BLEWatcher Add: " + value.Id);
+            ResultCollection.Add(new DeviceInformationDisplay(value));
         }
 
 

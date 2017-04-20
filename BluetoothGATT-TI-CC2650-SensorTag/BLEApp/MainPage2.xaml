@@ -181,12 +181,12 @@
 
                     <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"
                     Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Visibility="Collapsed">
                         <Button x:Name="PairButton" FontFamily="Segoe MDL2 Assets" Content="&#xE1E9;"
                         Width="50" Height="50" Background="Transparent" IsEnabled="true" Visibility="Visible" Click="PairButton_Click"/>
                         <TextBlock  Text="Pair -Connect"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" Tapped="PairButton_Click"  />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Visibility="Collapsed">
                         <Button x:Name="UnpairButton" FontFamily="Segoe MDL2 Assets" Content="&#xE1E5;"
                         Width="50" Height="50" Background="Transparent" IsEnabled="False" Visibility="Visible"  Click="UnpairButton_Click"/>
                         <TextBlock  Text="Unpair Device"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" Tapped="UnpairButton_Click" />
@@ -335,7 +335,7 @@
                         </StackPanel>
 
 
-                        <ScrollViewer VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" Height="80" Background="#FFF3E4E4" Margin="10,0,10,10">
+                        <ScrollViewer VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" Height="80" Background="#FFF3E4E4" Margin="10,0,10,10" IsEnabled="False">
                             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,15,0">
                                 <Border BorderBrush="Red" BorderThickness="1">
                                     <ListView x:Name="resultsListView"

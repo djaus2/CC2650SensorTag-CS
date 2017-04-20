@@ -19,9 +19,9 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>BluetoothGATT-CC2650-SensorTag_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
-    <PackageCertificateThumbprint>DD54307B4289ECB5927E17DCE9D0B536276D99F0</PackageCertificateThumbprint>
-    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>arm</AppxBundlePlatforms>
+    <PackageCertificateThumbprint>C480E1005F4D8010C84BE43BF0E572A80D66C120</PackageCertificateThumbprint>
+    <AppxBundle>Auto</AppxBundle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -105,6 +105,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DeviceInfoForm.cs" />
     <Compile Include="Parameters.xaml.cs">
       <DependentUpon>Parameters.xaml</DependentUpon>
     </Compile>
@@ -125,7 +126,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="BluetoothGATT_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Package.StoreAssociation.xml" />
