@@ -66,14 +66,27 @@ namespace TICC2650SensorTag
                         count += (int)bArray[i];
                     }
                     if (count == 0)
-                        Debug.WriteLine("Invalid byte[] recvd: All zeros " + SensorIndex.ToString());
-                    else
-                    if (this.SensorIndex == SensorIndexes.HUMIDITY)
                     {
-                        if (count != 2 * 0xff)
+                        //Only optical can be all zeros
+                        if (this.SensorIndex == SensorIndexes.OPTICAL)
                             ret = true;
                         else
-                            Debug.WriteLine("Invalid byte[] recvd: ff ff 00 00 " + SensorIndex.ToString());
+                            Debug.WriteLine("Invalid byte[] recvd: All zeros " + SensorIndex.ToString());
+                    }
+                    else if (DataLength[(int)this.SensorIndex] != DataLengthUsed[(int)this.SensorIndex])
+                    {
+                        //Eg Humidity uses 2 out 4 bytes
+                        count = 0;
+                        for (int i = 0; i < DataLengthUsed[(int)this.SensorIndex]; i++)
+                        {
+                            count += (int)bArray[i];
+                        }
+                        if (count == 0)
+                        {
+                            Debug.WriteLine("Invalid used byte[] recvd: All zeros " + SensorIndex.ToString());
+                        }
+                        else
+                            ret = true;
                     }
                     else
                         ret = true;
@@ -85,6 +98,14 @@ namespace TICC2650SensorTag
             {
                 Debug.WriteLine("Invalid byte[] recvd: Null " + SensorIndex.ToString());
             }
+            if (!ret)
+            {
+                string str = "Invalid byte[]: ";
+                for (int i = 0; i < bArray.Length; i++)
+                    str += "["+ bArray[i].ToString() + "] ";
+                Debug.WriteLine(str);
+            }
+
             return ret;
         }
 
@@ -156,9 +177,13 @@ namespace TICC2650SensorTag
             SensorData values = null;
             if (bArray.Length == DataLength[(int)this.SensorIndex])
             {
-                double humidity = (double)((((UInt16)bArray[1] << 8) + (UInt16)bArray[0]) & ~0x0003);
-                humidity = (-6.0 + 125.0 / 65536 * humidity); // RH= -6 + 125 * SRH/2^16
-                values =  new SensorData {Sensor_Index=SensorIndex, Values = new double[] { humidity }, Raw = bArray };
+
+                double temp = 165 * ((double)(bArray[3] * 256 + bArray[2])) / 65536 - 40.005;
+                double humidity = 100 * ((double)(bArray[1] * 256 + bArray[0])) / 65536;
+
+                //double humidity = (double)((((UInt16)bArray[1] << 8) + (UInt16)bArray[0]) & ~0x0003);
+                //humidity = (-6.0 + 125.0 / 65536 * humidity); // RH= -6 + 125 * SRH/2^16
+                values =  new SensorData {Sensor_Index=SensorIndex, Values = new double[] { humidity, temp }, Raw = bArray };
                 if (DoCallBack)
                     if (CallMeBack != null)
                         CallMeBack(values);

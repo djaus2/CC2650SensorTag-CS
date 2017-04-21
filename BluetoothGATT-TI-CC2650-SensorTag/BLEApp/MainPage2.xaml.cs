@@ -512,13 +512,14 @@ namespace BluetoothGATT
                             break;
                         case (CC2650SensorTag.SensorIndexes.HUMIDITY):
                             HumidOut.Text = string.Format("H:\t{0:0.0####}", data.Values[0]);
+                            HumidTempOut.Text = string.Format("T:\t{0:0.0####}", data.Values[1]);
                             break;
                         case (CC2650SensorTag.SensorIndexes.OPTICAL):
                             LuxOut.Text = string.Format("L:\t{0:0.0####}", data.Values[0]);
                             break; ;
                         case (CC2650SensorTag.SensorIndexes.BAROMETRIC_PRESSURE):
-                            BaroOutTemp.Text = string.Format("T:\t{0:0.0####}", data.Values[1]);
                             BaroOut.Text = string.Format("P:\t{0:0.0####}", data.Values[0]);
+                            BaroOutTemp.Text = string.Format("T:\t{0:0.0####}", data.Values[1]);
                             break;
                         case (CC2650SensorTag.SensorIndexes.KEYS):
                             if (data.Values[0] > 0)
@@ -1094,8 +1095,11 @@ namespace BluetoothGATT
 
         public void SetDeviceInfo(DeviceInformation value)
         {
-            Debug.WriteLine("BLEWatcher Add: " + value.Id);
-            ResultCollection.Add(new DeviceInformationDisplay(value));
+            if (ResultCollection.Count != 0)
+            {
+                Debug.WriteLine("BLEWatcher Add: " + value.Id);
+                ResultCollection.Add(new DeviceInformationDisplay(value));
+            }
         }
 
 

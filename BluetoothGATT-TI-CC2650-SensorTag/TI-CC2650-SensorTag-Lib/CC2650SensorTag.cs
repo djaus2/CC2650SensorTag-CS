@@ -134,11 +134,23 @@ namespace TICC2650SensorTag
         }
 
         /// <summary>
-        /// The number of bytes in for each sensor's Data characteristic
+        /// The number of bytes in for each sensor's Data characteristic that are used
         /// </summary>
         internal static readonly List<int> DataLength = new List<int>(){
             4,
             4,
+            6,
+            1,
+            1,
+            2,
+            18,
+            -1, //Can be 1 to 4 for Registers
+            1,
+        };
+
+        internal static readonly List<int> DataLengthUsed = new List<int>(){
+            4,
+            2,
             6,
             1,
             1,

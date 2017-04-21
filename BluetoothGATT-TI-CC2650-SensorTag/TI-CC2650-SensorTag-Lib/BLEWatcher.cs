@@ -133,7 +133,7 @@ namespace TICC2650SensorTag
             StopBLEWatcher();
         }
 
-        public bool HasOKd = false;
+        public static bool HasOKd = false;
         public static Page NainPage2 { get; set; } = null;
         //Watcher for Bluetooth LE Services
         public void StartBLEWatcher(Page mainPage2, DeviceInfoDel SetDevInfo)
@@ -153,16 +153,17 @@ namespace TICC2650SensorTag
                     {
                         if (CC2650SensorTag.DeviceAltSensorNames.Contains(deviceInfo.Name))
                         {
-                            Debug.WriteLine("OnBLEAdded: " + deviceInfo.Id);
+                            Debug.WriteLine("OnBLEAdded1: " + deviceInfo.Id);
                             GattDeviceService service = null;
                             try
                             {
-                                service = await GattDeviceService.FromIdAsync(deviceInfo.Id);
                                 HasOKd = true;
+                                service = await GattDeviceService.FromIdAsync(deviceInfo.Id);
                                 SetDevInfo(deviceInfo);
                             }
                             catch (Exception ex)
                             {
+                                HasOKd = false;
                                 string msg = ex.Message;
                                 return;
                             }
@@ -245,7 +246,7 @@ namespace TICC2650SensorTag
                     {
                         if (CC2650SensorTag.DeviceAltSensorNames.Contains(deviceInfo.Name))
                         {
-                            Debug.WriteLine("OnBLEAdded: " + deviceInfo.Id);
+                            Debug.WriteLine("OnBLEAdded2: " + deviceInfo.Id);
                             GattDeviceService service = null;
                             try
                             {

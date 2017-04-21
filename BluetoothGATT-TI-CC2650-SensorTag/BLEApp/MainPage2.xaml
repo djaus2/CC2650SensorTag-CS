@@ -453,6 +453,7 @@
                             <StackPanel Grid.Row="1" Grid.Column="0" Padding="5,0,0,0">
                                 <TextBlock x:Name="HumidTitle" Foreground="White" FontSize="18">Humidity (%)</TextBlock>
                                 <TextBlock x:Name="HumidOut" Foreground="White">N/A</TextBlock>
+                                <TextBlock x:Name="HumidTempOut" Foreground="White">N/A</TextBlock>
                                 <TextBlock x:Name="LuxTitle" Foreground="White" FontSize="18">Luminosity (Lux)</TextBlock>
                                 <TextBlock x:Name="LuxOut" Foreground="White">N/A</TextBlock>
                             </StackPanel>
