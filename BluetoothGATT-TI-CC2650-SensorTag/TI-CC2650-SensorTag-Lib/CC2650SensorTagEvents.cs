@@ -124,37 +124,58 @@ namespace TICC2650SensorTag
                 await tempChangedProc(bArray, true);
         }
 
+        //IR_Sensor
         private async Task<SensorData> tempChangedProc(byte[] bArray , bool doCallback)
         {
             SensorData values = null;
             if (bArray.Length == DataLength[(int)this.SensorIndex])
             {
-                double AmbTemp = (double)(((UInt16)bArray[3] << 8) + (UInt16)bArray[2]);
-                AmbTemp /= 128.0;
 
-                Int16 temp = (Int16)(((UInt16)bArray[1] << 8) + (UInt16)bArray[0]);
-                double Vobj2 = (double)temp;
-                Vobj2 *= 0.00000015625;
-                double Tdie = AmbTemp + 273.15;
+                ushort upperNum = ((ushort)(bArray[3] * 256 + (ushort)bArray[2]));
+                ushort lowerNum = ((ushort)(bArray[1] * 256 + (ushort)bArray[0]));
 
-                const double S0 = 5.593E-14;            // Calibration factor
-                const double a1 = 1.75E-3;
-                const double a2 = -1.678E-5;
-                const double b0 = -2.94E-5;
-                const double b1 = -5.7E-7;
-                const double b2 = 4.63E-9;
-                const double c2 = 13.4;
-                const double Tref = 298.15;
 
-                double S = S0 * (1 + a1 * (Tdie - Tref) + a2 * Math.Pow((Tdie - Tref), 2));
-                double Vos = b0 + b1 * (Tdie - Tref) + b2 * Math.Pow((Tdie - Tref), 2);
-                double fObj = (Vobj2 - Vos) + c2 * Math.Pow((Vobj2 - Vos), 2);
-                double tObj = Math.Pow(Math.Pow(Tdie, 4) + (fObj / S), 0.25);
+                double SCALE_LSB = 0.03125;
+                double t;
+                ushort it;
 
-                tObj = (tObj - 273.15);
+                it = (ushort) ((lowerNum) >> 2);
+                t = ((double)(it));
+                double temp2 = t * SCALE_LSB; ;
 
-                values =  new SensorData { Sensor_Index = SensorIndex, Values = new double[] { AmbTemp, tObj }, Raw = bArray };
-                if(doCallback)
+                it = (ushort)((upperNum) >> 2);
+                t = (double)it;
+                double ambient2 = t * SCALE_LSB;
+
+
+                //double AmbTemp = (double)(((UInt16)bArray[3] << 8) + (UInt16)bArray[2]);
+                //AmbTemp /= 128.0;
+
+                //Int16 temp = (Int16)(((UInt16)bArray[1] << 8) + (UInt16)bArray[0]);
+
+
+                //double Vobj2 = (double)temp;
+                //Vobj2 *= 0.00000015625;
+                //double Tdie = AmbTemp + 273.15;
+
+                //const double S0 = 5.593E-14;            // Calibration factor
+                //const double a1 = 1.75E-3;
+                //const double a2 = -1.678E-5;
+                //const double b0 = -2.94E-5;
+                //const double b1 = -5.7E-7;
+                //const double b2 = 4.63E-9;
+                //const double c2 = 13.4;
+                //const double Tref = 298.15;
+
+                //double S = S0 * (1 + a1 * (Tdie - Tref) + a2 * Math.Pow((Tdie - Tref), 2));
+                //double Vos = b0 + b1 * (Tdie - Tref) + b2 * Math.Pow((Tdie - Tref), 2);
+                //double fObj = (Vobj2 - Vos) + c2 * Math.Pow((Vobj2 - Vos), 2);
+                //double tObj = Math.Pow(Math.Pow(Tdie, 4) + (fObj / S), 0.25);
+
+                //tObj = (tObj - 273.15);
+
+                values =  new SensorData { Sensor_Index = SensorIndex, Values = new double[] { ambient2, temp2  }, Raw = bArray }; //AmbTemp, tObj
+                if (doCallback)
                     if (CallMeBack!=null)
                         CallMeBack(values);
                
@@ -177,9 +198,11 @@ namespace TICC2650SensorTag
             SensorData values = null;
             if (bArray.Length == DataLength[(int)this.SensorIndex])
             {
+                ushort upperNum = ((ushort)(bArray[3] * 256 + (ushort)bArray[2]));
+                ushort lowerNum = ((ushort)(bArray[1] * 256 + (ushort)bArray[0])); 
 
-                double temp = 165 * ((double)(bArray[3] * 256 + bArray[2])) / 65536 - 40.005;
-                double humidity = 100 * ((double)(bArray[1] * 256 + bArray[0])) / 65536;
+                double temp = 165 * ((double)(lowerNum)) / 65536.0 - 40.00;
+                double humidity = 100 * ((double)(upperNum)) / 65536.0;
 
                 //double humidity = (double)((((UInt16)bArray[1] << 8) + (UInt16)bArray[0]) & ~0x0003);
                 //humidity = (-6.0 + 125.0 / 65536 * humidity); // RH= -6 + 125 * SRH/2^16

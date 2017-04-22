@@ -110,7 +110,9 @@
     <Compile Include="BLEWatcher.cs" />
     <Compile Include="CC2650SensorTag.cs" />
     <Compile Include="CC2650SensorTagEvents.cs" />
+    <Compile Include="CC2650SensorTagGlobals.cs" />
     <Compile Include="CC2650SensorTagProperties.cs" />
+    <Compile Include="CC2650SensorTagReadWrite.cs" />
     <Compile Include="ICC2650SensorTag.cs" />
     <Compile Include="ITICC2650SensorTag_BLEWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
