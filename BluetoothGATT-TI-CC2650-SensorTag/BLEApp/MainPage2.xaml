@@ -434,59 +434,67 @@
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Row="0" Grid.Column="0" Padding="5,0,0,0">
-                                <TextBlock x:Name="IRTitle" Foreground="White" FontSize="18">IR Temp (C)</TextBlock>
-                                <TextBlock x:Name="ObjTempOut" Foreground="White">IR:</TextBlock>
-                                <TextBlock x:Name="AmbTempOut" Foreground="White">Chip:</TextBlock>
-                            </StackPanel>
-                            <StackPanel Grid.Row="0" Grid.Column="1">
-                                <TextBlock x:Name="GyroTitle" Foreground="White" FontSize="18">Gyroscope (degrees/s)</TextBlock>
-                                <TextBlock x:Name="GyroXOut" Foreground="White">X:</TextBlock>
-                                <TextBlock x:Name="GyroYOut" Foreground="White">Y:</TextBlock>
-                                <TextBlock x:Name="GyroZOut" Foreground="White">Z:</TextBlock>
-                            </StackPanel>
-                            <StackPanel Grid.Row="1" Grid.Column="0" Padding="5,0,0,0">
-                                <TextBlock x:Name="HumidTitle" Foreground="White" FontSize="18">Humidity (%)</TextBlock>
-                                <TextBlock x:Name="HumidOut" Foreground="White">N/A</TextBlock>
-                                <TextBlock x:Name="HumidTempOut" Foreground="White">N/A</TextBlock>
-                                <TextBlock x:Name="LuxTitle" Foreground="White" FontSize="18">Luminosity (Lux)</TextBlock>
-                                <TextBlock x:Name="LuxOut" Foreground="White">N/A</TextBlock>
-                            </StackPanel>
-                            <StackPanel Grid.Row="1" Grid.Column="1">
-                                <TextBlock x:Name="MagnoTitle" Foreground="White" FontSize="18">Magnetometer (uT)</TextBlock>
-                                <TextBlock x:Name="MagnoXOut" Foreground="White">X:</TextBlock>
-                                <TextBlock x:Name="MagnoYOut" Foreground="White">Y:</TextBlock>
-                                <TextBlock x:Name="MagnoZOut" Foreground="White">Z:</TextBlock>
-                            </StackPanel>
-                            <StackPanel Grid.Row="2" Grid.Column="0" Padding="5,0,0,0">
-                                <TextBlock x:Name="BaroTitle" Foreground="White" FontSize="18">Barometer (hPa)</TextBlock>
-                                <TextBlock x:Name="BaroOut" Foreground="White">N/A</TextBlock>
-                                <TextBlock x:Name="BaroTitleTemp" Foreground="White" FontSize="18">Barometer Temp (C)</TextBlock>
-                                <TextBlock x:Name="BaroOutTemp" Foreground="White">N/A</TextBlock>
-                            </StackPanel>
-                            <StackPanel Grid.Row="2" Grid.Column="1" Grid.RowSpan="2">
-                                <TextBlock x:Name="AccelTitle" Foreground="White" FontSize="18">Accelerometer (g)</TextBlock>
-                                <TextBlock x:Name="AccelXOut" Foreground="White">X:</TextBlock>
-                                <TextBlock x:Name="AccelYOut" Foreground="White">Y:</TextBlock>
-                                <TextBlock x:Name="AccelZOut" Foreground="White">Z:</TextBlock>
-                                <Grid Height="180" Width="180" Margin="0,10,0,0">
-                                    <TextBlock Foreground="White" Canvas.ZIndex="1" Margin="0" HorizontalAlignment="Center">+Y</TextBlock>
-                                    <TextBlock Foreground="White" Canvas.ZIndex="1" Margin="0" HorizontalAlignment="Right" VerticalAlignment="Center">+X</TextBlock>
-                                    <Rectangle StrokeThickness="5" Width="90" Height="90" Stroke="Black"/>
-                                    <Rectangle StrokeThickness="5" Width="180" Height="180" Stroke="Black"/>
-                                    <Rectangle x:Name="AccPointer" Height="10" Width="10" Fill="Red" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <Rectangle.RenderTransform>
-                                            <TranslateTransform x:Name="RecTranslateTransform" />
-                                        </Rectangle.RenderTransform>
-                                    </Rectangle>
-                                </Grid>
-                            </StackPanel>
-                            <StackPanel Grid.Row="3" Grid.Column="0" Padding="5,0,0,0">
+                            <!--<StackPanel Grid.Row="0" Grid.Column="0" Padding="5,0,0,0">-->
+                                <TextBlock  Grid.Row="0" Grid.Column="0" x:Name="IRTitle" Foreground="White" FontSize="18">IR Temp (C)</TextBlock>
+                                <TextBlock  Grid.Row="1" Grid.Column="0" x:Name="ObjTempOut" Foreground="White">IR:</TextBlock>
+                                <TextBlock  Grid.Row="2" Grid.Column="0" x:Name="AmbTempOut" Foreground="White">Chip:</TextBlock>
+                            <!--</StackPanel>
+                            <StackPanel Grid.Row="0" Grid.Column="1">-->
+                                <TextBlock  Grid.Row="0" Grid.Column="1" x:Name="GyroTitle" Foreground="White" FontSize="18">Gyroscope (degrees/s)</TextBlock>
+                                <TextBlock  Grid.Row="1" Grid.Column="1" x:Name="GyroXOut" Foreground="White">X:</TextBlock>
+                                <TextBlock  Grid.Row="2" Grid.Column="1" x:Name="GyroYOut" Foreground="White">Y:</TextBlock>
+                                <TextBlock  Grid.Row="3" Grid.Column="1" x:Name="GyroZOut" Foreground="White">Z:</TextBlock>
+                            <!--</StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="0" Padding="5,0,0,0">-->
+                                <TextBlock  Grid.Row="3" Grid.Column="0" x:Name="HumidTitle" Foreground="White" FontSize="18">Humidity (%)</TextBlock>
+                                <TextBlock  Grid.Row="4" Grid.Column="0" x:Name="HumidOut" Foreground="White">N/A</TextBlock>
+                                <TextBlock  Grid.Row="5" Grid.Column="0" x:Name="HumidTempOut" Foreground="White">N/A</TextBlock>
+                                <TextBlock  Grid.Row="6" Grid.Column="0" x:Name="LuxTitle" Foreground="White" FontSize="18">Luminosity (Lux)</TextBlock>
+                                <TextBlock  Grid.Row="7" Grid.Column="0" x:Name="LuxOut" Foreground="White">N/A</TextBlock>
+                            <!--</StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="1">-->
+                                <TextBlock  Grid.Row="4" Grid.Column="1" x:Name="MagnoTitle" Foreground="White" FontSize="18">Magnetometer (uT)</TextBlock>
+                                <TextBlock  Grid.Row="5" Grid.Column="1" x:Name="MagnoXOut" Foreground="White">X:</TextBlock>
+                                <TextBlock  Grid.Row="6" Grid.Column="1" x:Name="MagnoYOut" Foreground="White">Y:</TextBlock>
+                                <TextBlock  Grid.Row="7" Grid.Column="1" x:Name="MagnoZOut" Foreground="White">Z:</TextBlock>
+                            <!--</StackPanel>
+                            <StackPanel Grid.Row="2" Grid.Column="0" Padding="5,0,0,0">-->
+                                <TextBlock  Grid.Row="8" Grid.Column="0" x:Name="BaroTitle" Foreground="White" FontSize="18">Barometer (hPa)</TextBlock>
+                                <TextBlock  Grid.Row="9" Grid.Column="0" x:Name="BaroOut" Foreground="White">N/A</TextBlock>
+                                <TextBlock  Grid.Row="10" Grid.Column="0" x:Name="BaroOutTemp" Foreground="White">N/A</TextBlock>
+                            <!--</StackPanel>
+                            <StackPanel Grid.Row="2" Grid.Column="1" Grid.RowSpan="2">-->
+                                <TextBlock  Grid.Row="8" Grid.Column="1" x:Name="AccelTitle" Foreground="White" FontSize="18">Accelerometer (g)</TextBlock>
+                                <TextBlock  Grid.Row="9" Grid.Column="1" x:Name="AccelXOut" Foreground="White">X:</TextBlock>
+                                <TextBlock  Grid.Row="10" Grid.Column="1" x:Name="AccelYOut" Foreground="White">Y:</TextBlock>
+                                <TextBlock  Grid.Row="11" Grid.Column="1" x:Name="AccelZOut" Foreground="White">Z:</TextBlock>
+                            <Grid Grid.Row="13" Grid.Column="1" Height="180" Width="180" Margin="0,10,0,0">
+                                <TextBlock Foreground="White" Canvas.ZIndex="1" Margin="0" HorizontalAlignment="Center">+Y</TextBlock>
+                                <TextBlock Foreground="White" Canvas.ZIndex="1" Margin="0" HorizontalAlignment="Right" VerticalAlignment="Center">+X</TextBlock>
+                                <Rectangle StrokeThickness="5" Width="90" Height="90" Stroke="Black"/>
+                                <Rectangle StrokeThickness="5" Width="180" Height="180" Stroke="Black"/>
+                                <Rectangle x:Name="AccPointer" Height="10" Width="10" Fill="Red" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Rectangle.RenderTransform>
+                                        <TranslateTransform x:Name="RecTranslateTransform" />
+                                    </Rectangle.RenderTransform>
+                                </Rectangle>
+                            </Grid>
+                            <!--</StackPanel>-->
+                            <StackPanel Grid.Row="13" Grid.Column="0" Padding="5,0,0,0">
                                 <TextBlock x:Name="KeyTitle" Foreground="White" FontSize="18">Key Press</TextBlock>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
                                     <Border x:Name="KeyLOut" Width="80" Height="80" BorderBrush="Black" BorderThickness="5" Background="Red">

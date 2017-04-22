@@ -430,7 +430,7 @@ namespace BluetoothGATT
                             break; ;
                         case (CC2650SensorTag.SensorIndexes.BAROMETRIC_PRESSURE):
                             BaroTitle.Foreground = new SolidColorBrush(Colors.Green);
-                            BaroTitleTemp.Foreground = new SolidColorBrush(Colors.Green);
+                            //BaroTitleTemp.Foreground = new SolidColorBrush(Colors.Green);
                             break;
                         case (CC2650SensorTag.SensorIndexes.KEYS):
                             KeyTitle.Foreground = new SolidColorBrush(Colors.Green);
