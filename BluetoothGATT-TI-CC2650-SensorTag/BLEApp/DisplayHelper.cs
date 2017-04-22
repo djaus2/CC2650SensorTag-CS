@@ -4,6 +4,7 @@ using System.ComponentModel;
 using Windows.Foundation;
 using Windows.Devices.Enumeration;
 using Windows.UI.Xaml.Media.Imaging;
+using TICC2650SensorTag;
 
 namespace BluetoothGATT
 {
@@ -29,7 +30,22 @@ namespace BluetoothGATT
         {
             get
             {
+                
                 return deviceInfo.Id;
+            }
+        }
+
+        public string Address
+        {
+            get
+            {
+                //Get address from the Id
+                string[] idPart = deviceInfo.Id.Split(new char[] { '#', '_' });
+                if (idPart.Length == CC2650SensorTag.DEVICE_ID_AS_ARRAY_LENGTH)
+                    return idPart[CC2650SensorTag.DEVICE_ID_AS_ARRAY_BTADDRESS_INDEX];
+                else
+                    return deviceInfo.Id;
+
             }
         }
 

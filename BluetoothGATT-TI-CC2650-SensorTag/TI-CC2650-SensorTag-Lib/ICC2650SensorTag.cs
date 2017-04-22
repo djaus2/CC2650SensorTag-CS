@@ -16,7 +16,7 @@ namespace TICC2650SensorTag
         CC2650SensorTag.SensorIndexes SensorIndex { get; set; }
 
         Task DisableNotify();
-        Task EnableNotify();
+        Task SetChangedNotifactionHandler();
         void keyChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs);
         Task<CC2650SensorTag.SensorData> keyChangedProc(byte[] bArray, bool doCallback);
         Task<CC2650SensorTag.SensorData> ReadSensor(bool disableNotify, bool updateDisplay, bool turnSensorOffOn);

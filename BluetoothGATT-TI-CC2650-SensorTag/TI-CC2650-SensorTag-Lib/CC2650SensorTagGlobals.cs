@@ -25,6 +25,12 @@ namespace TICC2650SensorTag
         /// </summary>
         public static bool DisableSensorWithDisableNotifications { get; private set; } = false;
 
+        // Take device.Id: \\?\BTHLEDevice#{0000180a-0000-1000-8000-00805f9b34fb}_Dev_VID&01000d_PID&0000_REV&0110_24718908ed82#6&379cf99a&6&0009#{6e3bb679-4372-40c8-9eaa-4509df260cd8}
+        // Split into array using # and _ as delimeters. 
+        // The array should eb 12 elements long.
+        // The [6]th element should be the tag's BT Address.
+        public const int DEVICE_ID_AS_ARRAY_LENGTH = 9;
+        public const int DEVICE_ID_AS_ARRAY_BTADDRESS_INDEX = 6;
 
         public enum ServiceCharacteristicsEnum
         {

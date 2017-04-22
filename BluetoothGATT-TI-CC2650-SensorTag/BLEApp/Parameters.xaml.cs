@@ -112,10 +112,10 @@ namespace BluetoothGATT
 
         private void Go_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            uint numTags = 2;
-            bool res = uint.TryParse(txtnumTags.Text.Trim(), out numTags);
-            if (res)
-                MainPage2.numDevices = (int)numTags;
+            //uint numTags = 2;
+            //bool res = uint.TryParse(txtnumTags.Text.Trim(), out numTags);
+            //if (res)
+            //    MainPage2.numDevices = (int)numTags;
 
             if ((bool)AA.IsChecked)
                 CC2650SensorTag.Use_DEVICE_BATTERY_SERVICE = true;
@@ -126,6 +126,11 @@ namespace BluetoothGATT
                 CC2650SensorTag.Use_UUID_PROPERTIES_SERVICE = true;
             else
                 CC2650SensorTag.Use_UUID_PROPERTIES_SERVICE = false;
+
+            if ((bool)CC.IsChecked)
+                CC2650SensorTag.StartNotifications = true;
+            else
+                CC2650SensorTag.StartNotifications = false;
 
             CC2650SensorTag.SensorIndexes start = (CC2650SensorTag.SensorIndexes)lbstart.SelectedIndex;
             CC2650SensorTag.SensorIndexes end = (CC2650SensorTag.SensorIndexes)lbend.SelectedIndex;

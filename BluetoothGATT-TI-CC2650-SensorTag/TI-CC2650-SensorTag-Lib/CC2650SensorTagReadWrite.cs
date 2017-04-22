@@ -267,6 +267,8 @@ namespace TICC2650SensorTag
         }
 
         private bool IO_IsOn { get; set; } = false;
+        public static bool StartNotifications { get; set; } = true;
+
         private async Task ActionIO(IOActions action, int target)
         {
             Debug.WriteLine("Begin ActionIO: ");

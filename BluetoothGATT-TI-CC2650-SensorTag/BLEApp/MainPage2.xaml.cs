@@ -972,7 +972,7 @@ namespace BluetoothGATT
             //HideMenu();
             if (SensorList.SelectedIndex >= 0)
             {
-                await CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].EnableNotify();
+                await CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].SetChangedNotifactionHandler();
                 //enableSensor(GATTClassCharacteristics.SensorIndexes[SensorList.SelectedIndex]);
                 CC2650SensorTag.ActiveCharacteristicNotifications[SensorList.SelectedIndex] = CC2650SensorTag.SensorsCharacteristicsList[SensorList.SelectedIndex].Notification;
                 if (CC2650SensorTag.DisableSensorWithDisableNotifications)
@@ -1095,10 +1095,11 @@ namespace BluetoothGATT
 
         public void SetDeviceInfo(DeviceInformation value)
         {
-            if (ResultCollection.Count != 0)
+            if (ResultCollection.Count == 0)
             {
                 Debug.WriteLine("BLEWatcher Add: " + value.Id);
                 ResultCollection.Add(new DeviceInformationDisplay(value));
+                string address = ResultCollection[0].Address;
             }
         }
 

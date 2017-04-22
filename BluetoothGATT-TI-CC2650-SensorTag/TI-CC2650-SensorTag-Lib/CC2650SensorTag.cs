@@ -123,8 +123,10 @@ namespace TICC2650SensorTag
                 if (SensorIndex >= 0 && SensorIndex != SensorIndexes.IO_SENSOR && SensorIndex != SensorIndexes.REGISTERS)
                 {
                     ActiveCharacteristicNotifications[(int)SensorIndex] = Notification;
-                    Task.Run(() => this.EnableNotify()).Wait(); //Could leave out Wait but potentially could action this instance too soon
-                    Task.Run(() => this.TurnOnSensor()).Wait(); //This launches a new thread for this action but stalls the constructor thread.
+                    if (StartNotifications)
+                        Task.Run(() => this.SetChangedNotifactionHandler()).Wait(); //Could leave out Wait but potentially could action this instance too soon
+
+                        Task.Run(() => this.TurnOnSensor()).Wait(); //This launches a new thread for this action but stalls the constructor thread.
                 }
             } catch (Exception ex)
             {
@@ -197,10 +199,10 @@ namespace TICC2650SensorTag
 
         private bool HasSetCallBacks = false;
 
-        public async Task EnableNotify()
+        public async Task SetChangedNotifactionHandler()
         {
 
-            Debug.WriteLine("Begin EnableNotify sensor: " + SensorIndex.ToString());
+            Debug.WriteLine("Begin SetChangedNotifactionHandler sensor: " + SensorIndex.ToString());
             try
             {
                 if (Notification != null)
@@ -239,17 +241,17 @@ namespace TICC2650SensorTag
                     if (Notification != null)
                         if (Notification.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
                         {
-                            Debug.WriteLine("Awaiting EnableNotify sensor: " + SensorIndex.ToString());
+                            Debug.WriteLine("Awaiting SetChangedNotifactionHandler sensor: " + SensorIndex.ToString());
                             await Notification.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
-                            Debug.WriteLine("Awaited EnableNotify sensor: " + SensorIndex.ToString());
+                            Debug.WriteLine("Awaited SetChangedNotifactionHandler sensor: " + SensorIndex.ToString());
                         }
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error: EnableNotify(): " + SensorIndex.ToString() + " " + ex.Message);
+                Debug.WriteLine("Error: SetChangedNotifactionHandler(): " + SensorIndex.ToString() + " " + ex.Message);
             }
-             Debug.WriteLine("(End EnableNotify sensor: " + SensorIndex.ToString());
+             Debug.WriteLine("(End SetChangedNotifactionHandler sensor: " + SensorIndex.ToString());
         }
 
         public async Task DisableNotify()

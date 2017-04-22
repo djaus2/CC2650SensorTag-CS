@@ -11,7 +11,7 @@
         <!--<local:Parameters.EnumToStringConverter  x:Key="EnumToStringConverter"/>-->
     </Page.Resources>
 
-    <Grid Background="#FF1E1D42">
+    <Grid Background= "#FF26F3EA" > 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="125"/>
             <ColumnDefinition Width="125"/>
@@ -31,17 +31,17 @@
             <RowDefinition Height="40"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock FontSize="30" Foreground="White" Margin="4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <TextBlock FontSize="30" Foreground="Blue" Margin="4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" VerticalAlignment="Center" HorizontalAlignment="Center">
                     BLE GATT SensorTag Settings
         </TextBlock>
-        <TextBlock FontSize="24" Foreground="Yellow" Margin="4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic">
+        <TextBlock FontSize="24" Foreground="Blue" Margin="4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic">
                     Sensors to use:
         </TextBlock>
-        <TextBlock Text="From"  FontSize="24" Foreground="White"  Margin="4" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
-        <TextBlock Text="Start"  FontSize="24" Foreground="LightGreen"  Margin="4" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
-        <TextBlock Text="to"  FontSize="24" Foreground="White"  Margin="4" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" />
-        <TextBlock Text="End"   FontSize="24"  Foreground="Crimson"  Margin="4" Grid.Row="2" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <Button x:Name="Go"  Foreground="White" Background="Green" Content="Go" Tapped="Go_Tapped"  Grid.Row="2" Grid.Column="4" Width="100" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock Text="From"  FontSize="24" Foreground="Green"  Margin="4" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <TextBlock Text="Start"  FontSize="24" Foreground="Green"  Margin="4" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <TextBlock Text="to"  FontSize="24" Foreground="Red"  Margin="4" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <TextBlock Text="End"   FontSize="24"  Foreground="Red"  Margin="4" Grid.Row="2" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <Button x:Name="Go"  Foreground="Blue" Background="LightGreen" Content="Go" Tapped="Go_Tapped"  Grid.Row="2" Grid.Column="4" Width="100" VerticalAlignment="Center" HorizontalAlignment="Center"  />
 
         <ListBox x:Name="lbstart" Margin="4" Grid.Row="3" Grid.Column="1" Width="120" Height="380" VerticalAlignment="Top" HorizontalAlignment="Center" SelectionChanged="lbstart_SelectionChanged" />
         <ListBox x:Name="lbend" Margin="4" Grid.Row="3" Grid.Column="3" Width="120" Height="380" VerticalAlignment="Top" HorizontalAlignment="Center" SelectionChanged="lbstart_SelectionChanged" />
@@ -49,14 +49,21 @@
         <TextBlock Text="Device Battery Service:"   FontSize="22"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="4
                    " Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
         <CheckBox x:Name="AA" Content="" IsChecked="True" 
-                  FontSize="18"  Foreground="Red"  Background="White"  Margin="4" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" FlowDirection="RightToLeft"/>
+                  FontSize="18"  Foreground="Red"  Background="White"  Margin="4" 
+                  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
+                  FlowDirection="RightToLeft"
+                  VerticalAlignment="Center" HorizontalAlignment="Center"  />
         <TextBlock Text="Sys Info Service:"   FontSize="22"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
         <CheckBox x:Name="BB" Content="" IsChecked="True" 
                   FontSize="18"  Foreground="Yellow" Background="Yellow"   Margin="4" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" FlowDirection="RightToLeft"/>
-        
-        <TextBlock Text="No. Sensor Tags:"   FontSize="24"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="6
+
+        <TextBlock Text="Start Notifications"   FontSize="24"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="6
                    " Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <TextBox  x:Name="txtnumTags" Text="1"   
-                  FontSize="18"  Foreground="Black" Background="White"   Margin="4" Grid.Row="6" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" Width="40"/>
+        <CheckBox x:Name="CC" Content="" IsChecked="True" 
+                  FontSize="18"  Foreground="Red"  Background="White"  Margin="4" 
+                  Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"
+                  FlowDirection="RightToLeft" 
+                  VerticalAlignment="Center" HorizontalAlignment="Center" />
+
     </Grid>
 </Page>
