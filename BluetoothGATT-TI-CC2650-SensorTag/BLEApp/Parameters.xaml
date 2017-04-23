@@ -29,6 +29,7 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock FontSize="30" Foreground="Blue" Margin="4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -45,23 +46,29 @@
 
         <ListBox x:Name="lbstart" Margin="4" Grid.Row="3" Grid.Column="1" Width="120" Height="380" VerticalAlignment="Top" HorizontalAlignment="Center" SelectionChanged="lbstart_SelectionChanged" />
         <ListBox x:Name="lbend" Margin="4" Grid.Row="3" Grid.Column="3" Width="120" Height="380" VerticalAlignment="Top" HorizontalAlignment="Center" SelectionChanged="lbstart_SelectionChanged" />
-
-        <TextBlock Text="Device Battery Service:"   FontSize="22"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="4
+        <TextBlock Text="Service Sensors:"   FontSize="22"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="4
                    " Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <CheckBox x:Name="AA" Content="" IsChecked="True" 
+        <CheckBox x:Name="DD" Content="" IsChecked="True" 
                   FontSize="18"  Foreground="Red"  Background="White"  Margin="4" 
                   Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
                   FlowDirection="RightToLeft"
                   VerticalAlignment="Center" HorizontalAlignment="Center"  />
-        <TextBlock Text="Sys Info Service:"   FontSize="22"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <CheckBox x:Name="BB" Content="" IsChecked="True" 
-                  FontSize="18"  Foreground="Yellow" Background="Yellow"   Margin="4" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" FlowDirection="RightToLeft"/>
-
-        <TextBlock Text="Start Notifications"   FontSize="24"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="6
+        <TextBlock Text="Device Battery Service:"   FontSize="22"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="5
                    " Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <CheckBox x:Name="AA" Content="" IsChecked="True" 
+                  FontSize="18"  Foreground="Red"  Background="White"  Margin="4" 
+                  Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
+                  FlowDirection="RightToLeft"
+                  VerticalAlignment="Center" HorizontalAlignment="Center"  />
+        <TextBlock Text="Sys Info Service:"   FontSize="22"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <CheckBox x:Name="BB" Content="" IsChecked="True" 
+                  FontSize="18"  Foreground="Yellow" Background="Yellow"   Margin="4" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" FlowDirection="RightToLeft"/>
+
+        <TextBlock Text="Start Notifications"   FontSize="24"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="7"
+                    Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
         <CheckBox x:Name="CC" Content="" IsChecked="True" 
                   FontSize="18"  Foreground="Red"  Background="White"  Margin="4" 
-                  Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"
+                  Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2"
                   FlowDirection="RightToLeft" 
                   VerticalAlignment="Center" HorizontalAlignment="Center" />
 

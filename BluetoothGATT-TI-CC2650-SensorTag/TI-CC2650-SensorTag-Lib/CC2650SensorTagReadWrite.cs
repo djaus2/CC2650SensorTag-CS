@@ -268,6 +268,9 @@ namespace TICC2650SensorTag
 
         private bool IO_IsOn { get; set; } = false;
         public static bool StartNotifications { get; set; } = true;
+        public static bool CountUpdates { get; set; } = false;
+        public static bool ServiceSensors { get; set; } = true;
+
 
         private async Task ActionIO(IOActions action, int target)
         {

@@ -204,7 +204,11 @@
                     <!--<Button x:Name="PairButton" Content="Pair -Connect" Background="#CCFFFFFF" Click="PairButton_Click" Margin="10,0,0,0" Style="{StaticResource ButtonStyleGATT}" IsEnabled="True"></Button>
                     <Button x:Name="UnpairButton" Content="Unpair Device" Background="#CCFFFFFF" Click="UnpairButton_Click" Margin="10,0,0,0" Style="{StaticResource ButtonStyleGATT}" IsEnabled="False"></Button>
                     <Button x:Name="ExitButton" Content="Exit" Background="#CCFFFFFF" Click="ExitButton_Click" Margin="10,0,0,0" Style="{StaticResource ButtonStyleGATT}" IsEnabled="True"></Button>-->
-
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="CountUpdates" FontFamily="Segoe MDL2 Assets" Content="&#xE713;"
+                        Width="50" Height="50" Background="Transparent" IsEnabled="true" Visibility="Visible" Click="HamburgerButton_Click"/>
+                        <CheckBox x:Name="chkCountEvents" IsEnabled="True" IsChecked="true"  Foreground="Green" Checked="chkCountEvents_Checked" Unchecked="chkCountEvents_Checked" >Count Updates</CheckBox>
+                        </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Button x:Name="SensorListButton" FontFamily="Segoe MDL2 Assets" Content="&#xE713;"
                         Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
@@ -395,10 +399,10 @@
                             </StackPanel>
                         </ScrollViewer>-->
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                            <TextBlock  x:Name="UserOutLabel" Foreground="White" VerticalAlignment="Center" Margin="10,0,0,0">Message:</TextBlock>
-                            <TextBlock x:Name="UserOut" Foreground="White" VerticalAlignment="Center" Margin="30,0,0,0">
-                	<Run Text="Click to Pair and Connect"/>
-                            </TextBlock>
+                            <TextBlock  x:Name="UserOutLabel" Foreground="White" VerticalAlignment="Center" Margin="8,0,0,0">Message:</TextBlock>
+                            <TextBlock x:Name="UserOut" Foreground="White" VerticalAlignment="Center" Width="175" Margin="8,0,0,0">Data</TextBlock>
+                            <TextBlock x:Name="TxtCount" Foreground="White" VerticalAlignment="Center" Width="60" Margin="8,0,0,0">Prog: --</TextBlock>
+                            <TextBlock x:Name="TxtBattery" Foreground="White" VerticalAlignment="Center" Width="50" Margin="8,0,0,0">Batt: --</TextBlock>
                         </StackPanel>
                         <!--<StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10" VerticalAlignment="Center">

@@ -2,7 +2,7 @@
 {
     public interface ITICC2650SensorTag_BLEWatcher
     {
-        void StartBLEWatcher(Windows.UI.Xaml.Controls.Page mainPage2, DeviceInfoDel SetDevInfo);
+        void StartBLEWatcher(Windows.UI.Xaml.Controls.Page mainPage2, DeviceInfoDel SetDevInfo,  SetupProgressDel SetUpProgress2);
 
         void StopBLEWatcher();
     }

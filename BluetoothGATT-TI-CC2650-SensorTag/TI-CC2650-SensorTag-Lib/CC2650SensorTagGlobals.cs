@@ -47,7 +47,15 @@ namespace TICC2650SensorTag
         internal static CC2650SensorTag IO_SensorCharacteristics = null; //new GATTClassCharacteristics();
         internal static CC2650SensorTag RegistersCharacteristics = null; //new GATTClassCharacteristics();
 
-        public static CC2650SensorTag[] SensorsCharacteristicsList = new CC2650SensorTag[NUM_SENSORS];
+        private  static CC2650SensorTag[] _SensorsCharacteristicsList = new CC2650SensorTag[NUM_SENSORS];
+        public static CC2650SensorTag[] SensorsCharacteristicsList
+        {
+            get {
+                return _SensorsCharacteristicsList; 
+            }
+            set { _SensorsCharacteristicsList = value; }
+        }
+
 
         public static GattDeviceService[] ServiceList = new GattDeviceService[NUM_SENSORS];
         public static GattCharacteristic[] ActiveCharacteristicNotifications = new GattCharacteristic[NUM_SENSORS];
@@ -237,6 +245,7 @@ namespace TICC2650SensorTag
                     }
 
                 }
+                IncProg();
             }
             catch (Exception ex)
             {

@@ -8,9 +8,14 @@ using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.ComponentModel.DataAnnotations;
 using System;
+using Windows.Devices.Enumeration;
 
 namespace TICC2650SensorTag
 {
+    public delegate void DeviceInfoDel(DeviceInformation SetDdevInfo);
+    public delegate void SetupProgressDel();
+    public delegate void PassInt(int i);
+
     public sealed partial class CC2650SensorTag : ICC2650SensorTag
     {
 
@@ -26,8 +31,15 @@ namespace TICC2650SensorTag
 
         public SensorIndexes SensorIndex { get; set; }
 
+        public static SetupProgressDel SetUpProgress { get; set; } = null;
+        public static PassInt SetBatteryLevel { get; set; } = null;
+        public static void IncProg()
+        {
+            SetUpProgress?.Invoke();
+        }
 
-        
+
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -132,7 +144,7 @@ namespace TICC2650SensorTag
             {
                 Debug.WriteLine("Error: CC2650SensorTag() Constructor: " + SensorIndex.ToString() + " " + ex.Message);
             }
-
+            IncProg();
             Debug.WriteLine("End sensor constructor: " + SensorIndex.ToString());
         }
 
@@ -159,10 +171,12 @@ namespace TICC2650SensorTag
                             var status = await Configuration.WriteValueAsync(writer.DetachBuffer());
                         }
                 }
+                IncProg();
             } catch (Exception ex)
             {
                 Debug.WriteLine("Error: TurnOnSensor() : " + SensorIndex.ToString() +" " + ex.Message);
             }
+
             Debug.WriteLine("End turn on sensor: " + SensorIndex.ToString());
         }
 
@@ -246,6 +260,7 @@ namespace TICC2650SensorTag
                             Debug.WriteLine("Awaited SetChangedNotifactionHandler sensor: " + SensorIndex.ToString());
                         }
                 }
+                IncProg();
             }
             catch (Exception ex)
             {

@@ -132,6 +132,11 @@ namespace BluetoothGATT
             else
                 CC2650SensorTag.StartNotifications = false;
 
+            if ((bool)DD.IsChecked)
+                CC2650SensorTag.ServiceSensors = true;
+            else
+                CC2650SensorTag.ServiceSensors = false;
+
             CC2650SensorTag.SensorIndexes start = (CC2650SensorTag.SensorIndexes)lbstart.SelectedIndex;
             CC2650SensorTag.SensorIndexes end = (CC2650SensorTag.SensorIndexes)lbend.SelectedIndex;
 

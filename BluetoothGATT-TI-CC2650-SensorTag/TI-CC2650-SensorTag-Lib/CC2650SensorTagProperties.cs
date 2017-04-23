@@ -52,6 +52,7 @@ namespace TICC2650SensorTag
 
         public static async Task<byte[]> GetBatteryLevel()
         {
+            Debug.WriteLine("Begin GetBatteryLevel");
             byte[] bytes = null;
             GattCharacteristicProperties flag = GattCharacteristicProperties.Read;
             if (DeviceBatteryLevelCharacteristic != null)
@@ -68,6 +69,7 @@ namespace TICC2650SensorTag
                         catch (Exception ex)
                         {
                             string msg = ex.Message;
+                            Debug.WriteLine("Error GetBatteryLevel1(): " + msg);
                         }
 
                         var status = result.Status;
@@ -88,6 +90,7 @@ namespace TICC2650SensorTag
                     catch (Exception ex)
                     {
                         string msg = ex.Message;
+                        Debug.WriteLine("Error GetBatteryLevel2(): " + msg);
                     }
 
 
@@ -98,13 +101,16 @@ namespace TICC2650SensorTag
                 if (bytes.Length == CC2650SensorTag.DataLength[CC2650SensorTag.BATT_INDX])
                 {
                     Debug.WriteLine("Battery Level: {0}", bytes[0]);
+                    SetBatteryLevel((int)bytes[0]);
+                    IncProg();
                 }
+            Debug.WriteLine("End GetBatteryLevel");
             return bytes;
         }
 
         public static async Task<byte[]> ReadProperty(SensorTagProperties property, bool showStartEndMsg)
         {
-            if (showStartEndMsg)
+            //if (showStartEndMsg)
                 Debug.WriteLine("Begin read property: {0} ", property);
             string guidstr = "";
             byte[] bytes = null;
@@ -162,6 +168,7 @@ namespace TICC2650SensorTag
                             catch (Exception ex)
                             {
                                 string msg = ex.Message;
+                                Debug.WriteLine("Error ReadProperty1(): " + msg);
                             }
 
                             var status = result.Status;
@@ -175,7 +182,7 @@ namespace TICC2650SensorTag
                                 bytes = new byte[result.Value.Length];
 
                                 Windows.Storage.Streams.DataReader.FromBuffer(result.Value).ReadBytes(bytes);
-                                
+                                IncProg();
 
                             }
                         }
@@ -183,6 +190,7 @@ namespace TICC2650SensorTag
                         catch (Exception ex)
                         {
                             string msg = ex.Message;
+                            Debug.WriteLine("Error ReadProperty2(): " + msg);
                         }
 
 
@@ -190,8 +198,8 @@ namespace TICC2650SensorTag
 
                     
                 }
-            if(showStartEndMsg)
-                Debug.WriteLine("End read property: {0} ", property);
+            //if(showStartEndMsg)
+            Debug.WriteLine("End read property: {0} ", property);
 
             return bytes;
         }
