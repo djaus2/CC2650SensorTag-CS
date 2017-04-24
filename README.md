@@ -1,6 +1,6 @@
 
 
-## TI CC2650 SensorTag V4.5
+## TI CC2650 SensorTag V4.6  Built for SDK 14393 and above.
 
 [This repository](https://github.com/djaus2/CC2650SensorTag-CS) is a port of the [ms-iot/Samples/BluetoothGatt/CS GitHub](https://github.com/ms-iot/samples/tree/develop/BluetoothGATT/CS) code to support the Texas Instruments CC2650STK, the **CC2650 SensorTag**. The Microsoft code only supports the TI CC2541 Sensor Tag. This code has been refactored and extended to only support the CC2650.
 
@@ -30,6 +30,9 @@ This code also supports the IO Characteristic enabling turning on/off of the LED
 - Windows 10 Desktop Builds 15063 TBA
 - Windows 10 Phone Builds 14393 TBA
 - Windows 10 Phone Builds 15063 TBA
+
+**Note** ARM Appx Packages availble in the repository for side loading on RPI and Phone
+
 
 The code has been specifically refactored so that the CC2650 functionality is defined in a separate class. The UI for displaying data and for user input is in the MainPage class.
 

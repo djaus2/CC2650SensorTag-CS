@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		BluetoothGATT-CC2650-SensorTag_4.2.21.0.zip = BluetoothGATT-CC2650-SensorTag_4.2.21.0.zip
 		BluetoothGATT-CC2650-SensorTag_4.5.34.0_.zip = BluetoothGATT-CC2650-SensorTag_4.5.34.0_.zip
+		BluetoothGATT-CC2650-SensorTag_4.6.37.0_ARM.zip = BluetoothGATT-CC2650-SensorTag_4.6.37.0_ARM.zip
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject

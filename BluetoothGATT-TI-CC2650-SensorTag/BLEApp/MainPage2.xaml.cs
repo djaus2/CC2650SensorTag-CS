@@ -28,7 +28,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading;
 using TICC2650SensorTag;
-using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Input; 
 
 // Disable warning "...execution of the current method continues before the call is completed..."
 #pragma warning disable 4014
