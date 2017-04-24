@@ -67,8 +67,10 @@ namespace TICC2650SensorTag
                     }
                     if (count == 0)
                     {
-                        //Only optical can be all zeros
+                        //Only optical or keys can be all zeros
                         if (this.SensorIndex == SensorIndexes.OPTICAL)
+                            ret = true;
+                        else if (this.SensorIndex == SensorIndexes.KEYS)
                             ret = true;
                         else
                             Debug.WriteLine("Invalid byte[] recvd: All zeros " + SensorIndex.ToString());

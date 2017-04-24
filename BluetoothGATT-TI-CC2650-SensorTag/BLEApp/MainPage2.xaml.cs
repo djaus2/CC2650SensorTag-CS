@@ -118,6 +118,7 @@ namespace BluetoothGATT
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             ResultCollection.Clear();
+            chkCountEvents_Checked(null, null);
         }
 
 
@@ -131,8 +132,9 @@ namespace BluetoothGATT
                 ReadButton.IsEnabled = true;
                 InitButton.IsEnabled = false;
 
-                EnableIOIOButton.IsEnabled = true;
-                DisableIOIOButton.IsEnabled = true;
+                EnableIOIOButton2.IsEnabled = true;
+                //EnableIOIOButton.IsEnabled = true;
+                //DisableIOIOButton.IsEnabled = true;
                 AllOffIOButton.IsEnabled = true;
                 BuzzButton.IsEnabled = true;
                 LED1Button.IsEnabled = true;
@@ -1142,5 +1144,29 @@ namespace BluetoothGATT
             else
                 CountUpdateDataEvents = false;
         }
+
+        private async void chkEnableIOTButton2_Checked(object sender, RoutedEventArgs e)
+        {
+            string action = "";
+            if (chkEnableIOTButton2.IsChecked == true)
+                action = "EnableIO";
+            else
+                action = "DisableIO";
+
+            switch (action)
+            //from BuzzButton_ClickOf()
+            {
+                case "AllOff":
+                    await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.AllOff, 0);
+                    break;
+                case "EnableIO":
+                    await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.Enable, 0);
+                    break;
+                case "DisableIO":
+                    await CC2650SensorTag.GlobalActionIO(CC2650SensorTag.IOActions.Disable, 0);
+                    break;
+            }
+        }
+
     }
 }

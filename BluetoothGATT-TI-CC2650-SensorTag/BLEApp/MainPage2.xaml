@@ -200,6 +200,7 @@
                         Width="50" Height="50" Background="Transparent" IsEnabled="true" Visibility="Visible" Click="ExitButton_Click"/>
                         <TextBlock  Text="Exit"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" Tapped="ExitButton_Click" />
                     </StackPanel>
+                    <Rectangle Width="190" Height="2" Fill="LightGray"  Stroke="LightGray"   StrokeThickness="0" HorizontalAlignment="Left" Margin="0,8,0,16"/>
 
                     <!--<Button x:Name="PairButton" Content="Pair -Connect" Background="#CCFFFFFF" Click="PairButton_Click" Margin="10,0,0,0" Style="{StaticResource ButtonStyleGATT}" IsEnabled="True"></Button>
                     <Button x:Name="UnpairButton" Content="Unpair Device" Background="#CCFFFFFF" Click="UnpairButton_Click" Margin="10,0,0,0" Style="{StaticResource ButtonStyleGATT}" IsEnabled="False"></Button>
@@ -207,8 +208,24 @@
                     <StackPanel Orientation="Horizontal">
                         <Button x:Name="CountUpdates" FontFamily="Segoe MDL2 Assets" Content="&#xE713;"
                         Width="50" Height="50" Background="Transparent" IsEnabled="true" Visibility="Visible" Click="HamburgerButton_Click"/>
-                        <CheckBox x:Name="chkCountEvents" IsEnabled="True" IsChecked="true"  Foreground="Green" Checked="chkCountEvents_Checked" Unchecked="chkCountEvents_Checked" >Count Updates</CheckBox>
+                        <CheckBox x:Name="chkCountEvents" IsEnabled="True" IsChecked="false"  Foreground="Green" Checked="chkCountEvents_Checked" Unchecked="chkCountEvents_Checked" >Count Updates</CheckBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <!--<Button x:Name="LED1Button" Content="Buzz" Background="#CCFFFFFF" Click="BuzzButton_ClickOn" Margin="10,0,0,0" IsEnabled="False"/>-->
+                        <Button x:Name="InitButton1" FontFamily="Segoe MDL2 Assets" Content="&#xE950;"
+                        Width="50" Height="50" Background="Transparent" IsEnabled="True" Visibility="Visible" Tapped="InitButton1_Click"/>
+                        <TextBlock  Text="Dev Info"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" Tapped="InitButton1_Click"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="DataMode" FontFamily="Segoe MDL2 Assets" Content="&#xE713;"
+                        Width="50" Height="50" Background="Transparent" IsEnabled="true" Visibility="Visible" Click="HamburgerButton_Click"/>
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton x:Name="chkDataModeValues" IsEnabled="True" IsChecked="true" GroupName="DataMode" Foreground="Green" Checked="chkDataModeValues_Checked" Unchecked="chkDataModeValues_Checked" >Values</RadioButton>
+                            <RadioButton x:Name="chkDataModeRaw" IsEnabled="True" IsChecked="False" GroupName="DataMode" Foreground="Green">Raw</RadioButton>
                         </StackPanel>
+                    </StackPanel>
+
+                    <Rectangle Width="190" Height="2" Fill="LightGray"  Stroke="LightGray"   StrokeThickness="0" HorizontalAlignment="Left" Margin="0,8,0,16"/>
                     <StackPanel Orientation="Horizontal">
                         <Button x:Name="SensorListButton" FontFamily="Segoe MDL2 Assets" Content="&#xE713;"
                         Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
@@ -249,19 +266,19 @@
                         Width="50" Height="50" Background="Transparent" IsEnabled="False" Visibility="Visible" Click="EnableButton_Click"/>
                         <TextBlock  Text="Enable Notif"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" Tapped="EnableButton_Click"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Button x:Name="DataMode" FontFamily="Segoe MDL2 Assets" Content="&#xE713;"
-                        Width="50" Height="50" Background="Transparent" IsEnabled="true" Visibility="Visible" Click="HamburgerButton_Click"/>
-                        <StackPanel Orientation="Vertical">
-                            <RadioButton x:Name="chkDataModeValues" IsEnabled="True" IsChecked="true" GroupName="DataMode" Foreground="Green" Checked="chkDataModeValues_Checked" Unchecked="chkDataModeValues_Checked" >Values</RadioButton>
-                            <RadioButton x:Name="chkDataModeRaw" IsEnabled="True" IsChecked="False" GroupName="DataMode" Foreground="Green">Raw</RadioButton>
-                        </StackPanel>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <!--<Button x:Name="LED1Button" Content="Buzz" Background="#CCFFFFFF" Click="BuzzButton_ClickOn" Margin="10,0,0,0" IsEnabled="False"/>-->
+
+                    <!--<StackPanel Orientation="Horizontal">
+                        --><!--<Button x:Name="LED1Button" Content="Buzz" Background="#CCFFFFFF" Click="BuzzButton_ClickOn" Margin="10,0,0,0" IsEnabled="False"/>--><!--
                         <Button x:Name="EnableIOIOButton" FontFamily="Segoe MDL2 Assets" Content="&#xE73A;"
                         Width="50" Height="50" Background="Transparent" IsEnabled="False" Visibility="Visible" Click="BuzzButton_ClickOff"/>
                         <TextBlock  Text="Enable IO"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" Tapped="BuzzButton_ClickOff"/>
+                    </StackPanel>-->
+                    <Rectangle Width="190" Height="2" Fill="LightGray"  Stroke="LightGray"   StrokeThickness="0" HorizontalAlignment="Left" Margin="0,8,0,16"/>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="EnableIOIOButton2" FontFamily="Segoe MDL2 Assets" Content="&#xEA86;"
+                        Width="50" Height="50" Background="Transparent" IsEnabled="true" Visibility="Visible" Click="HamburgerButton_Click"/>
+                        <CheckBox x:Name="chkEnableIOTButton2" IsEnabled="True" IsChecked="false"  Foreground="Green" Checked="chkEnableIOTButton2_Checked" >IO Enabled</CheckBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <!--<Button x:Name="LED1Button" Content="LED1" Background="#CCFFFFFF" Click="BuzzButton_ClickOn" Margin="10,0,0,0" IsEnabled="False"/>-->
@@ -287,21 +304,15 @@
                         Width="50" Height="50" Background="Transparent" IsEnabled="False" Visibility="Visible" Click="BuzzButton_ClickOff"/>
                         <TextBlock  Text="All Off"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center"  Tapped="BuzzButton_ClickOff"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <!--<Button x:Name="LED1Button" Content="Buzz" Background="#CCFFFFFF" Click="BuzzButton_ClickOn" Margin="10,0,0,0" IsEnabled="False"/>-->
+                    <!--<StackPanel Orientation="Horizontal">
+                        --><!--<Button x:Name="LED1Button" Content="Buzz" Background="#CCFFFFFF" Click="BuzzButton_ClickOn" Margin="10,0,0,0" IsEnabled="False"/>--><!--
                         <Button x:Name="DisableIOIOButton" FontFamily="Segoe MDL2 Assets" Content="&#xE739;" 
                         Width="50" Height="50" Background="Transparent" IsEnabled="False" Visibility="Visible" Click="BuzzButton_ClickOff"/>
                         <TextBlock  Text="Disable IO"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" Tapped="BuzzButton_ClickOff"/>
-                    </StackPanel>
+                    </StackPanel>-->
 
 
 
-                    <StackPanel Orientation="Horizontal">
-                        <!--<Button x:Name="LED1Button" Content="Buzz" Background="#CCFFFFFF" Click="BuzzButton_ClickOn" Margin="10,0,0,0" IsEnabled="False"/>-->
-                        <Button x:Name="InitButton1" FontFamily="Segoe MDL2 Assets" Content="&#xE950;"
-                        Width="50" Height="50" Background="Transparent" IsEnabled="True" Visibility="Visible" Tapped="InitButton1_Click"/>
-                        <TextBlock  Text="Dev Info"  Visibility="Visible"  FontSize="18" VerticalAlignment="Center" Tapped="InitButton1_Click"/>
-                    </StackPanel>
                 </StackPanel>
                 </StackPanel>
             </ScrollViewer>
@@ -401,7 +412,7 @@
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                             <TextBlock  x:Name="UserOutLabel" Foreground="White" VerticalAlignment="Center" Margin="8,0,0,0">Message:</TextBlock>
                             <TextBlock x:Name="UserOut" Foreground="White" VerticalAlignment="Center" Width="175" Margin="8,0,0,0">Data</TextBlock>
-                            <TextBlock x:Name="TxtCount" Foreground="White" VerticalAlignment="Center" Width="60" Margin="8,0,0,0">Prog: --</TextBlock>
+                            <TextBlock x:Name="TxtCount" Foreground="White" VerticalAlignment="Center" Width="80" Margin="8,0,0,0">Prog: 000000</TextBlock>
                             <TextBlock x:Name="TxtBattery" Foreground="White" VerticalAlignment="Center" Width="50" Margin="8,0,0,0">Batt: --</TextBlock>
                         </StackPanel>
                         <!--<StackPanel Orientation="Vertical">
