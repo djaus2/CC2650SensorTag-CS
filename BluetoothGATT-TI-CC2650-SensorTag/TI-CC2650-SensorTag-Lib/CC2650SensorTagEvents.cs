@@ -65,7 +65,7 @@ namespace TICC2650SensorTag
                     {
                         count += (int)bArray[i];
                     }
-                    if (count == 0)
+                    if ( (count == 0) && (chkIgnoreZeros))
                     {
                         //Only optical or keys can be all zeros
                         if (this.SensorIndex == SensorIndexes.OPTICAL)

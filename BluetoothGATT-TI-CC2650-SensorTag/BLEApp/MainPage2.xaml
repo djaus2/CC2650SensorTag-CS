@@ -211,6 +211,11 @@
                         <CheckBox x:Name="chkCountEvents" IsEnabled="True" IsChecked="false"  Foreground="Green" Checked="chkCountEvents_Checked" Unchecked="chkCountEvents_Checked" >Count Updates</CheckBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
+                        <Button x:Name="IgnoreZeros" FontFamily="Segoe MDL2 Assets" Content="&#xE713;"
+                        Width="50" Height="50" Background="Transparent" IsEnabled="true" Visibility="Visible" Click="HamburgerButton_Click"/>
+                        <CheckBox x:Name="chkIgnoreZeros" IsEnabled="True" IsChecked="true"  Foreground="Green" Checked="chkIgnoreZeros_Checked"  >Ignore 0 Data</CheckBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
                         <!--<Button x:Name="LED1Button" Content="Buzz" Background="#CCFFFFFF" Click="BuzzButton_ClickOn" Margin="10,0,0,0" IsEnabled="False"/>-->
                         <Button x:Name="InitButton1" FontFamily="Segoe MDL2 Assets" Content="&#xE950;"
                         Width="50" Height="50" Background="Transparent" IsEnabled="True" Visibility="Visible" Tapped="InitButton1_Click"/>

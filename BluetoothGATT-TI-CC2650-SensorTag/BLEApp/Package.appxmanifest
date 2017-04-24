@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="61795Spotrtronics.CC2650SensorTag" Publisher="CN=B04DFAC7-365A-45B0-8B00-97A2B852DA4B" Version="4.5.34.0" />
+  <Identity Name="61795Spotrtronics.CC2650SensorTag" Publisher="CN=david" Version="4.5.34.0" />
   <mp:PhoneIdentity PhoneProductId="f21a452f-f92e-401a-bce0-cf0173835522" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>CC2650SensorTag</DisplayName>

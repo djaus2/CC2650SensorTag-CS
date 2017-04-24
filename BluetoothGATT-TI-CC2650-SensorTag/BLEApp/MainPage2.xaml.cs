@@ -119,6 +119,7 @@ namespace BluetoothGATT
         {
             ResultCollection.Clear();
             chkCountEvents_Checked(null, null);
+            chkIgnoreZeros_Checked(null,null);
         }
 
 
@@ -1168,5 +1169,12 @@ namespace BluetoothGATT
             }
         }
 
+        private void chkIgnoreZeros_Checked(object sender, RoutedEventArgs e)
+        {
+            if (chkIgnoreZeros.IsChecked == true)
+                CC2650SensorTag.chkIgnoreZeros = true;
+            else
+                CC2650SensorTag.chkIgnoreZeros = false;
+        }
     }
 }

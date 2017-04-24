@@ -270,7 +270,7 @@ namespace TICC2650SensorTag
         public static bool StartNotifications { get; set; } = true;
         public static bool CountUpdates { get; set; } = false;
         public static bool ServiceSensors { get; set; } = true;
-
+        public static bool chkIgnoreZeros { get; set; } = true;
 
         private async Task ActionIO(IOActions action, int target)
         {
