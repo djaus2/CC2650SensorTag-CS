@@ -33,6 +33,10 @@ This code also supports the IO Characteristic enabling turning on/off of the LED
 
 **Note** ARM Appx Packages availble in the repository for side loading on RPI and Phone
 
+**NB:**
+This version counts the updates events per 15 seconds and writes to a log file **sample.log** in
+\\minwinpc\c$\Data\Users\DefaultAccount\Documents
+
 
 The code has been specifically refactored so that the CC2650 functionality is defined in a separate class. The UI for displaying data and for user input is in the MainPage class.
 

@@ -107,7 +107,8 @@ namespace TICC2650SensorTag
                     str += "["+ bArray[i].ToString() + "] ";
                 Debug.WriteLine(str);
             }
-
+            if (ret)
+                System.Threading.Interlocked.Increment(ref EventCount);
             return ret;
         }
 
@@ -282,6 +283,8 @@ namespace TICC2650SensorTag
         const int ACC_RANGE_4G = 1;
         const int ACC_RANGE_8G = 2;
         const int ACC_RANGE_16G = 3;
+        internal static long EventCount = 0;
+
         int accRange { get; set; } = ACC_RANGE_16G;
 
         double sensorMpu9250AccConvert(Int16 rawData)

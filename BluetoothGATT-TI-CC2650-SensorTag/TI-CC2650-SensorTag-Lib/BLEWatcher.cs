@@ -13,6 +13,7 @@ using Windows.Devices.Radios;
 using System;
 using Windows.UI.Xaml.Controls;
 using System.Threading;
+using Windows.Storage;
 
 namespace TICC2650SensorTag
 {
@@ -135,7 +136,19 @@ namespace TICC2650SensorTag
             StopBLEWatcher();
         }
 
+        Timer EventTimer = null;
+        long LastEventCount = 0;
+        long counter = 0;
+        private async void EventTimerCallback(object state)
+        {
+            long currentCount =  System.Threading.Interlocked.Read(ref CC2650SensorTag.EventCount);
+            long diff = currentCount - LastEventCount;
+            LastEventCount = currentCount;
+            if (sampleFile!= null)
+                await Windows.Storage.FileIO.AppendTextAsync(sampleFile, counter++.ToString() + " " + diff.ToString() +"\r\n");
+        }
 
+        Windows.Storage.StorageFile sampleFile = null;
         public static bool HasOKd = false;
         public static Page NainPage2 { get; set; } = null;
         //Watcher for Bluetooth LE Services
@@ -147,12 +160,26 @@ namespace TICC2650SensorTag
             int discoveredServices = 0;
             int notifiedServices = 0;
             ManualResetEvent firstServiceStartedResetEvent = new ManualResetEvent(false);
+            CC2650SensorTag.EventCount = 0;
+
+
 
         // Hook up handlers for the watcher events before starting the watcher
             OnBLEAdded = async (watcher, deviceInfo) =>
             {            
                 if (System.Threading.Interlocked.Increment(ref notifiedServices) == 1)
-                {                                     
+                {
+                    //Set up event logging
+                    StorageFolder storageFolder = KnownFolders.DocumentsLibrary;
+                    sampleFile = await storageFolder.CreateFileAsync("sample.log", CreationCollisionOption.ReplaceExisting);
+                    //sampleFile =
+                        //await storageFolder.CreateFileAsync("log.txt",
+                        //    Windows.Storage.CreationCollisionOption.ReplaceExisting);
+                    long start = 0;
+                    counter = 0;
+                    System.Threading.Interlocked.Exchange(ref CC2650SensorTag.EventCount, start);
+                    EventTimer = new Timer(EventTimerCallback, null, 0, 15000);
+
                     //await Task.Run(async () =>
                     await NainPage2.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                     {
@@ -410,6 +437,8 @@ namespace TICC2650SensorTag
             blewatcher.Start();
             CC2650SensorTag.IncProg();
         }
+
+
 
         private async Task initSensor(CC2650SensorTag.SensorIndexes sensorIndx)
         {
