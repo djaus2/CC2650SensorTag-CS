@@ -51,6 +51,11 @@ namespace TICC2650SensorTag
             Raw
         }
 
+        public static void ReEnableAllSEnsors()
+        {
+
+        }
+
         public delegate void SensorDataDelegate(SensorData data);
 
         private bool checkArray(byte[] bArray)
@@ -108,7 +113,16 @@ namespace TICC2650SensorTag
                 Debug.WriteLine(str);
             }
             if (ret)
+            {
+                //If running in periodic mode, turn notifications off after first Update (we still start in Update mode)
+                if (this.SensorIndex != SensorIndexes.MOVEMENT)
+                {
+                    if ((PeriodicUpdatesOnly) && (this.NotificationState == NotificationStates.on))
+                        Task.Run(() => this.DisableNotify()).Wait();
+                }
                 System.Threading.Interlocked.Increment(ref EventCount);
+            }
+            
             return ret;
         }
 

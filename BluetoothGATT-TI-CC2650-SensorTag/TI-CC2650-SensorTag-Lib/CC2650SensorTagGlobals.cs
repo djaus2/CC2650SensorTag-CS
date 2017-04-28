@@ -219,8 +219,15 @@ namespace TICC2650SensorTag
         /// </summary>
         public static GattDataModes GattMode { get; set; } = GattDataModes.Values;
 
+        private static List<CC2650SensorTag> SensorList = null;
+        private static void InitSensors()
+        {
+            SensorList = new List<CC2650SensorTag>();
+        }
+
         public static void SetUp_SensorsLists()
         {
+            InitSensors();
             Debug.WriteLine("Begin SetUp_SensorsLists() ");
             try
             {

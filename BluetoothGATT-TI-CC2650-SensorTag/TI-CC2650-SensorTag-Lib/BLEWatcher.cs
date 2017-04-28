@@ -139,13 +139,24 @@ namespace TICC2650SensorTag
         Timer EventTimer = null;
         long LastEventCount = 0;
         long counter = 0;
+        bool updating = false;
         private async void EventTimerCallback(object state)
         {
+            if (updating)
+                return;
             long currentCount =  System.Threading.Interlocked.Read(ref CC2650SensorTag.EventCount);
             long diff = currentCount - LastEventCount;
             LastEventCount = currentCount;
             if (sampleFile!= null)
                 await Windows.Storage.FileIO.AppendTextAsync(sampleFile, counter++.ToString() + " " + diff.ToString() +"\r\n");
+            if (CC2650SensorTag.PeriodicUpdatesOnly)
+                if (((counter+ 1 ) % CC2650SensorTag.Period) == 0) 
+                {
+                    updating = true;
+                    await CC2650SensorTag.GetBatteryLevel();
+                    await CC2650SensorTag.ReadAllSensors();
+                    updating = false;
+                }
         }
 
         Windows.Storage.StorageFile sampleFile = null;

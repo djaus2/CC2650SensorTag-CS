@@ -11,7 +11,7 @@
         <!--<local:Parameters.EnumToStringConverter  x:Key="EnumToStringConverter"/>-->
     </Page.Resources>
 
-    <Grid Background= "#FF26F3EA" > 
+    <Grid Background= "#FF26F3EA" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="125"/>
             <ColumnDefinition Width="125"/>
@@ -64,13 +64,19 @@
         <CheckBox x:Name="BB" Content="" IsChecked="True" 
                   FontSize="18"  Foreground="Yellow" Background="Yellow"   Margin="4" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" FlowDirection="RightToLeft"/>
 
-        <TextBlock Text="Start Notifications"   FontSize="24"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="7"
+        <TextBlock Text="Periodic Updates"   FontSize="24"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="7"
                     Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <CheckBox x:Name="CC" Content="" IsChecked="True" 
+        <CheckBox x:Name="CC" Content="" IsChecked="False" 
                   FontSize="18"  Foreground="Red"  Background="White"  Margin="4" 
                   Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2"
                   FlowDirection="RightToLeft" 
                   VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <TextBlock Text="(viz) On change updates"   FontSize="24"  Foreground="Crimson" Grid.ColumnSpan="3" Margin="108,4,-5,4" Grid.Row="7" FontStyle="Italic"
+                    Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Width="272"/>
+        <TextBlock Text="Period (Min)"   FontSize="24"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="8"
+                    Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <TextBox Text="5" x:Name="txtPeriod"  FontSize="24"  Foreground="Crimson" Grid.ColumnSpan="1" Margin="0" Grid.Row="8"
+                    Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
     </Grid>
 </Page>

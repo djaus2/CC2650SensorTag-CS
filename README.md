@@ -10,6 +10,7 @@ The code establishes a connection to the service for each of the BTE characteris
 
 This code also supports the IO Characteristic enabling turning on/off of the LEDs 1 & 2 as well as the Buzzer on and off.
 
+---
 **The supported characteristics/services are:**           
 - IR_SENSOR
 - HUMIDITY
@@ -19,7 +20,10 @@ This code also supports the IO Characteristic enabling turning on/off of the LED
 - OPTICAL
 - MOVEMENT
 - REGISTERS
+- BATTERY
+- SYSTEM INFORMATION
 
+---
 **The app has been tested  on:**
 - Windows 10 IoT Core, RPI3. 14393 TBA
 - Windows 10 IoT Core, RPI3. 15063 TBA
@@ -30,15 +34,22 @@ This code also supports the IO Characteristic enabling turning on/off of the LED
 - Windows 10 Desktop Builds 15063 TBA
 - Windows 10 Phone Builds 14393 TBA
 - Windows 10 Phone Builds 15063 TBA
+---
+**Note 1:** *This version of the app requires pairing to be done outside of the app. Ther are no Pair/Unpair buttons.*
 
-**Note** ARM Appx Packages availble in the repository for side loading on RPI and Phone
+**Note 2:** The current version OF THE APP is available as an ARM Appx Package in the repository for side loading on RPI and Phone.
 
-**NB:**
-This version counts the updates events per 15 seconds and writes to a log file **sample.log** in
-\\minwinpc\c$\Data\Users\DefaultAccount\Documents
+**Note 3:** This version counts the updates events per 15 seconds and writes to a log file **sample.log** in
+\\\minwinpc\c$\Data\Users\DefaultAccount\Documents
 
-
-The code has been specifically refactored so that the CC2650 functionality is defined in a separate class. The UI for displaying data and for user input is in the MainPage class.
+**Note 4:** There is now an option, at app startup, to limit the ambience (temperature, pressure and humidity) readings to being periodic on demand rather than for every change. 
+- After startup in on changed mode, the sensors are disabled. 
+- Periodically through the event count monitoring timer, the sensors are manually read. 
+- The period can be set in minutes, at app startup.
+- Luminosity remains in update on changed mode.
+- Motion remains on auto-periodic updates (1 second period).
+---
+The code has been specifically refactored so that the CC2650 functionality is defined in a separate class. The UI for displaying data and for user input is in the MainPage class. Luminosity still remains as being auto-updated and motion remains as periodicaly updated every second.
 
 Code for handling Bluetooth connectivity, characteristic metadata, service code and event handlers are all in the CC2650 class. The class uses a callback mechanism to update data in the UI.
 
@@ -47,9 +58,8 @@ Another small change is that the moving dot for accelerator X-Y display has a va
 - Red is < -1.4
 - Blue is > 1.4  etc.
 
-**This version of the app requires pairing to be done outside of the app. Ther are no Pair/Unpair buttons.**
 
-At startup there is a progress counter is displayed. Whilst there is no target, it reaches 74 on dekstop and about 84 on the RPI.
+At startup there is a progress counter is displayed. Whilst there is no target, it reaches 74 on. This gives you some feedback as to how the setup is progressing.
 
 Battery Voltage is also displayed after startup if it is enabled.
 
@@ -64,11 +74,11 @@ Also there are some  options:
 **UI Changes:**
 - Implemented UI as SplitView with most buttons in the SplitView Pane on left.
 - The SplitView menu on left has been rearranged with seperators between functional section.
-- Som ecommands have been added, some removed
+- Some commands have been added, some removed
 - **Note:** When manually read, a sensor's Notifications are stopped. Can re-enable
-- Properties are displayed on a separate page.
+- System Information is displayed on a separate page.
 - Can select a subset (as a range) of sensors to start.
-- Can select no sensors, as well a choose battery and properties enable/disable.
+- Can select no sensors, as well a choose battery and system information, enable/disable.
 
 
 **NOTE**

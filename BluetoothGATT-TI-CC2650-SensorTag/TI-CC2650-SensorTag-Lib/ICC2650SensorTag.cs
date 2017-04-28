@@ -12,7 +12,7 @@ namespace TICC2650SensorTag
         GattCharacteristic Device_Id { get; set; }
         GattDeviceService GattService { get; set; }
         GattCharacteristic Notification { get; set; }
-        GattCharacteristic Period { get; set; }
+        GattCharacteristic GattCharacteristicPeriod { get; set; }
         CC2650SensorTag.SensorIndexes SensorIndex { get; set; }
 
         Task DisableNotify();

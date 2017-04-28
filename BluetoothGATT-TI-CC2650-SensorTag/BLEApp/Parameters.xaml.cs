@@ -128,12 +128,19 @@ namespace BluetoothGATT
                 CC2650SensorTag.Use_UUID_PROPERTIES_SERVICE = false;
 
             if ((bool)CC.IsChecked)
-                CC2650SensorTag.StartNotifications = true;
+                CC2650SensorTag.PeriodicUpdatesOnly = true;
             else
-                CC2650SensorTag.StartNotifications = false;
+                CC2650SensorTag.PeriodicUpdatesOnly = false;
 
             if ((bool)DD.IsChecked)
+            {
+                string valStr = this.txtPeriod.Text;
+                uint val = 4;
+                bool res = uint.TryParse(valStr, out val);
+                if (res)
+                    CC2650SensorTag.Period = val;
                 CC2650SensorTag.ServiceSensors = true;
+            }
             else
                 CC2650SensorTag.ServiceSensors = false;
 

@@ -24,7 +24,7 @@ namespace TICC2650SensorTag
         public GattCharacteristic Data { get; set; } = null;
         public GattCharacteristic Notification { get; set; } = null;
         public GattCharacteristic Configuration { get; set; } = null;
-        public GattCharacteristic Period { get; set; } = null;
+        public GattCharacteristic GattCharacteristicPeriod { get; set; } = null;
 
         public GattCharacteristic Address { get; set; } = null;
         public GattCharacteristic Device_Id { get; set; } = null;
@@ -50,6 +50,8 @@ namespace TICC2650SensorTag
             Debug.WriteLine("Begin sensor constructor: " + sensorIndex.ToString());
             try
             {
+                NotificationState = NotificationStates.off;
+                SensorList.Add(this);
                 GattService = gattService;
                 HasSetCallBacks = false;
                 SensorIndex = sensorIndex;
@@ -135,10 +137,9 @@ namespace TICC2650SensorTag
                 if (SensorIndex >= 0 && SensorIndex != SensorIndexes.IO_SENSOR && SensorIndex != SensorIndexes.REGISTERS)
                 {
                     ActiveCharacteristicNotifications[(int)SensorIndex] = Notification;
-                    if (StartNotifications)
-                        Task.Run(() => this.SetChangedNotifactionHandler()).Wait(); //Could leave out Wait but potentially could action this instance too soon
+                    Task.Run(() => this.SetChangedNotifactionHandler()).Wait(); //Could leave out Wait but potentially could action this instance too soon
 
-                        Task.Run(() => this.TurnOnSensor()).Wait(); //This launches a new thread for this action but stalls the constructor thread.
+                    Task.Run(() => this.TurnOnSensor()).Wait(); //This launches a new thread for this action but stalls the constructor thread.
                 }
             } catch (Exception ex)
             {
@@ -146,6 +147,15 @@ namespace TICC2650SensorTag
             }
             IncProg();
             Debug.WriteLine("End sensor constructor: " + SensorIndex.ToString());
+        }
+
+        public static async Task ReadAllSensors()
+        {
+            foreach (CC2650SensorTag sensor in SensorList)
+                if (sensor.SensorIndex != SensorIndexes.MOVEMENT)
+                {
+                    await sensor.ReadSensor(false, true, true);
+                }
         }
 
         public async Task TurnOnSensor()
@@ -257,6 +267,7 @@ namespace TICC2650SensorTag
                         {
                             Debug.WriteLine("Awaiting SetChangedNotifactionHandler sensor: " + SensorIndex.ToString());
                             await Notification.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
+                            NotificationState = NotificationStates.on;
                             Debug.WriteLine("Awaited SetChangedNotifactionHandler sensor: " + SensorIndex.ToString());
                         }
                 }
@@ -269,6 +280,9 @@ namespace TICC2650SensorTag
              Debug.WriteLine("(End SetChangedNotifactionHandler sensor: " + SensorIndex.ToString());
         }
 
+        enum NotificationStates { on, off};
+        NotificationStates NotificationState = NotificationStates.off;
+
         public async Task DisableNotify()
         {
             Debug.WriteLine("Begin DisableNotify sensor: " + SensorIndex.ToString());
@@ -276,7 +290,10 @@ namespace TICC2650SensorTag
             {
                 if (Notification != null)
                     if (Notification.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
+                    {
                         await Notification.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.None);
+                        this.NotificationState = NotificationStates.off;
+                    }
             } 
             catch (Exception ex)
             {

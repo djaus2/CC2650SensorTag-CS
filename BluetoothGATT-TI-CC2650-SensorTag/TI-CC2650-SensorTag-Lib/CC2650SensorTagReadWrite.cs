@@ -54,7 +54,7 @@ namespace TICC2650SensorTag
                             characteristic = this.Configuration;
                             break;
                         case ServiceCharacteristicsEnum.Period:
-                            characteristic = this.Period;
+                            characteristic = this.GattCharacteristicPeriod;
                             break;
                         case ServiceCharacteristicsEnum.Address:
                             characteristic = this.Address;
@@ -191,7 +191,7 @@ namespace TICC2650SensorTag
                             characteristic = this.Configuration;
                             break;
                         case ServiceCharacteristicsEnum.Period:
-                            characteristic = this.Period;
+                            characteristic = this.GattCharacteristicPeriod;
                             break;
                         case ServiceCharacteristicsEnum.Address:
                             characteristic = this.Address;
@@ -267,7 +267,8 @@ namespace TICC2650SensorTag
         }
 
         private bool IO_IsOn { get; set; } = false;
-        public static bool StartNotifications { get; set; } = true;
+        public static bool PeriodicUpdatesOnly { get; set; } = false;
+        public static long Period { get; set; } = 5;
         public static bool CountUpdates { get; set; } = false;
         public static bool ServiceSensors { get; set; } = true;
         public static bool chkIgnoreZeros { get; set; } = true;
