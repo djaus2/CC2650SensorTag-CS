@@ -28,7 +28,7 @@ This code also supports the IO Characteristic enabling turning on/off of the LED
 - Windows 10 IoT Core, RPI3. 14393 TBA
 - Windows 10 IoT Core, RPI3. 15063 TBA
 - Windows 10 IoT Core, RPI3, 16170  Works but there are some BT connectivity issues (works some times but not all).
-- Some time get not BT Radios messgae. Reboot fixes that.
+  - Sometimes get some issues that a reboot fixes.
 - Dragonboard test coming. 
 - Windows 10 Desktop Builds 14393  **OK**
 - Windows 10 Desktop Builds 15063 TBA
