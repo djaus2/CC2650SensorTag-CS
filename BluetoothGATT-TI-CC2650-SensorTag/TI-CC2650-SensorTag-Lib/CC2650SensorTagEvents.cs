@@ -114,10 +114,10 @@ namespace TICC2650SensorTag
             }
             if (ret)
             {
-                //If running in periodic mode, turn notifications off after first Update (we still start in Update mode)
-                if (this.SensorIndex != SensorIndexes.MOVEMENT)
+                //If running in periodic mode, turn notifications off after 8th Update (we still start in Update mode)
+                if ((this.SensorIndex != SensorIndexes.MOVEMENT) && (this.SensorIndex != SensorIndexes.OPTICAL))
                 {
-                    if ((PeriodicUpdatesOnly) && (this.NotificationState == NotificationStates.on))
+                    if ((SetSensorsManualMode) && (PeriodicUpdatesOnly) && (this.NotificationState == NotificationStates.on))
                         Task.Run(() => this.DisableNotify()).Wait();
                 }
                 System.Threading.Interlocked.Increment(ref EventCount);

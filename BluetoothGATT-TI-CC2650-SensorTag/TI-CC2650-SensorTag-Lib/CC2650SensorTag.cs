@@ -152,7 +152,7 @@ namespace TICC2650SensorTag
         public static async Task ReadAllSensors()
         {
             foreach (CC2650SensorTag sensor in SensorList)
-                if (sensor.SensorIndex != SensorIndexes.MOVEMENT)
+                if ((sensor.SensorIndex != SensorIndexes.MOVEMENT) && (sensor.SensorIndex != SensorIndexes.OPTICAL))
                 {
                     await sensor.ReadSensor(false, true, true);
                 }

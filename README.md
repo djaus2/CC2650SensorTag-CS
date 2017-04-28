@@ -42,10 +42,12 @@ This code also supports the IO Characteristic enabling turning on/off of the LED
 **Note 3:** This version counts the updates events per 15 seconds and writes to a log file **sample.log** in
 \\\minwinpc\c$\Data\Users\DefaultAccount\Documents
 
+Some bugs in the following mode ??):
 **Note 4:** There is now an option, at app startup, to limit the ambience (temperature, pressure and humidity) readings to being periodic on demand rather than for every change. 
-- After startup in on changed mode, the sensors are disabled. 
-- Periodically through the event count monitoring timer, the sensors are manually read. 
-- The period can be set in minutes, at app startup.
+- For this option, at startup app is set to on changed mode.
+- After a selected number log events, the sensors are disabled. 
+- Periodically, after a selected number of log events, the sensors are manually read. 
+- The log period can be set in seconds, at app startup.
 - Luminosity remains in update on changed mode.
 - Motion remains on auto-periodic updates (1 second period).
 ---

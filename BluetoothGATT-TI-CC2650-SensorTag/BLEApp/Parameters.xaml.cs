@@ -135,10 +135,20 @@ namespace BluetoothGATT
             if ((bool)DD.IsChecked)
             {
                 string valStr = this.txtPeriod.Text;
-                uint val = 4;
-                bool res = uint.TryParse(valStr, out val);
+                long val = 4;
+                bool res = long.TryParse(valStr, out val);
                 if (res)
                     CC2650SensorTag.Period = val;
+
+                valStr = this.txtUpdatePeriod.Text;
+                res = long.TryParse(valStr, out val);
+                if (res)
+                    CC2650SensorTag.UpdatePeriod = val * 1000; 
+
+                valStr = this.txtUpdatePeriodsToSkip.Text;
+                res = long.TryParse(valStr, out val);
+                if (res)
+                    CC2650SensorTag.NumTimerEventsToWaitBeforeTurningOffUpdates = val;
                 CC2650SensorTag.ServiceSensors = true;
             }
             else

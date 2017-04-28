@@ -272,6 +272,9 @@ namespace TICC2650SensorTag
         public static bool CountUpdates { get; set; } = false;
         public static bool ServiceSensors { get; set; } = true;
         public static bool chkIgnoreZeros { get; set; } = true;
+        public static bool SetSensorsManualMode { get; internal set; } = false;
+        public static long UpdatePeriod { get; set; } = 15 * 1000;
+        public static long NumTimerEventsToWaitBeforeTurningOffUpdates { get;  set; } = 4;
 
         private async Task ActionIO(IOActions action, int target)
         {

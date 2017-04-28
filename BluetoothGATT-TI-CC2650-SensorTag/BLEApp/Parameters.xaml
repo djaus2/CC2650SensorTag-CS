@@ -13,18 +13,21 @@
 
     <Grid Background= "#FF26F3EA" >
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="125"/>
-            <ColumnDefinition Width="125"/>
-            <ColumnDefinition Width="125"/>
-            <ColumnDefinition Width="125"/>
-            <ColumnDefinition Width="125"/>
+            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="140"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="400"/>
+            <RowDefinition Height="380"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
@@ -64,19 +67,26 @@
         <CheckBox x:Name="BB" Content="" IsChecked="True" 
                   FontSize="18"  Foreground="Yellow" Background="Yellow"   Margin="4" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" FlowDirection="RightToLeft"/>
 
-        <TextBlock Text="Periodic Updates"   FontSize="24"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="7"
+        <TextBlock Text="Periodic Updates:"   FontSize="24"  Foreground="Blue" Grid.ColumnSpan="2" Margin="4" Grid.Row="8"
                     Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
         <CheckBox x:Name="CC" Content="" IsChecked="False" 
                   FontSize="18"  Foreground="Red"  Background="White"  Margin="4" 
-                  Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2"
+                  Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2"
                   FlowDirection="RightToLeft" 
                   VerticalAlignment="Center" HorizontalAlignment="Center" />
-        <TextBlock Text="(viz) On change updates"   FontSize="24"  Foreground="Crimson" Grid.ColumnSpan="3" Margin="108,4,-5,4" Grid.Row="7" FontStyle="Italic"
-                    Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Width="272"/>
-        <TextBlock Text="Period (Min)"   FontSize="24"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="8"
+        <TextBlock Text="(Default is OnChange Updates)"   FontSize="24"  Foreground="Blue" Grid.ColumnSpan="3" Margin="93,0,0,0" Grid.Row="8" FontStyle="Italic"
+                    Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Width="322"/>
+        <TextBlock Text="Period (No. logs):"   FontSize="24"  Foreground="Blue" Grid.ColumnSpan="2" Margin="4" Grid.Row="9"
                     Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <TextBox Text="5" x:Name="txtPeriod"  FontSize="24"  Foreground="Crimson" Grid.ColumnSpan="1" Margin="0" Grid.Row="8"
+        <TextBox Text="4" x:Name="txtPeriod"  FontSize="24"  Foreground="Red" Grid.ColumnSpan="1" Margin="0" Grid.Row="9"
                     Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-
+        <TextBlock Text="Log Period (sec):"   FontSize="24"  Foreground="Blue" Grid.ColumnSpan="2" Margin="4" Grid.Row="7"
+                    Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <TextBox Text="15" x:Name="txtUpdatePeriod"  FontSize="24"  Foreground="Red" Grid.ColumnSpan="1" Margin="0" Grid.Row="7"
+                    Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock Text="Wait (No logs):"   FontSize="24"  Foreground="Blue" Grid.ColumnSpan="2" Margin="0" Grid.Row="9"
+                    Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <TextBox Text="4" x:Name="txtUpdatePeriodsToSkip"  FontSize="24"  Foreground="Red" Grid.ColumnSpan="1" Margin="0" Grid.Row="9"
+                    Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
     </Grid>
 </Page>

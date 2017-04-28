@@ -139,61 +139,74 @@ namespace TICC2650SensorTag
         Timer EventTimer = null;
         long LastEventCount = 0;
         long counter = 0;
-        bool updating = false;
+        static long updating = 0;
+
         private async void EventTimerCallback(object state)
         {
-            if (updating)
-                return;
-            long currentCount =  System.Threading.Interlocked.Read(ref CC2650SensorTag.EventCount);
+            counter++;
+            long currentCount = System.Threading.Interlocked.Read(ref CC2650SensorTag.EventCount);
             long diff = currentCount - LastEventCount;
             LastEventCount = currentCount;
-            if (sampleFile!= null)
-                await Windows.Storage.FileIO.AppendTextAsync(sampleFile, counter++.ToString() + " " + diff.ToString() +"\r\n");
+
+
+            if ((counter > CC2650SensorTag.NumTimerEventsToWaitBeforeTurningOffUpdates) && (!CC2650SensorTag.SetSensorsManualMode))
+            {
+                //Give sensors a change to switchto manual mode.
+                CC2650SensorTag.SetSensorsManualMode = true;
+                return;
+            }
+
+            if (sampleFile != null)
+                await Windows.Storage.FileIO.AppendTextAsync(sampleFile, counter.ToString() + " " + diff.ToString() + "\r\n");
+
+            if (System.Threading.Interlocked.Read(ref updating) == 1)
+                return;
+
             if (CC2650SensorTag.PeriodicUpdatesOnly)
-                if (((counter+ 1 ) % CC2650SensorTag.Period) == 0) 
-                {
-                    updating = true;
-                    await CC2650SensorTag.GetBatteryLevel();
-                    await CC2650SensorTag.ReadAllSensors();
-                    updating = false;
-                }
+                if (CC2650SensorTag.SetSensorsManualMode)
+                    if (((counter) % CC2650SensorTag.Period) == 0) 
+                    {
+                        System.Threading.Interlocked.Exchange(ref updating, 1);
+                        await CC2650SensorTag.GetBatteryLevel();
+                        await CC2650SensorTag.ReadAllSensors();
+                        System.Threading.Interlocked.Exchange(ref updating, 0);
+                    }
         }
 
         Windows.Storage.StorageFile sampleFile = null;
         public static bool HasOKd = false;
         public static Page NainPage2 { get; set; } = null;
+
         //Watcher for Bluetooth LE Services
         public void StartBLEWatcher(Page mainPage2, DeviceInfoDel SetDevInfo, SetupProgressDel setUpProgress2)
         {
             NainPage2 = mainPage2;
           
             HasOKd = false;
-            int discoveredServices = 0;
+            long discoveredServices = 0;
             int notifiedServices = 0;
             ManualResetEvent firstServiceStartedResetEvent = new ManualResetEvent(false);
             CC2650SensorTag.EventCount = 0;
+            CC2650SensorTag.SetSensorsManualMode = false;
 
-
-
-        // Hook up handlers for the watcher events before starting the watcher
+            //Init values for log
+            long start = 0;
+            counter = 0;
+            System.Threading.Interlocked.Exchange(ref updating, 0);
+            // Hook up handlers for the watcher events before starting the watcher
             OnBLEAdded = async (watcher, deviceInfo) =>
             {            
                 if (System.Threading.Interlocked.Increment(ref notifiedServices) == 1)
                 {
-                    //Set up event logging
-                    StorageFolder storageFolder = KnownFolders.DocumentsLibrary;
-                    sampleFile = await storageFolder.CreateFileAsync("sample.log", CreationCollisionOption.ReplaceExisting);
-                    //sampleFile =
-                        //await storageFolder.CreateFileAsync("log.txt",
-                        //    Windows.Storage.CreationCollisionOption.ReplaceExisting);
-                    long start = 0;
-                    counter = 0;
-                    System.Threading.Interlocked.Exchange(ref CC2650SensorTag.EventCount, start);
-                    EventTimer = new Timer(EventTimerCallback, null, 0, 15000);
+
 
                     //await Task.Run(async () =>
                     await NainPage2.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                     {
+                        //Set up event logging
+                        StorageFolder storageFolder = KnownFolders.DocumentsLibrary;
+                        sampleFile = await storageFolder.CreateFileAsync("sample.log", CreationCollisionOption.ReplaceExisting);
+
                         if (CC2650SensorTag.DeviceAltSensorNames.Contains(deviceInfo.Name))
                         {
                             setUpProgress2();
@@ -368,18 +381,24 @@ namespace TICC2650SensorTag
                                 }
 
                                 // When all sensors have been discovered, notify the user
-                                if (discoveredServices > 0) // == NUM_SENSORS)
+                                long curDiscv = System.Threading.Interlocked.Read(ref discoveredServices);
+                                if (curDiscv > 0) // == NUM_SENSORS)
                                 {
                                     UpdateButtons_WhenSensorsAreReady_CallBack?.Invoke();
 
-                                    if (discoveredServices == CC2650SensorTag.NUM_SENSORS_TO_TEST)
+                                    if (curDiscv == CC2650SensorTag.NUM_SENSORS_TO_TEST)
                                     {
                                         blewatcher.Stop();
                                         Debug.WriteLine("blewatcher Stopped.");
+                                        System.Threading.Interlocked.Exchange(ref CC2650SensorTag.EventCount, start);
+                                        EventTimer = new Timer(EventTimerCallback, null, 0, (int)CC2650SensorTag.UpdatePeriod);
+                                        discoveredServices = 0;
                                     }
-                                    discoveredServices = 0;
+                                    
                                     // UserOut.Text = "Sensors on!";
                                 }
+
+                                
                             }
                             CC2650SensorTag.IncProg();
                         }
@@ -425,6 +444,7 @@ namespace TICC2650SensorTag
                     }
                 }
             }
+
 
 
             if (CC2650SensorTag.Use_DEVICE_BATTERY_SERVICE)
