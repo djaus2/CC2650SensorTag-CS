@@ -37,7 +37,7 @@ This code also supports the IO Characteristic enabling turning on/off of the LED
 ---
 **Note 1:** *This version of the app requires pairing to be done outside of the app. Ther are no Pair/Unpair buttons.*
 
-**Note 2:** The current version OF the app is available as an ARM Appx Package in the repository for side loading on RPI and Phone.
+**Note 2:** The current version of the app is available as an ARM Appx Package in the repository for side loading on RPI and Phone.
 
 **Note 3:** This version counts the updates events per 15 seconds and writes to a log file **sample.log** in
 \\\minwinpc\c$\Data\Users\DefaultAccount\Documents
