@@ -117,45 +117,68 @@ namespace BluetoothGATT
             //if (res)
             //    MainPage2.numDevices = (int)numTags;
 
-            if ((bool)AA.IsChecked)
+            if ((bool)chkUseBattery.IsChecked)
                 CC2650SensorTag.Use_DEVICE_BATTERY_SERVICE = true;
             else
                 CC2650SensorTag.Use_DEVICE_BATTERY_SERVICE = false;
 
-            if ((bool)BB.IsChecked)
+            if ((bool)chkGetSysInfo.IsChecked)
                 CC2650SensorTag.Use_UUID_PROPERTIES_SERVICE = true;
             else
                 CC2650SensorTag.Use_UUID_PROPERTIES_SERVICE = false;
 
-            if ((bool)CC.IsChecked)
+            if ((bool)chkServiceSensors.IsChecked)
+                CC2650SensorTag.ServiceSensors = true;
+            else
+                CC2650SensorTag.ServiceSensors = false;
+
+            if ((bool)chkPeriodicUpdatesOnly.IsChecked)
                 CC2650SensorTag.PeriodicUpdatesOnly = true;
             else
                 CC2650SensorTag.PeriodicUpdatesOnly = false;
 
-            if ((bool)DD.IsChecked)
-            {
-                string valStr = this.txtPeriod.Text;
-                long val = 4;
-                bool res = long.TryParse(valStr, out val);
-                if (res)
-                    CC2650SensorTag.Period = val;
+            System.Diagnostics.Debug.WriteLine("==================");
+            string valStr = this.txtUpdatePeriod.Text;
+            long val = 4;
+            bool res = long.TryParse(valStr, out val);
+            if (res)
+                CC2650SensorTag.UpdatePeriod = val * 1000;
+            System.Diagnostics.Debug.WriteLine("LogPeriod(ms): " + CC2650SensorTag.UpdatePeriod.ToString());
 
-                valStr = this.txtUpdatePeriod.Text;
+            if ((bool)chkPeriodicUpdatesOnly.IsChecked)
+            {
+                System.Diagnostics.Debug.WriteLine("In periodic manual read of sensors mode, except Optical (OnChange) and Motion (Periodic 1s))");
+                valStr = this.txtPeriod.Text;
+
                 res = long.TryParse(valStr, out val);
                 if (res)
-                    CC2650SensorTag.UpdatePeriod = val * 1000; 
+                    CC2650SensorTag.Period = val;
+                System.Diagnostics.Debug.WriteLine("UpdatePeriod (No. log perios): " + CC2650SensorTag.Period.ToString());
+
+
 
                 valStr = this.txtUpdatePeriodsToSkip.Text;
                 res = long.TryParse(valStr, out val);
                 if (res)
                     CC2650SensorTag.NumTimerEventsToWaitBeforeTurningOffUpdates = val;
-                CC2650SensorTag.ServiceSensors = true;
+                
+                System.Diagnostics.Debug.WriteLine("Period to wait before turning off OnChange Updates (No. Log Periods): " + CC2650SensorTag.NumTimerEventsToWaitBeforeTurningOffUpdates.ToString());
             }
             else
+            {
+                System.Diagnostics.Debug.WriteLine("In OnChange read of sensors mode, except Motion (Periodic 1s))");
                 CC2650SensorTag.ServiceSensors = false;
+            }
 
-            CC2650SensorTag.SensorIndexes start = (CC2650SensorTag.SensorIndexes)lbstart.SelectedIndex;
-            CC2650SensorTag.SensorIndexes end = (CC2650SensorTag.SensorIndexes)lbend.SelectedIndex;
+            if ((bool)chkServiceSensors.IsChecked)
+            {
+                CC2650SensorTag.SensorIndexes start = (CC2650SensorTag.SensorIndexes)lbstart.SelectedIndex;
+                CC2650SensorTag.SensorIndexes end = (CC2650SensorTag.SensorIndexes)lbend.SelectedIndex;
+                System.Diagnostics.Debug.WriteLine("Using sensors " + start.ToString() + " to " + end.ToString());
+            }
+            else
+                System.Diagnostics.Debug.WriteLine("Not reading sensors");
+            System.Diagnostics.Debug.WriteLine("==================");
 
             this.Frame.Navigate(typeof(MainPage2), this);
         }

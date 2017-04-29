@@ -51,25 +51,25 @@
         <ListBox x:Name="lbend" Margin="4" Grid.Row="3" Grid.Column="3" Width="120" Height="380" VerticalAlignment="Top" HorizontalAlignment="Center" SelectionChanged="lbstart_SelectionChanged" />
         <TextBlock Text="Service Sensors:"   FontSize="22"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="4
                    " Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <CheckBox x:Name="DD" Content="" IsChecked="True" 
+        <CheckBox x:Name="chkServiceSensors" Content="" IsChecked="True" 
                   FontSize="18"  Foreground="Red"  Background="White"  Margin="4" 
                   Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
                   FlowDirection="RightToLeft"
                   VerticalAlignment="Center" HorizontalAlignment="Center"  />
         <TextBlock Text="Device Battery Service:"   FontSize="22"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="5
                    " Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <CheckBox x:Name="AA" Content="" IsChecked="True" 
+        <CheckBox x:Name="chkUseBattery" Content="" IsChecked="True" 
                   FontSize="18"  Foreground="Red"  Background="White"  Margin="4" 
                   Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
                   FlowDirection="RightToLeft"
                   VerticalAlignment="Center" HorizontalAlignment="Center"  />
         <TextBlock Text="Sys Info Service:"   FontSize="22"  Foreground="Crimson" Grid.ColumnSpan="2" Margin="4" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <CheckBox x:Name="BB" Content="" IsChecked="True" 
+        <CheckBox x:Name="chkGetSysInfo" Content="" IsChecked="True" 
                   FontSize="18"  Foreground="Yellow" Background="Yellow"   Margin="4" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" FlowDirection="RightToLeft"/>
 
         <TextBlock Text="Periodic Updates:"   FontSize="24"  Foreground="Blue" Grid.ColumnSpan="2" Margin="4" Grid.Row="8"
                     Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <CheckBox x:Name="CC" Content="" IsChecked="False" 
+        <CheckBox x:Name="chkPeriodicUpdatesOnly" Content="" IsChecked="False" 
                   FontSize="18"  Foreground="Red"  Background="White"  Margin="4" 
                   Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2"
                   FlowDirection="RightToLeft" 
