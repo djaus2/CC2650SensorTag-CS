@@ -167,13 +167,15 @@ namespace BluetoothGATT
             else
             {
                 System.Diagnostics.Debug.WriteLine("In OnChange read of sensors mode, except Motion (Periodic 1s))");
-                CC2650SensorTag.ServiceSensors = false;
+                //CC2650SensorTag.ServiceSensors = false;
             }
 
             if ((bool)chkServiceSensors.IsChecked)
             {
                 CC2650SensorTag.SensorIndexes start = (CC2650SensorTag.SensorIndexes)lbstart.SelectedIndex;
                 CC2650SensorTag.SensorIndexes end = (CC2650SensorTag.SensorIndexes)lbend.SelectedIndex;
+                CC2650SensorTag.FIRST_SENSOR = (int)start;
+                CC2650SensorTag.NUM_SENSORS_TO_TEST = 1 + (int)end - (int)start;
                 System.Diagnostics.Debug.WriteLine("Using sensors " + start.ToString() + " to " + end.ToString());
             }
             else

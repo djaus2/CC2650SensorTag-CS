@@ -109,6 +109,7 @@ namespace TICC2650SensorTag
         private TypedEventHandler<DeviceWatcher, DeviceInformation> OnBLEAdded = null;
         private TypedEventHandler<DeviceWatcher, DeviceInformationUpdate> OnBLEUpdated = null;
         private TypedEventHandler<DeviceWatcher, DeviceInformationUpdate> OnBLERemoved = null;
+        private TypedEventHandler<DeviceWatcher, Object> OnBLEEnumerationCompleted = null;
 
         public delegate void UpdateButtons_WhenReadyDelegate();
 
@@ -175,7 +176,14 @@ namespace TICC2650SensorTag
 
         Windows.Storage.StorageFile sampleFile = null;
         public static bool HasOKd = false;
+
+
         public static Page NainPage2 { get; set; } = null;
+
+        long discoveredServices = 0;
+        static long attemptedServices;
+
+        long notifiedServices = 0;
 
         //Watcher for Bluetooth LE Services
         public void StartBLEWatcher(Page mainPage2, DeviceInfoDel SetDevInfo, SetupProgressDel setUpProgress2)
@@ -183,8 +191,14 @@ namespace TICC2650SensorTag
             NainPage2 = mainPage2;
           
             HasOKd = false;
-            long discoveredServices = 0;
-            int notifiedServices = 0;
+
+            int targetNoServices = CC2650SensorTag.NUM_SENSORS_TO_TEST;
+            if (CC2650SensorTag.Use_DEVICE_BATTERY_SERVICE)
+                targetNoServices++;
+            if (CC2650SensorTag.Use_UUID_PROPERTIES_SERVICE)
+                targetNoServices++;
+
+
             ManualResetEvent firstServiceStartedResetEvent = new ManualResetEvent(false);
             CC2650SensorTag.EventCount = 0;
             CC2650SensorTag.SetSensorsManualMode = false;
@@ -192,6 +206,7 @@ namespace TICC2650SensorTag
             //Init values for log
             long start = 0;
             counter = 0;
+            int timeout = 120000;//2 minutes
             System.Threading.Interlocked.Exchange(ref updating, 0);
             // Hook up handlers for the watcher events before starting the watcher
             OnBLEAdded = async (watcher, deviceInfo) =>
@@ -209,6 +224,7 @@ namespace TICC2650SensorTag
 
                         if (CC2650SensorTag.DeviceAltSensorNames.Contains(deviceInfo.Name))
                         {
+                            System.Threading.Interlocked.Increment(ref attemptedServices);
                             setUpProgress2();
                             Debug.WriteLine("OnBLEAdded1 On UI Thread: " + deviceInfo.Id);
                             GattDeviceService service = null;
@@ -225,7 +241,7 @@ namespace TICC2650SensorTag
                                 Debug.WriteLine("Error: OnBLEAdded2() on UI Thread(): " + deviceInfo.Id + " " + msg);
                                 return;
                             }
-                            firstServiceStartedResetEvent.Set();
+
                             if (service != null)
                             {
 
@@ -233,74 +249,103 @@ namespace TICC2650SensorTag
                                 string svcGuid = service.Uuid.ToString().ToUpper();
                                 Debug.WriteLine("Found Service: " + svcGuid);
 
+                                firstServiceStartedResetEvent.Set();
+
                                 // Add this service to the list if it conforms to the TI-GUID pattern for most sensors
                                 if (svcGuid == CC2650SensorTag.DEVICE_BATTERY_SERVICE)
                                 {
                                     CC2650SensorTag.SetUpBattery(service);
                                     byte[] bytes = await CC2650SensorTag.GetBatteryLevel();
-                                    return;
                                 }
                                 else if (svcGuid == CC2650SensorTag.UUID_PROPERTIES_SERVICE.ToUpper())
                                 {
                                     CC2650SensorTag.DevicePropertyService = service;
-                                    await CC2650SensorTag.GetProperties();
-                                    return;
-                                }
-
-
-                                else if (svcGuid == CC2650SensorTag.IO_SENSOR_GUID_STR)
-                                {
-                                    sensorIndx = CC2650SensorTag.SensorIndexes.IO_SENSOR;
-                                }
-                                else if (svcGuid == CC2650SensorTag.REGISTERS_GUID_STR)
-                                {
-                                    sensorIndx = CC2650SensorTag.SensorIndexes.REGISTERS;
-                                }
-                                // otherwise, if this is the GUID for the KEYS, then handle it special
-                                else if (svcGuid == CC2650SensorTag.BUTTONS_GUID_STR)
-                                {
-                                    sensorIndx = CC2650SensorTag.SensorIndexes.KEYS;
-                                }
-                                else if (svcGuid.StartsWith(CC2650SensorTag.SENSOR_GUID_PREFIX))
-                                {
-                                    // The character at this position indicates the index into the ServiceList 
-                                    // container that we want to save this service to.  The rest of this program
-                                    // assumes that specific sensor types are at specific indexes in this array
-                                    int Indx = (svcGuid[6] - '0');
-                                    sensorIndx = CC2650SensorTag.GetSensorIndex(Indx);
-                                }
-                                // If the index is legal and a service hasn't already been cached, then
-                                // cache this service in our ServiceList
-                                if (((sensorIndx >= 0) && (sensorIndx <= (CC2650SensorTag.SensorIndexes)CC2650SensorTag.SENSOR_MAX)) && (CC2650SensorTag.ServiceList[(int)sensorIndx] == null))
-                                {
-                                    CC2650SensorTag.ServiceList[(int)sensorIndx] = service;
-                                    await initSensor(sensorIndx);
-                                    System.Threading.Interlocked.Increment(ref discoveredServices);
+                                    await CC2650SensorTag.GetProperties(false);
                                 }
                                 else
                                 {
 
-                                }
-
-                                // When all sensors have been discovered, notify the user
-                                if (discoveredServices > 0) // == NUM_SENSORS)
-                                {
-                                    UpdateButtons_WhenSensorsAreReady_CallBack?.Invoke();
-
-                                    if (discoveredServices == CC2650SensorTag.NUM_SENSORS_TO_TEST)
+                                    if (svcGuid == CC2650SensorTag.IO_SENSOR_GUID_STR)
                                     {
-                                        blewatcher.Stop();
-                                        Debug.WriteLine("blewatcher Stopped.");
+                                        sensorIndx = CC2650SensorTag.SensorIndexes.IO_SENSOR;
                                     }
-                                    discoveredServices = 0;
-                                    setUpProgress2();
-                                    // UserOut.Text = "Sensors on!";
+                                    else if (svcGuid == CC2650SensorTag.REGISTERS_GUID_STR)
+                                    {
+                                        sensorIndx = CC2650SensorTag.SensorIndexes.REGISTERS;
+                                    }
+                                    // otherwise, if this is the GUID for the KEYS, then handle it special
+                                    else if (svcGuid == CC2650SensorTag.BUTTONS_GUID_STR)
+                                    {
+                                        sensorIndx = CC2650SensorTag.SensorIndexes.KEYS;
+                                    }
+                                    else if (svcGuid.StartsWith(CC2650SensorTag.SENSOR_GUID_PREFIX))
+                                    {
+                                        // The character at this position indicates the index into the ServiceList 
+                                        // container that we want to save this service to.  The rest of this program
+                                        // assumes that specific sensor types are at specific indexes in this array
+                                        int Indx = (svcGuid[6] - '0');
+                                        sensorIndx = CC2650SensorTag.GetSensorIndex(Indx);
+                                    }
+                                    // If the index is legal and a service hasn't already been cached, then
+                                    // cache this service in our ServiceList
+                                    if (((sensorIndx >= 0) && (sensorIndx <= (CC2650SensorTag.SensorIndexes)CC2650SensorTag.SENSOR_MAX)) && (CC2650SensorTag.ServiceList[(int)sensorIndx] == null))
+                                    {
+                                        CC2650SensorTag.ServiceList[(int)sensorIndx] = service;
+                                        await initSensor(sensorIndx);
+                                        System.Threading.Interlocked.Increment(ref discoveredServices);
+                                    }
+                                    else
+                                    {
+
+                                    }
                                 }
-                                else
-                                {
-                                    Debug.WriteLine("NO Found Service: " + svcGuid);
-                                }
+                                setUpProgress2();
+
+                                //// When all sensors have been discovered, notify the user
+                                //if (discoveredServices > 0) // == NUM_SENSORS)
+                                //{
+                                //    UpdateButtons_WhenSensorsAreReady_CallBack?.Invoke();
+
+                                //    if (discoveredServices == CC2650SensorTag.NUM_SENSORS_TO_TEST)
+                                //    {
+                                //        blewatcher.Stop();
+                                //        Debug.WriteLine("blewatcher Stopped.");
+                                //    }
+                                //    discoveredServices = 0;
+                                //    setUpProgress2();
+                                //    // UserOut.Text = "Sensors on!";
+                                //}
+                                //else
+                                //{
+                                //    Debug.WriteLine("NO Found Service: " + svcGuid);
+                                //}
+
+                                //long curDiscv = System.Threading.Interlocked.Read(ref discoveredServices);
+                                //if (curDiscv > 0) // == NUM_SENSORS)
+                                //{
+                                //    //UpdateButtons_WhenSensorsAreReady_CallBack?.Invoke();
+
+                                //    if (curDiscv == CC2650SensorTag.NUM_SENSORS_TO_TEST)
+                                //    {
+                                //        blewatcher.Stop();
+                                //        Debug.WriteLine("blewatcher Stopped.");
+                                //        System.Threading.Interlocked.Exchange(ref CC2650SensorTag.EventCount, start);
+                                //        EventTimer = new Timer(EventTimerCallback, null, 0, (int)CC2650SensorTag.UpdatePeriod);
+                                //        discoveredServices = 0;
+                                //    }
+
+                                //    // UserOut.Text = "Sensors on!";
+                                //}
+                                //else
+                                //{
+                                //    Debug.WriteLine("NO Found Service: " + svcGuid);
+                                //}
+
                             }
+                            else //Service is Null
+                                firstServiceStartedResetEvent.Set();
+
+
                         }                  
                     });
                 }
@@ -312,6 +357,8 @@ namespace TICC2650SensorTag
                     {
                         if (CC2650SensorTag.DeviceAltSensorNames.Contains(deviceInfo.Name))
                         {
+                            System.Threading.Interlocked.Increment(ref attemptedServices);
+
                             CC2650SensorTag.IncProg();
                             Debug.WriteLine("OnBLEAdded2() Not on UI thread: " + deviceInfo.Id);
                             GattDeviceService service = null;
@@ -341,7 +388,7 @@ namespace TICC2650SensorTag
                                 else if (svcGuid == CC2650SensorTag.UUID_PROPERTIES_SERVICE.ToUpper())
                                 {
                                     CC2650SensorTag.DevicePropertyService = service;
-                                    await CC2650SensorTag.GetProperties();
+                                    await CC2650SensorTag.GetProperties(false);
                                     return;
                                 }
 
@@ -381,22 +428,26 @@ namespace TICC2650SensorTag
                                 }
 
                                 // When all sensors have been discovered, notify the user
-                                long curDiscv = System.Threading.Interlocked.Read(ref discoveredServices);
-                                if (curDiscv > 0) // == NUM_SENSORS)
-                                {
-                                    UpdateButtons_WhenSensorsAreReady_CallBack?.Invoke();
+                                //long curDiscv = System.Threading.Interlocked.Read(ref attemptedServices);
+                                //if (curDiscv > 0) // == NUM_SENSORS)
+                                //{
+                                //    UpdateButtons_WhenSensorsAreReady_CallBack?.Invoke();
 
-                                    if (curDiscv == CC2650SensorTag.NUM_SENSORS_TO_TEST)
-                                    {
-                                        blewatcher.Stop();
-                                        Debug.WriteLine("blewatcher Stopped.");
-                                        System.Threading.Interlocked.Exchange(ref CC2650SensorTag.EventCount, start);
-                                        EventTimer = new Timer(EventTimerCallback, null, 0, (int)CC2650SensorTag.UpdatePeriod);
-                                        discoveredServices = 0;
-                                    }
+                                //    if (curDiscv == targetNoServices) //CC2650SensorTag.NUM_SENSORS_TO_TEST)
+                                //    {
+                                //        if (blewatcher.Status == DeviceWatcherStatus.EnumerationCompleted)
+                                //        {
+                                //            blewatcher.Stop();
+                                //            Debug.WriteLine("blewatcher Stopped.");
+                                //            System.Threading.Interlocked.Exchange(ref CC2650SensorTag.EventCount, start);
+                                //            EventTimer = new Timer(EventTimerCallback, null, 0, (int)CC2650SensorTag.UpdatePeriod);
+                                //            discoveredServices = 0;
+                                //            attemptedServices = 0;
+                                //        }
+                                //    }
                                     
-                                    // UserOut.Text = "Sensors on!";
-                                }
+                                //    // UserOut.Text = "Sensors on!";
+                                //}
 
                                 
                             }
@@ -417,6 +468,19 @@ namespace TICC2650SensorTag
             OnBLERemoved = async (watcher, deviceInfoUpdate) =>
             {
                 await Task.Run(() => Debug.WriteLine("OnBLERemoved"));
+            };
+
+            OnBLEEnumerationCompleted = async (watcher,obj) =>
+            {
+                await Task.Run(() =>
+                {
+                    blewatcher.Stop();
+                    UpdateButtons_WhenSensorsAreReady_CallBack?.Invoke();
+                    Debug.WriteLine("blewatcher Stopped.");
+                    System.Threading.Interlocked.Exchange(ref CC2650SensorTag.EventCount, start);
+                    EventTimer = new Timer(EventTimerCallback, null, 0, (int)CC2650SensorTag.UpdatePeriod);
+                    Debug.WriteLine("OnBLEEnumerationCompelted");
+                });
             };
 
             string aqs = "";
@@ -465,11 +529,15 @@ namespace TICC2650SensorTag
             blewatcher.Added += OnBLEAdded;
             blewatcher.Updated += OnBLEUpdated;
             blewatcher.Removed += OnBLERemoved;
+            blewatcher.EnumerationCompleted += OnBLEEnumerationCompleted; ;
             blewatcher.Start();
             CC2650SensorTag.IncProg();
         }
 
-
+        private void Blewatcher_EnumerationCompleted(DeviceWatcher sender, object args)
+        {
+            throw new NotImplementedException();
+        }
 
         private async Task initSensor(CC2650SensorTag.SensorIndexes sensorIndx)
         {

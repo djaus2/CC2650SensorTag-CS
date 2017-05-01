@@ -51,14 +51,14 @@ namespace BluetoothGATT
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
-                await DoGetProp();
+                await DoGetProp(true);
             });
         }
 
 
-        private  async Task  DoGetProp()
+        private  async Task  DoGetProp(bool doBattery)
         { 
-            System.Collections.Generic.Dictionary<CC2650SensorTag.SensorTagProperties, byte[]> props = await CC2650SensorTag.GetProperties();
+            System.Collections.Generic.Dictionary<CC2650SensorTag.SensorTagProperties, byte[]> props = await CC2650SensorTag.GetProperties(doBattery);
 
             int count = 0;
 
@@ -116,7 +116,7 @@ namespace BluetoothGATT
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            Task.Run(()  => this.buttonRefresh_Click(null,null)).Wait();
+            Task.Run(() => this.DoGetProp(false)); // buttonRefresh_Click(null,null)).Wait();
         }
 
 

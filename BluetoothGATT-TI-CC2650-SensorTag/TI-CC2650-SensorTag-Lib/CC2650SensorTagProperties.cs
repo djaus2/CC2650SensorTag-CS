@@ -206,7 +206,8 @@ namespace TICC2650SensorTag
 
         public static List<SensorTagProperties> showbytes = new List<SensorTagProperties>() { SensorTagProperties.BatteryLevel, SensorTagProperties.SysId, SensorTagProperties.BTSigCertification, SensorTagProperties.PNPId };
 
-        public async static Task<Dictionary<SensorTagProperties, byte[]> > GetProperties()
+        //Don't do battery at startup as its called when battery service is started.
+        public async static Task<Dictionary<SensorTagProperties, byte[]> > GetProperties(bool doBattery)
         {
             byte[] bytes = null;
             Dictionary<SensorTagProperties, byte[]> deviceProprties = new Dictionary<SensorTagProperties, byte[]>();
@@ -216,10 +217,13 @@ namespace TICC2650SensorTag
             foreach (SensorTagProperties val in values)
             {
                 bytes = null;
-                if (val== SensorTagProperties.BatteryLevel)
-                    bytes =    await GetBatteryLevel();
+                if (val == SensorTagProperties.BatteryLevel)
+                    if (doBattery)
+                        bytes = await GetBatteryLevel();
+                    else
+                        continue;
                 else
-                    bytes = await ReadProperty( val,false);
+                    bytes = await ReadProperty(val, false);
                 if (bytes != null)
                 {
                     if (!showbytes.Contains(val))

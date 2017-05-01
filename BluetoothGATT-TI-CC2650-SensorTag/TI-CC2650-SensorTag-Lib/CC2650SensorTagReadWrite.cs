@@ -31,7 +31,7 @@ namespace TICC2650SensorTag
     public sealed partial class CC2650SensorTag
     {
 
-        private async Task<bool> WriteSensor(byte[] bytes, ServiceCharacteristicsEnum character)
+        private async Task<bool> WriteSensor(byte[] bytes, ServiceCharacteristicsEnum characteristicEnum)
         {
             bool ret = false;
             Debug.WriteLine("Begin WriteSensor: " + SensorIndex.ToString());
@@ -41,7 +41,7 @@ namespace TICC2650SensorTag
                 {
                     GattCharacteristic characteristic = null;
                     GattCharacteristicProperties flag = GattCharacteristicProperties.Write;
-                    switch (character)
+                    switch (characteristicEnum)
                     {
                         case ServiceCharacteristicsEnum.Data:
                             characteristic = this.Data;
@@ -270,7 +270,8 @@ namespace TICC2650SensorTag
         public static bool PeriodicUpdatesOnly { get; set; } = false;
         public static long Period { get; set; } = 5;
         public static bool CountUpdates { get; set; } = false;
-        public static bool ServiceSensors { get; set; } = true;
+        public static bool ServiceSensors { get;
+            set; } = true;
         public static bool chkIgnoreZeros { get; set; } = true;
         public static bool SetSensorsManualMode { get; internal set; } = false;
         public static long UpdatePeriod { get; set; } = 15 * 1000;
