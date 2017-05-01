@@ -33,7 +33,7 @@ namespace TICC2650SensorTag
 
         public static SetupProgressDel SetUpProgress { get; set; } = null;
         public static PassInt SetBatteryLevel { get; set; } = null;
-        public static void IncProg()
+        public static void IncProgressCounter()
         {
             SetUpProgress?.Invoke();
         }
@@ -145,7 +145,7 @@ namespace TICC2650SensorTag
             {
                 Debug.WriteLine("Error: CC2650SensorTag() Constructor: " + SensorIndex.ToString() + " " + ex.Message);
             }
-            IncProg();
+            IncProgressCounter();
             Debug.WriteLine("End sensor constructor: " + SensorIndex.ToString());
         }
 
@@ -181,7 +181,7 @@ namespace TICC2650SensorTag
                             var status = await Configuration.WriteValueAsync(writer.DetachBuffer());
                         }
                 }
-                IncProg();
+                IncProgressCounter();
             } catch (Exception ex)
             {
                 Debug.WriteLine("Error: TurnOnSensor() : " + SensorIndex.ToString() +" " + ex.Message);
@@ -271,7 +271,7 @@ namespace TICC2650SensorTag
                             Debug.WriteLine("Awaited SetChangedNotifactionHandler sensor: " + SensorIndex.ToString());
                         }
                 }
-                IncProg();
+                IncProgressCounter();
             }
             catch (Exception ex)
             {

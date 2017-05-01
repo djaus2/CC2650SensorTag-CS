@@ -252,7 +252,7 @@ namespace TICC2650SensorTag
                     }
 
                 }
-                IncProg();
+                IncProgressCounter();
             }
             catch (Exception ex)
             {

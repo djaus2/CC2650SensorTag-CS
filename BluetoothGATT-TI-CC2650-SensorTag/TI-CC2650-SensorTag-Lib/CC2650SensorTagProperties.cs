@@ -102,7 +102,7 @@ namespace TICC2650SensorTag
                 {
                     Debug.WriteLine("Battery Level: {0}", bytes[0]);
                     SetBatteryLevel((int)bytes[0]);
-                    IncProg();
+                    IncProgressCounter();
                 }
             Debug.WriteLine("End GetBatteryLevel");
             return bytes;
@@ -182,7 +182,7 @@ namespace TICC2650SensorTag
                                 bytes = new byte[result.Value.Length];
 
                                 Windows.Storage.Streams.DataReader.FromBuffer(result.Value).ReadBytes(bytes);
-                                IncProg();
+                                IncProgressCounter();
 
                             }
                         }

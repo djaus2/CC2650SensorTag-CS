@@ -181,7 +181,6 @@ namespace TICC2650SensorTag
         public static Page NainPage2 { get; set; } = null;
 
         long discoveredServices = 0;
-        static long attemptedServices;
 
         long notifiedServices = 0;
 
@@ -199,14 +198,13 @@ namespace TICC2650SensorTag
                 targetNoServices++;
 
 
-            ManualResetEvent firstServiceStartedResetEvent = new ManualResetEvent(false);
+            ManualResetEvent firstServiceStartedManualResetEvent = new ManualResetEvent(false);
             CC2650SensorTag.EventCount = 0;
             CC2650SensorTag.SetSensorsManualMode = false;
 
             //Init values for log
             long start = 0;
             counter = 0;
-            int timeout = 120000;//2 minutes
             System.Threading.Interlocked.Exchange(ref updating, 0);
             // Hook up handlers for the watcher events before starting the watcher
             OnBLEAdded = async (watcher, deviceInfo) =>
@@ -224,7 +222,6 @@ namespace TICC2650SensorTag
 
                         if (CC2650SensorTag.DeviceAltSensorNames.Contains(deviceInfo.Name))
                         {
-                            System.Threading.Interlocked.Increment(ref attemptedServices);
                             setUpProgress2();
                             Debug.WriteLine("OnBLEAdded1 On UI Thread: " + deviceInfo.Id);
                             GattDeviceService service = null;
@@ -249,7 +246,8 @@ namespace TICC2650SensorTag
                                 string svcGuid = service.Uuid.ToString().ToUpper();
                                 Debug.WriteLine("Found Service: " + svcGuid);
 
-                                firstServiceStartedResetEvent.Set();
+                                //Let other services start now
+                                firstServiceStartedManualResetEvent.Set();
 
                                 // Add this service to the list if it conforms to the TI-GUID pattern for most sensors
                                 if (svcGuid == CC2650SensorTag.DEVICE_BATTERY_SERVICE)
@@ -299,67 +297,22 @@ namespace TICC2650SensorTag
 
                                     }
                                 }
-                                setUpProgress2();
-
-                                //// When all sensors have been discovered, notify the user
-                                //if (discoveredServices > 0) // == NUM_SENSORS)
-                                //{
-                                //    UpdateButtons_WhenSensorsAreReady_CallBack?.Invoke();
-
-                                //    if (discoveredServices == CC2650SensorTag.NUM_SENSORS_TO_TEST)
-                                //    {
-                                //        blewatcher.Stop();
-                                //        Debug.WriteLine("blewatcher Stopped.");
-                                //    }
-                                //    discoveredServices = 0;
-                                //    setUpProgress2();
-                                //    // UserOut.Text = "Sensors on!";
-                                //}
-                                //else
-                                //{
-                                //    Debug.WriteLine("NO Found Service: " + svcGuid);
-                                //}
-
-                                //long curDiscv = System.Threading.Interlocked.Read(ref discoveredServices);
-                                //if (curDiscv > 0) // == NUM_SENSORS)
-                                //{
-                                //    //UpdateButtons_WhenSensorsAreReady_CallBack?.Invoke();
-
-                                //    if (curDiscv == CC2650SensorTag.NUM_SENSORS_TO_TEST)
-                                //    {
-                                //        blewatcher.Stop();
-                                //        Debug.WriteLine("blewatcher Stopped.");
-                                //        System.Threading.Interlocked.Exchange(ref CC2650SensorTag.EventCount, start);
-                                //        EventTimer = new Timer(EventTimerCallback, null, 0, (int)CC2650SensorTag.UpdatePeriod);
-                                //        discoveredServices = 0;
-                                //    }
-
-                                //    // UserOut.Text = "Sensors on!";
-                                //}
-                                //else
-                                //{
-                                //    Debug.WriteLine("NO Found Service: " + svcGuid);
-                                //}
-
                             }
-                            else //Service is Null
-                                firstServiceStartedResetEvent.Set();
-
-
+                            else //Service is Null: Need to let other services attempt start now
+                                firstServiceStartedManualResetEvent.Set();
+                            CC2650SensorTag.IncProgressCounter();
                         }                  
                     });
                 }
                 else
                 {
-                    firstServiceStartedResetEvent.WaitOne();
+                    firstServiceStartedManualResetEvent.WaitOne();
                     await Task.Run(async () =>
                     //await NainPage2.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                     {
                         if (CC2650SensorTag.DeviceAltSensorNames.Contains(deviceInfo.Name))
                         {
-                            System.Threading.Interlocked.Increment(ref attemptedServices);
-
-                            CC2650SensorTag.IncProg();
+                            CC2650SensorTag.IncProgressCounter();
                             Debug.WriteLine("OnBLEAdded2() Not on UI thread: " + deviceInfo.Id);
                             GattDeviceService service = null;
                             try
@@ -426,32 +379,9 @@ namespace TICC2650SensorTag
                                 {
 
                                 }
-
-                                // When all sensors have been discovered, notify the user
-                                //long curDiscv = System.Threading.Interlocked.Read(ref attemptedServices);
-                                //if (curDiscv > 0) // == NUM_SENSORS)
-                                //{
-                                //    UpdateButtons_WhenSensorsAreReady_CallBack?.Invoke();
-
-                                //    if (curDiscv == targetNoServices) //CC2650SensorTag.NUM_SENSORS_TO_TEST)
-                                //    {
-                                //        if (blewatcher.Status == DeviceWatcherStatus.EnumerationCompleted)
-                                //        {
-                                //            blewatcher.Stop();
-                                //            Debug.WriteLine("blewatcher Stopped.");
-                                //            System.Threading.Interlocked.Exchange(ref CC2650SensorTag.EventCount, start);
-                                //            EventTimer = new Timer(EventTimerCallback, null, 0, (int)CC2650SensorTag.UpdatePeriod);
-                                //            discoveredServices = 0;
-                                //            attemptedServices = 0;
-                                //        }
-                                //    }
-                                    
-                                //    // UserOut.Text = "Sensors on!";
-                                //}
-
                                 
                             }
-                            CC2650SensorTag.IncProg();
+                            CC2650SensorTag.IncProgressCounter();
                         }
                         
                     });
@@ -479,7 +409,8 @@ namespace TICC2650SensorTag
                     Debug.WriteLine("blewatcher Stopped.");
                     System.Threading.Interlocked.Exchange(ref CC2650SensorTag.EventCount, start);
                     EventTimer = new Timer(EventTimerCallback, null, 0, (int)CC2650SensorTag.UpdatePeriod);
-                    Debug.WriteLine("OnBLEEnumerationCompelted");
+                    CC2650SensorTag.IncProgressCounter();
+                    Debug.WriteLine("OnBLEEnumerationCompleted");
                 });
             };
 
@@ -531,7 +462,7 @@ namespace TICC2650SensorTag
             blewatcher.Removed += OnBLERemoved;
             blewatcher.EnumerationCompleted += OnBLEEnumerationCompleted; ;
             blewatcher.Start();
-            CC2650SensorTag.IncProg();
+            CC2650SensorTag.IncProgressCounter();
         }
 
         private void Blewatcher_EnumerationCompleted(DeviceWatcher sender, object args)
@@ -575,7 +506,7 @@ namespace TICC2650SensorTag
                         break;
                 }
             }
-            CC2650SensorTag.IncProg();
+            CC2650SensorTag.IncProgressCounter();
         }
 
         public void StopBLEWatcher()
