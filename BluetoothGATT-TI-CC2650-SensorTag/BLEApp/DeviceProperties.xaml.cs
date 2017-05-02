@@ -117,9 +117,17 @@ namespace BluetoothGATT
 
         }//End of fn 
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async Task OnLoaded()
         {
-            Task.Run(() => this.DoGetProp(false)); // buttonRefresh_Click(null,null)).Wait();
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
+                await DoGetProp(false);
+            });
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {          
+            Task.Run(() => this.OnLoaded());
         }
 
 
